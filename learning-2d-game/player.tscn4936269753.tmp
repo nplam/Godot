@@ -37,7 +37,6 @@ height = 42.8873
 
 [node name="Player" type="Area2D" unique_id=548043257]
 script = ExtResource("1_sweqy")
-speed = null
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=121652371]
 scale = Vector2(0.5, 0.5)
