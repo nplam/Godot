@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://1lphwpa0dph0" path="res://main.gd" id="1_h2yge"]
 [ext_resource type="PackedScene" uid="uid://b6pdw6lo2ak6x" path="res://player.tscn" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://dpcamyq1y42x2" path="res://mob.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://d3goyvys1u41r" path="res://hud.tscn" id="4_1bvp3"]
 
 [sub_resource type="Curve2D" id="Curve2D_lquwl"]
 _data = {
@@ -34,6 +35,8 @@ curve = SubResource("Curve2D_lquwl")
 [node name="ModSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=782884664]
 position = Vector2(2, 3)
 rotation = -0.008528578
+
+[node name="HUD" parent="." unique_id=1053641111 instance=ExtResource("4_1bvp3")]
 
 [connection signal="hit" from="Player" to="." method="game_over"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
