@@ -32,7 +32,7 @@ position = Vector2(240, 450)
 [node name="MobPath" type="Path2D" parent="." unique_id=697724860]
 curve = SubResource("Curve2D_lquwl")
 
-[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=782884664]
+[node name="ModSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=782884664]
 position = Vector2(2, 3)
 rotation = -0.008528578
 
