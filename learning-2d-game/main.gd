@@ -5,12 +5,15 @@ var score
 
 func game_over():
 	$HUD.show_game_over()
+	$Music.stop()
+	$DeathSound.play()
 	
 func new_game():
 	score = 0
 	$HUD.update_score(score)
 	$HUD.show_message("Get Ready")
 	$startTimer.start()
+	$Music.play()
 	
 func _on_mob_timer_timeout():
 
