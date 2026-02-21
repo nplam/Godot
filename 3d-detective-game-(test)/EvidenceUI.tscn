@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://bjmm4d7qr5y5h"]
+
+[ext_resource type="Script" uid="uid://q2sw0ph7bnwh" path="res://texture_rect.gd" id="1_3ckqn"]
+[ext_resource type="Script" uid="uid://63io02upwaoq" path="res://EvidenceUI.gd" id="1_hna7y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hna7y"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="Control" type="Control" unique_id=1440285983]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hna7y")
+
+[node name="Background" type="Panel" parent="." unique_id=698004361]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hna7y")
+
+[node name="Scroll" type="ScrollContainer" parent="Background" unique_id=174866052]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 0.88483757)
+
+[node name="Grid" type="GridContainer" parent="Background/Scroll" unique_id=238486516]
+layout_mode = 2
+columns = 4
+
+[node name="CloseButton" type="Button" parent="Background" unique_id=1168445766]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -31.0
+offset_right = 25.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Close"
+
+[node name="DetailsPanel" type="Control" parent="Background" unique_id=469408459]
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Background/DetailsPanel" unique_id=699849611]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -64.0
+offset_right = 64.0
+offset_bottom = 128.0
+grow_horizontal = 2
+script = ExtResource("1_3ckqn")
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="Background/CloseButton" to="." method="_on_close_button_pressed"]

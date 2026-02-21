@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bvks2hioyoo4a"]
+
+[ext_resource type="Script" uid="uid://cr0b66ljyffjl" path="res://ui.gd" id="1_b3bc3"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=1172188472]
+script = ExtResource("1_b3bc3")
+
+[node name="Panel" type="Panel" parent="." unique_id=99880764]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Panel" unique_id=1392315138]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0

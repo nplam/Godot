@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://bet63mb8ggn4"]
+
+[ext_resource type="Script" uid="uid://blg6swjp7kwgd" path="res://EvidenceSlot.gd" id="1_ebmul"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_15b16"]
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="PanelContainer" type="PanelContainer" unique_id=1534144450]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_15b16")
+script = ExtResource("1_ebmul")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=505568905]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=290655315]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="MarginContainer/VBoxContainer" unique_id=863393642]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1287930318]
+layout_mode = 2
+size_flags_vertical = 6
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer" unique_id=1234654203]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2

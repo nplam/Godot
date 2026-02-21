@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://clg61px2by33h"]
+
+[ext_resource type="Script" uid="uid://duxdu2wtvyqad" path="res://InteractionPrompt.gd" id="1_6sflo"]
+
+[node name="CanvasLayer" type="CanvasLayer" unique_id=1172188472]
+script = ExtResource("1_6sflo")
+
+[node name="BackgroundPanel" type="Panel" parent="." unique_id=99880764]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PromptLabel" type="Label" parent="BackgroundPanel" unique_id=1392315138]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 123.0
+offset_top = -25.0
+offset_right = 123.0
+offset_bottom = 9.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(2.292746, 1.555871)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_font_sizes/font_size = 24

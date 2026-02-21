@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://nf3jen7bh5bl"]
+
+[ext_resource type="Script" uid="uid://bclmmhwc641e7" path="res://Interactable.gd" id="1_tnxym"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0w71n"]
+albedo_color = Color(0.949876, 0.78032994, 0.76150113, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_qs7kl"]
+material = SubResource("StandardMaterial3D_0w71n")
+size = Vector3(0.5, 0.05, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tnxym"]
+
+[node name="ClueNote" type="StaticBody3D" unique_id=1899240163]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 2)
+collision_layer = 2
+script = ExtResource("1_tnxym")
+object_name = "Mysterious Note"
+examination_text = "\"It says: 'Meet me at midnight.'\""
+is_evidence = true
+evidence_id = "\"note_1\""
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=928335123]
+transform = Transform3D(-0.0071812877, -0.016040446, -0.99984556, -0.102534555, 0.99461305, -0.015220016, 0.9947035, 0.10240944, -0.008787258, 0, 0, 0)
+mesh = SubResource("BoxMesh_qs7kl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=899661365]
+shape = SubResource("BoxShape3D_tnxym")
