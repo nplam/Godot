@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 EvidenceSystem="*uid://ci5wj31m45nye"
+CursorManager="*uid://bdeit0yvcrmx"
 
 [input]
 

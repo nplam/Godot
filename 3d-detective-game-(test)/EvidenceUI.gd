@@ -17,8 +17,14 @@ func _input(event):
 	if event.is_action_pressed("ui_focus_next"):  # Tab key
 		visible = !visible
 		if visible:
+			# Make sure cursor is visible when UI opens
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			refresh()
-
+		else:
+			# Return to game mode (optional - you might want cursor back)
+			# Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			pass
+			
 func refresh():
 	# Clear existing slots
 	for child in grid.get_children():

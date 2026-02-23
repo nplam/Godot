@@ -9,8 +9,10 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [node name="PanelContainer" type="PanelContainer" unique_id=1534144450]
+custom_minimum_size = Vector2(30, 35)
 offset_right = 40.0
 offset_bottom = 40.0
+scale = Vector2(1.8399999, 1.7600001)
 theme_override_styles/panel = SubResource("StyleBoxFlat_15b16")
 script = ExtResource("1_ebmul")
 

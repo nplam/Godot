@@ -15,25 +15,41 @@ extends CharacterBody3D
 var current_interactable: Node = null
 
 var current_speed: float
+# Declare the variable that will store this slot's evidence ID
+var evidence_id: String
 
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	# Start with visible cursor (for UI)
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	current_speed = walk_speed
 
 func _input(event):
-	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+	# MOUSE LOOK: Only when right mouse button is held
+	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		head.rotate_y(-event.relative.x * mouse_sensitivity)
 		camera.rotate_x(-event.relative.y * mouse_sensitivity)
 		camera.rotation.x = clamp(camera.rotation.x, -1.4, 1.4)
-
+	
+	# ESC key to toggle cursor capture (optional)
 	if event.is_action_pressed("ui_cancel"):
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	if event.is_action_pressed("interact") and current_interactable:
-		current_interactable.interact()
+	# E key to interact
+	if event.is_action_pressed("interact"):
+		print("🟢 E key pressed")
+		if current_interactable:
+			CursorManager.set_cursor(CursorManager.CursorState.CLICK)
+			current_interactable.interact()
+			await get_tree().create_timer(0.1).timeout
+			if current_interactable:
+				CursorManager.set_cursor(CursorManager.CursorState.HOVER)
+			else:
+				CursorManager.reset_cursor()
+		else:
+			print("🟢 No current_interactable")
 
 func _physics_process(delta):
 	# Sprint
@@ -69,22 +85,35 @@ func check_interaction():
 	if interaction_ray.is_colliding():
 		var collider = interaction_ray.get_collider()
 		if collider and collider.has_method("get_interaction_text"):
+			# Looking at an interactable object
+			CursorManager.set_cursor(CursorManager.CursorState.HOVER)
+			
 			if current_interactable != collider:
 				# Unfocus previous
 				if current_interactable and current_interactable.has_method("on_unfocus"):
 					current_interactable.on_unfocus()
+				
 				# Focus new
 				current_interactable = collider
 				if current_interactable.has_method("on_focus"):
 					current_interactable.on_focus()
+				
+				# Show the UI prompt
 				interaction_ui.show_prompt(collider.get_interaction_text())
-			return
-	# Nothing hit or not interactable
+			return  # Important: Exit the function here!
+	
+	# If we get here, we're NOT looking at any interactable
+	# Hide the UI prompt
+	interaction_ui.hide_prompt()
+	
+	# Reset cursor to normal
+	CursorManager.reset_cursor()
+	
+	# Unfocus any previously focused object
 	if current_interactable:
 		if current_interactable.has_method("on_unfocus"):
 			current_interactable.on_unfocus()
 		current_interactable = null
-	interaction_ui.hide_prompt()
 
 
 	
