@@ -19,17 +19,17 @@ func set_cursor(state: CursorState):
 		CursorState.NORMAL:
 			# Standard arrow cursor
 			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-			print("🖱️ Cursor: NORMAL (arrow)")  # Debug
+			#print("🖱️ Cursor: NORMAL (arrow)")  # Debug
 		
 		CursorState.HOVER:
 			# Pointing hand - perfect for interactable objects
 			Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
-			print("🖱️ Cursor: HOVER (pointing hand)")  # Debug
+			#print("🖱️ Cursor: HOVER (pointing hand)")  # Debug
 		
 		CursorState.CLICK:
 			# Brief feedback when pressing E (use drag or busy cursor)
 			Input.set_default_cursor_shape(Input.CURSOR_DRAG)
-			print("🖱️ Cursor: CLICK (drag)")  # Debug
+			#print("🖱️ Cursor: CLICK (drag)")  # Debug
 
 # Convenience function to reset to normal
 func reset_cursor():

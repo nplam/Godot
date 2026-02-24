@@ -30,26 +30,27 @@ func _input(event):
 		camera.rotate_x(-event.relative.y * mouse_sensitivity)
 		camera.rotation.x = clamp(camera.rotation.x, -1.4, 1.4)
 	
-	# ESC key to toggle cursor capture (optional)
+	# ESC key to pause/quit (optional)
 	if event.is_action_pressed("ui_cancel"):
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	# E key to interact
-	if event.is_action_pressed("interact"):
-		print("🟢 E key pressed")
+	# LEFT CLICK to interact with clues
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if current_interactable:
+			print("🖱️ Left click on: ", current_interactable.name)
+			# Show click cursor briefly
 			CursorManager.set_cursor(CursorManager.CursorState.CLICK)
+			# Open inspection view
 			current_interactable.interact()
+			# Reset cursor after delay
 			await get_tree().create_timer(0.1).timeout
 			if current_interactable:
 				CursorManager.set_cursor(CursorManager.CursorState.HOVER)
 			else:
 				CursorManager.reset_cursor()
-		else:
-			print("🟢 No current_interactable")
 
 func _physics_process(delta):
 	# Sprint

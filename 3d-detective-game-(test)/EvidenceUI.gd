@@ -11,20 +11,22 @@ extends Control
 func _ready():
 	EvidenceSystem.evidence_collected.connect(_on_evidence_collected)
 	hide()  # Start hidden
+	$Background.visible = false  # Ensure background starts hidden
 	details_panel.hide()
 
 func _input(event):
 	if event.is_action_pressed("ui_focus_next"):  # Tab key
 		visible = !visible
 		if visible:
-			# Make sure cursor is visible when UI opens
+			# Show everything
+			$Background.visible = true
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			refresh()
 		else:
-			# Return to game mode (optional - you might want cursor back)
-			# Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-			pass
-			
+			# Hide everything
+			$Background.visible = false
+			details_panel.hide()
+
 func refresh():
 	# Clear existing slots
 	for child in grid.get_children():
@@ -38,7 +40,8 @@ func refresh():
 		grid.add_child(slot)
 
 func _on_evidence_collected(id, data):
-	refresh()  # Auto-update when new evidence is added
+	if visible:  # Only refresh if UI is visible
+		refresh()
 
 func _on_slot_clicked(evidence_id):
 	var data = EvidenceSystem.get_evidence(evidence_id)
@@ -51,4 +54,6 @@ func _on_close_details_pressed():
 	details_panel.hide()
 
 func _on_close_button_pressed():
-	hide()
+	visible = false
+	$Background.visible = false
+	details_panel.hide()

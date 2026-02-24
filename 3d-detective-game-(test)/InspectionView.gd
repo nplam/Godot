@@ -17,35 +17,23 @@ var on_cancel_callback: Callable
 
 func _ready():
 	print("🔧 INSPECTION VIEW READY")
-	print("   object_name_label: ", object_name_label)
-	print("   description_label: ", description_label)
-	print("   viewport: ", viewport)
 	
-	# Check camera
-	var camera = viewport.find_child("*Camera3D*", true, false)
+	# Check for camera with name "InspectionCamera"
+	var camera = viewport.find_child("InspectionCamera", true, false)
 	if camera:
-		print("   Camera found: ", camera)
+		camera.current = true
+		print("   InspectionCamera found and set to current")
 		print("   Camera position: ", camera.position)
-		print("   Camera current: ", camera.current)
 	else:
-		print("   ⚠️ No camera found in viewport!")
-		# Add a camera if missing
-		var new_camera = Camera3D.new()
-		new_camera.current = true
-		new_camera.position = Vector3(0, 0, 3)
-		viewport.add_child(new_camera)
-		print("   Added new camera at position: ", new_camera.position)
+		print("   ⚠️ InspectionCamera not found - check scene!")
 	
-	# Check lighting
-	var light = viewport.find_child("*Light3D*", true, false)
+	# Check for light with name "InspectionLight"
+	var light = viewport.find_child("InspectionLight", true, false)
 	if light:
-		print("   Light found: ", light)
+		print("   InspectionLight found")
+		print("   Light rotation: ", light.rotation)
 	else:
-		print("   ⚠️ No light found in viewport!")
-		var new_light = DirectionalLight3D.new()
-		new_light.rotation = Vector3(-45, 45, 0)
-		viewport.add_child(new_light)
-		print("   Added new light")
+		print("   ⚠️ InspectionLight not found - check scene!")
 	
 	hide()
 	cancel_button.pressed.connect(_on_cancel)
@@ -76,61 +64,105 @@ func inspect(interactable, take_callback: Callable, cancel_callback: Callable):
 	# get_tree().paused = true
 
 func show_object_in_viewport(interactable):
-	# Clear previous content
+	# Clear previous objects (keep camera and light)
 	for child in viewport.get_children():
+		if child.name == "InspectionCamera" or child.name == "InspectionLight":
+			continue
 		child.queue_free()
 	
 	print("📦 Creating object copy for viewport")
 	
-	# Create a copy of the interactable object for inspection
 	var object_copy = interactable.duplicate()
 	viewport.add_child(object_copy)
 	
-	# Print debug info
-	print("   Object copy created: ", object_copy)
-	print("   Original position: ", interactable.position)
-	
-	# Position the object nicely for viewing
-	object_copy.position = Vector3(0, 0, -2)  # 2 meters in front of camera
+	# CRITICAL: Position the object where the camera can see it
+	object_copy.position = Vector3(0, 0, -2)  # 2 units in front of camera
 	object_copy.rotation = Vector3(0, 0, 0)
 	
-	print("   New position: ", object_copy.position)
+	# Force scale to be normal
+	object_copy.scale = Vector3(1, 1, 1)
 	
-	# Make sure it has a mesh
+	print("   Object position: ", object_copy.position)
+	
+	# Find and highlight the mesh
 	var mesh = object_copy.find_child("*MeshInstance3D*", true, false)
 	if mesh:
-		print("   Mesh found: ", mesh)
-		print("   Mesh visible: ", mesh.visible)
+		print("   Mesh found: ", mesh.name)
+		print("   Original material: ", mesh.material_override)
+		
+		# FORCE VISIBILITY: Apply bright glowing material
+		var glow_material = StandardMaterial3D.new()
+		glow_material.albedo_color = Color(1, 0, 0)  # Bright red
+		glow_material.emission_enabled = true
+		glow_material.emission = Color(1, 0, 0)  # Red emission
+		glow_material.emission_energy_multiplier = 2.0
+		mesh.material_override = glow_material
+		print("   🔆 Applied bright red glowing material")
+		
+		# Make sure the mesh is visible
+		mesh.visible = true
 	else:
-		print("   ⚠️ No mesh found in copied object!")
+		print("   ❌ No mesh found in copied object!")
+		
+		# Create a visible fallback cube
+		print("   Creating fallback red cube")
+		var fallback = MeshInstance3D.new()
+		fallback.mesh = BoxMesh.new()
+		fallback.position = Vector3(0, 0, -2)
+		
+		var red_mat = StandardMaterial3D.new()
+		red_mat.albedo_color = Color(1, 0, 0)
+		fallback.material_override = red_mat
+		viewport.add_child(fallback)
 	
-	# Add a light if there isn't one
-	if viewport.get_child_count() == 1:  # Only the object, no light
-		print("   Adding temporary light")
-		var light = DirectionalLight3D.new()
-		light.rotation = Vector3(-45, 45, 0)  # Angle the light
-		viewport.add_child(light)
+	# Double-check camera
+	var camera = viewport.find_child("InspectionCamera", true, false)
+	if camera:
+		print("   Camera position: ", camera.position)
+		print("   Camera is current: ", camera.current)
 	
-	print("✅ Object added to viewport")
+	print("✅ Object setup complete")
 
 func _on_take():
-	print("Take button pressed")  # Debug
-	# Call the take callback (which will collect evidence)
-	# Return to game mode (optional)
-	# Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	CursorManager.reset_cursor()
+	print("Take button pressed")
+	
 	if on_take_callback.is_valid():
-		on_take_callback.call(current_interactable)
-	# Hide and unpause
+		on_take_callback.call()
+	
+	# Disable viewport rendering
+	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	
+	# Remove objects (keep InspectionCamera and InspectionLight)
+	for child in viewport.get_children():
+		if child.name == "InspectionCamera" or child.name == "InspectionLight":
+			continue
+		child.queue_free()
+	
+	CursorManager.reset_cursor()
 	hide()
-	# get_tree().paused = false
+	
+	# Re-enable after a frame
+	await get_tree().process_frame
+	viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
 
 func _on_cancel():
-	print("Cancel button pressed")  # Debug
-	# Just close the inspection view
+	print("Cancel button pressed")
+	
 	if on_cancel_callback.is_valid():
 		on_cancel_callback.call()
 	
-	# Hide and unpause
+	# Disable viewport rendering
+	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	
+	# Remove objects (keep InspectionCamera and InspectionLight)
+	for child in viewport.get_children():
+		if child.name == "InspectionCamera" or child.name == "InspectionLight":
+			continue
+		child.queue_free()
+	
+	CursorManager.reset_cursor()
 	hide()
-	# get_tree().paused = false
+	
+	# Re-enable after a frame
+	await get_tree().process_frame
+	viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE

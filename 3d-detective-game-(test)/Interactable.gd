@@ -22,7 +22,7 @@ func _ready():
 		highlight_material.emission = highlight_color
 
 func get_interaction_text() -> String:
-	return "Examine " + object_name
+	return "Examine " + object_name  # Removed "Press E" text
 
 func on_focus():
 	if is_focused:
@@ -49,6 +49,7 @@ func interact():
 	#	show_examination()
 
 func collect_evidence():
+	print("✅ Collecting evidence: ", object_name)
 	EvidenceSystem.collect_evidence(evidence_id, object_name, examination_text, evidence_texture)
 	queue_free()	
 

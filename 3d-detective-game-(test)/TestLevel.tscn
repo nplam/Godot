@@ -7,6 +7,11 @@
 [ext_resource type="PackedScene" uid="uid://nf3jen7bh5bl" path="res://Clue_Note.tscn" id="4_waekl"]
 [ext_resource type="PackedScene" uid="uid://lj8yxs2f1rg4" path="res://InspectionView.tscn" id="6_xlsm3"]
 
+[sub_resource type="Environment" id="Environment_xlsm3"]
+background_color = Color(0.4045111, 0.40451115, 0.4045111, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.41598046, 0.41598043, 0.4159804, 1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_34lg8"]
 size = Vector3(20, 1, 20)
 
@@ -14,11 +19,7 @@ size = Vector3(20, 1, 20)
 size = Vector3(20, 1, 20)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_waekl"]
-albedo_color = Color(0.33398598, 0.33287886, 0.32986182, 1)
-
-[sub_resource type="Environment" id="Environment_xlsm3"]
-ambient_light_source = 2
-ambient_light_color = Color(0.39688927, 0.39688927, 0.39688924, 1)
+albedo_color = Color(0.69965345, 0.6996535, 0.6996533, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_1kog2"]
 size = Vector3(0.2, 3, 20)
@@ -57,6 +58,12 @@ size = Vector3(20, 3, 0.2)
 
 [node name="World" type="Node3D" unique_id=1420371846]
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1951003062]
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1599193445]
+environment = SubResource("Environment_xlsm3")
+
 [node name="Floor" type="StaticBody3D" parent="." unique_id=1937034035]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=145708940]
@@ -66,12 +73,6 @@ shape = SubResource("BoxShape3D_34lg8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_y1jsw")
 surface_material_override/0 = SubResource("StandardMaterial3D_waekl")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1951003062]
-shadow_enabled = true
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1599193445]
-environment = SubResource("Environment_xlsm3")
 
 [node name="Wall_Left" type="StaticBody3D" parent="." unique_id=1567017875]
 
@@ -118,7 +119,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 shape = SubResource("BoxShape3D_hij1a")
 
 [node name="Player" parent="." unique_id=566990049 node_paths=PackedStringArray("interaction_ui") instance=ExtResource("1_y1jsw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.1912725, 0, 1, 0)
 walk_speed = 5.0
 sprint_speed = 8.0
 jump_velocity = 4.5

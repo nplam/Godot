@@ -28,6 +28,7 @@ size_flags_vertical = 4
 script = ExtResource("1_hna7y")
 
 [node name="Background" type="Panel" parent="." unique_id=698004361]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,6 +37,7 @@ offset_top = 2.0
 offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hna7y")
 
 [node name="Scroll" type="ScrollContainer" parent="Background" unique_id=174866052]
