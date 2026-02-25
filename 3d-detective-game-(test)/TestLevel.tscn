@@ -150,4 +150,3 @@ evidence_id = "\"note_2\""
 scale = Vector2(1, 1.0256411)
 
 [node name="InspectionView" parent="UI" unique_id=328867025 instance=ExtResource("6_xlsm3")]
-offset_top = -1.5258789e-05

@@ -15,6 +15,12 @@ corner_radius_bottom_left = 10
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pyggk"]
 bg_color = Color(0.19607843, 0.19607843, 0.78431374, 0.11764706)
 
+[sub_resource type="SphereMesh" id="SphereMesh_pyggk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a1w3y"]
+albedo_color = Color(0.21906224, 0.60274, 0.20666379, 1)
+emission_enabled = true
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jw5sl"]
 bg_color = Color(0.16470589, 0.43529412, 0.16470589, 1)
 corner_radius_top_left = 5
@@ -86,6 +92,7 @@ offset_bottom = 90.0
 grow_horizontal = 2
 
 [node name="ViewportContainer" type="Control" parent="MainPanel" unique_id=302038776]
+modulate = Color(1, 0, 0, 0.003921569)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -112,12 +119,18 @@ render_target_update_mode = 4
 
 [node name="InspectionCamera" type="Camera3D" parent="MainPanel/ViewportContainer/SubViewport" unique_id=1210058906]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+cull_mask = 1048574
 current = true
 near = 0.1
 far = 100.0
 
 [node name="InspectionLight" type="DirectionalLight3D" parent="MainPanel/ViewportContainer/SubViewport" unique_id=2029016269]
 transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 0, 0, 0)
+
+[node name="TestSphere" type="MeshInstance3D" parent="MainPanel/ViewportContainer/SubViewport" unique_id=880676362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+mesh = SubResource("SphereMesh_pyggk")
+surface_material_override/0 = SubResource("StandardMaterial3D_a1w3y")
 
 [node name="Description" type="RichTextLabel" parent="MainPanel" unique_id=658353498]
 layout_mode = 1

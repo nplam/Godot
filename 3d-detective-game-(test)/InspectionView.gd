@@ -71,15 +71,29 @@ func show_object_in_viewport(interactable):
 		child.queue_free()
 	
 	print("📦 Creating object copy for viewport")
+	print("Viewport size: ", viewport.size)
 	
+	# Add a TEST CUBE first (bright green, at a different spot)
+	var test_cube = MeshInstance3D.new()
+	test_cube.mesh = BoxMesh.new()
+	test_cube.position = Vector3(1, 0, -2)  # 1 unit to the right
+	test_cube.scale = Vector3(0.3, 0.3, 0.3)  # Small cube
+	
+	var green_mat = StandardMaterial3D.new()
+	green_mat.albedo_color = Color(0, 1, 0)  # Bright green
+	green_mat.emission_enabled = true
+	green_mat.emission = Color(0, 1, 0)
+	test_cube.material_override = green_mat
+	viewport.add_child(test_cube)
+	print("   ✅ Added bright green test cube at (1,0,-2)")
+	
+	# Now add the actual clue object
 	var object_copy = interactable.duplicate()
 	viewport.add_child(object_copy)
 	
-	# CRITICAL: Position the object where the camera can see it
-	object_copy.position = Vector3(0, 0, -2)  # 2 units in front of camera
+	# Position the clue
+	object_copy.position = Vector3(0, 0, -2)
 	object_copy.rotation = Vector3(0, 0, 0)
-	
-	# Force scale to be normal
 	object_copy.scale = Vector3(1, 1, 1)
 	
 	print("   Object position: ", object_copy.position)
@@ -88,32 +102,16 @@ func show_object_in_viewport(interactable):
 	var mesh = object_copy.find_child("*MeshInstance3D*", true, false)
 	if mesh:
 		print("   Mesh found: ", mesh.name)
-		print("   Original material: ", mesh.material_override)
-		
-		# FORCE VISIBILITY: Apply bright glowing material
-		var glow_material = StandardMaterial3D.new()
-		glow_material.albedo_color = Color(1, 0, 0)  # Bright red
-		glow_material.emission_enabled = true
-		glow_material.emission = Color(1, 0, 0)  # Red emission
-		glow_material.emission_energy_multiplier = 2.0
-		mesh.material_override = glow_material
-		print("   🔆 Applied bright red glowing material")
-		
-		# Make sure the mesh is visible
-		mesh.visible = true
-	else:
-		print("   ❌ No mesh found in copied object!")
-		
-		# Create a visible fallback cube
-		print("   Creating fallback red cube")
-		var fallback = MeshInstance3D.new()
-		fallback.mesh = BoxMesh.new()
-		fallback.position = Vector3(0, 0, -2)
-		
+		# Force bright red material
 		var red_mat = StandardMaterial3D.new()
 		red_mat.albedo_color = Color(1, 0, 0)
-		fallback.material_override = red_mat
-		viewport.add_child(fallback)
+		red_mat.emission_enabled = true
+		red_mat.emission = Color(1, 0, 0)
+		mesh.material_override = red_mat
+		mesh.visible = true
+		print("   🔆 Applied bright red glowing material")
+	else:
+		print("   ❌ No mesh found in copied object!")
 	
 	# Double-check camera
 	var camera = viewport.find_child("InspectionCamera", true, false)
