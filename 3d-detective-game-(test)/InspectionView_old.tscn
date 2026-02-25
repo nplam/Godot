@@ -1,0 +1,157 @@
+[gd_scene format=3 uid="uid://lj8yxs2f1rg4"]
+
+[ext_resource type="Script" uid="uid://ftoqc2ffhh1a" path="res://InspectionView.gd" id="1_pyggk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a1w3y"]
+bg_color = Color(0, 0, 0, 0.003921569)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rm2fs"]
+bg_color = Color(0.16470589, 0.16470589, 0.16470589, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="SphereMesh" id="SphereMesh_pyggk"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a1w3y"]
+albedo_color = Color(0.21906224, 0.60274, 0.20666379, 1)
+emission_enabled = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jw5sl"]
+bg_color = Color(0.16470589, 0.43529412, 0.16470589, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mmeap"]
+bg_color = Color(0.43529412, 0.16470589, 0.16470589, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Control" type="Control" unique_id=328867025]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_pyggk")
+
+[node name="Background" type="Panel" parent="." unique_id=543329595]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_a1w3y")
+
+[node name="MainPanel" type="Panel" parent="." unique_id=298483841]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rm2fs")
+
+[node name="CloseButton" type="Button" parent="MainPanel" unique_id=1940769670]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 20
+text = "X"
+
+[node name="ObjectName" type="Label" parent="MainPanel" unique_id=1936049508]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 50.0
+offset_right = 200.0
+offset_bottom = 90.0
+grow_horizontal = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="MainPanel" unique_id=355966481]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 105.0
+offset_right = 67.0
+offset_bottom = 145.0
+scale = Vector2(18.514385, 9.914827)
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="MainPanel/SubViewportContainer" unique_id=547476890]
+handle_input_locally = false
+size = Vector2i(40, 40)
+render_target_update_mode = 4
+
+[node name="InspectionCamera" type="Camera3D" parent="MainPanel/SubViewportContainer/SubViewport" unique_id=1210058906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+cull_mask = 1048574
+current = true
+near = 0.1
+far = 100.0
+
+[node name="InspectionLight" type="DirectionalLight3D" parent="MainPanel/SubViewportContainer/SubViewport" unique_id=2029016269]
+transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 0, 0, 0)
+
+[node name="TestSphere" type="MeshInstance3D" parent="MainPanel/SubViewportContainer/SubViewport" unique_id=880676362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+mesh = SubResource("SphereMesh_pyggk")
+surface_material_override/0 = SubResource("StandardMaterial3D_a1w3y")
+
+[node name="Description" type="RichTextLabel" parent="MainPanel" unique_id=658353498]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 67.0
+offset_top = -143.0
+offset_right = 27.0
+offset_bottom = -43.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(0.8799994, 1)
+bbcode_enabled = true
+text = "[b]Description:[/b] This is a clue description that will appear here when examining an object."
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MainPanel" unique_id=1718912490]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -40.0
+offset_right = 150.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="TakeEvidenceButton" type="Button" parent="MainPanel/ButtonContainer" unique_id=305629644]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_jw5sl")
+text = "Take Evidence"
+
+[node name="CancelButton" type="Button" parent="MainPanel/ButtonContainer" unique_id=2118497613]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_mmeap")
+text = "Cancel"

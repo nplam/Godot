@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://doca1npup2ak1" path="res://TestCube.tscn" id="3_2xot7"]
 [ext_resource type="PackedScene" uid="uid://bjmm4d7qr5y5h" path="res://EvidenceUI.tscn" id="3_mvtj7"]
 [ext_resource type="PackedScene" uid="uid://nf3jen7bh5bl" path="res://Clue_Note.tscn" id="4_waekl"]
-[ext_resource type="PackedScene" uid="uid://lj8yxs2f1rg4" path="res://InspectionView.tscn" id="6_xlsm3"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.4045111, 0.40451115, 0.4045111, 1)
@@ -148,5 +147,3 @@ evidence_id = "\"note_2\""
 
 [node name="Control" parent="UI" unique_id=1328873859 instance=ExtResource("3_mvtj7")]
 scale = Vector2(1, 1.0256411)
-
-[node name="InspectionView" parent="UI" unique_id=328867025 instance=ExtResource("6_xlsm3")]
