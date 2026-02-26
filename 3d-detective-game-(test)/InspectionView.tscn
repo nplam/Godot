@@ -1,20 +1,34 @@
 [gd_scene format=3 uid="uid://tdugabfbyqal"]
 
-[node name="Control" type="Control" unique_id=723493698]
+[ext_resource type="Script" uid="uid://ftoqc2ffhh1a" path="res://InspectionView.gd" id="1_pyggk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u4sno"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a1w3y"]
+bg_color = Color(0.22296771, 0.47510785, 0.21598673, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rm2fs"]
+bg_color = Color(0.6901961, 0.12941177, 0.2627451, 1)
+
+[node name="InspectionView" type="Control" unique_id=723493698]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("1_pyggk")
 
-[node name="Background" type="Panel" parent="." unique_id=396541345]
+[node name="Background" type="Panel" parent="." unique_id=1936118339]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u4sno")
 
-[node name="MainPanel" type="Panel" parent="Background" unique_id=1224171751]
+[node name="MainPanel" type="Panel" parent="." unique_id=1411452765]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -28,33 +42,85 @@ offset_bottom = 580.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CloseButton" type="Button" parent="Background/MainPanel" unique_id=1290239759]
+[node name="CloseButton" type="Button" parent="MainPanel" unique_id=1606172701]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -20.0
-offset_top = 2.0
-offset_bottom = 22.0
+offset_left = -8.0
+offset_right = 2.0
+offset_bottom = 8.0
 grow_horizontal = 0
+text = "X"
 
-[node name="ObjectName" type="Label" parent="Background/MainPanel" unique_id=1618061103]
+[node name="ObjectName" type="Label" parent="MainPanel" unique_id=1675257970]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -176.0
-offset_top = 17.0
-offset_right = -96.0
-offset_bottom = 63.0
+offset_left = -31.0
+offset_top = 11.0
+offset_right = 9.0
+offset_bottom = 34.0
 grow_horizontal = 2
-scale = Vector2(4.96, 0.92)
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="Background/MainPanel" unique_id=1299982270]
-layout_mode = 0
-offset_left = 67.0
-offset_top = 43.0
-offset_right = 667.0
-offset_bottom = 443.0
-scale = Vector2(1.12, 1.08)
+[node name="ViewportContainer" type="SubViewportContainer" parent="MainPanel" unique_id=1256254751]
+modulate = Color(1.0000322, 0, 0, 0.003921569)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="MainPanel/ViewportContainer" unique_id=457887760]
+handle_input_locally = false
+size = Vector2i(800, 600)
+render_target_update_mode = 4
+
+[node name="InspectionCamera" type="Camera3D" parent="MainPanel/ViewportContainer/SubViewport" unique_id=543683053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+cull_mask = 1048574
+current = true
+near = 0.1
+far = 100.0
+
+[node name="InspectionLight" type="DirectionalLight3D" parent="MainPanel/ViewportContainer/SubViewport" unique_id=2004094487]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
+
+[node name="Description" type="RichTextLabel" parent="MainPanel" unique_id=1755078762]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -100.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
+bbcode_enabled = true
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MainPanel" unique_id=554401017]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -40.0
+offset_right = 150.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="TakeEvidenceButton" type="Button" parent="MainPanel/ButtonContainer" unique_id=354255460]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_a1w3y")
+text = "Take Evidence"
+
+[node name="CancelButton" type="Button" parent="MainPanel/ButtonContainer" unique_id=444469677]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_rm2fs")
+text = "Cancel
+"

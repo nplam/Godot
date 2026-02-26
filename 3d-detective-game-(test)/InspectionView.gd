@@ -1,12 +1,12 @@
 extends Control
 
-# Declare node references - these paths must match YOUR scene exactly
-@onready var main_panel: Panel = $MainPanel
+# Declare node references - match your scene exactly
+@onready var main_panel: Control = $MainPanel
 @onready var object_name_label: Label = $MainPanel/ObjectName
 @onready var description_label: RichTextLabel = $MainPanel/Description
-@onready var viewport_container: Control = $MainPanel/SubViewportContainer
-@onready var viewport: SubViewport = $MainPanel/SubViewportContainer/SubViewport
-@onready var close_button: Button = $MainPanel/CloseButton
+@onready var viewport_container = $MainPanel/ViewportContainer          # Name: ViewportContainer
+@onready var viewport: SubViewport = $MainPanel/ViewportContainer/SubViewport   # SubViewport inside
+@onready var close_button: Button = $MainPanel/CloseButton              # Fixed typo
 @onready var take_button: Button = $MainPanel/ButtonContainer/TakeEvidenceButton
 @onready var cancel_button: Button = $MainPanel/ButtonContainer/CancelButton
 
@@ -17,8 +17,30 @@ var on_cancel_callback: Callable
 
 func _ready():
 	print("🔧 INSPECTION VIEW READY")
+	print("   main_panel: ", main_panel)
+	print("   viewport_container: ", viewport_container)
+	print("   viewport: ", viewport)
+	print("   close_button: ", close_button)
+	print("   take_button: ", take_button)
+	print("   cancel_button: ", cancel_button)
 	
-	# Check for camera with name "InspectionCamera"
+	# Connect signals
+	if cancel_button:
+		cancel_button.pressed.connect(_on_cancel)
+	else:
+		print("⚠️ cancel_button is null!")
+	
+	if take_button:
+		take_button.pressed.connect(_on_take)
+	else:
+		print("⚠️ take_button is null!")
+	
+	if close_button:
+		close_button.pressed.connect(_on_cancel)
+	else:
+		print("⚠️ close_button is null!")
+	
+	# Check camera
 	var camera = viewport.find_child("InspectionCamera", true, false)
 	if camera:
 		camera.current = true
@@ -27,7 +49,7 @@ func _ready():
 	else:
 		print("   ⚠️ InspectionCamera not found - check scene!")
 	
-	# Check for light with name "InspectionLight"
+	# Check light
 	var light = viewport.find_child("InspectionLight", true, false)
 	if light:
 		print("   InspectionLight found")
@@ -36,13 +58,9 @@ func _ready():
 		print("   ⚠️ InspectionLight not found - check scene!")
 	
 	hide()
-	cancel_button.pressed.connect(_on_cancel)
-	take_button.pressed.connect(_on_take)
-	close_button.pressed.connect(_on_cancel)
 
 func inspect(interactable, take_callback: Callable, cancel_callback: Callable):
-	print("Inspect called for: ", interactable.object_name)  # Debug
-	# Make sure cursor is visible for UI interaction
+	print("Inspect called for: ", interactable.object_name)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	CursorManager.set_cursor(CursorManager.CursorState.NORMAL)
 	
@@ -50,18 +68,11 @@ func inspect(interactable, take_callback: Callable, cancel_callback: Callable):
 	on_take_callback = take_callback
 	on_cancel_callback = cancel_callback
 	
-	# Set up the UI
 	object_name_label.text = interactable.object_name
 	description_label.text = "[b]" + interactable.object_name + "[/b]\n\n" + interactable.examination_text
 	
-	# Show the 3D object in the viewport
 	show_object_in_viewport(interactable)
-	
-	# Show the inspection view
 	show()
-	
-	# Optional: Pause the game
-	# get_tree().paused = true
 
 func show_object_in_viewport(interactable):
 	# Clear previous objects (keep camera and light)
@@ -73,36 +84,30 @@ func show_object_in_viewport(interactable):
 	print("📦 Creating object copy for viewport")
 	print("Viewport size: ", viewport.size)
 	
-	# Add a TEST CUBE first (bright green, at a different spot)
+	# Test cube (bright green)
 	var test_cube = MeshInstance3D.new()
 	test_cube.mesh = BoxMesh.new()
-	test_cube.position = Vector3(1, 0, -2)  # 1 unit to the right
-	test_cube.scale = Vector3(0.3, 0.3, 0.3)  # Small cube
-	
+	test_cube.position = Vector3(1, 0, -2)
+	test_cube.scale = Vector3(0.3, 0.3, 0.3)
 	var green_mat = StandardMaterial3D.new()
-	green_mat.albedo_color = Color(0, 1, 0)  # Bright green
+	green_mat.albedo_color = Color(0, 1, 0)
 	green_mat.emission_enabled = true
 	green_mat.emission = Color(0, 1, 0)
 	test_cube.material_override = green_mat
 	viewport.add_child(test_cube)
 	print("   ✅ Added bright green test cube at (1,0,-2)")
 	
-	# Now add the actual clue object
+	# Clue object
 	var object_copy = interactable.duplicate()
 	viewport.add_child(object_copy)
-	
-	# Position the clue
 	object_copy.position = Vector3(0, 0, -2)
 	object_copy.rotation = Vector3(0, 0, 0)
 	object_copy.scale = Vector3(1, 1, 1)
-	
 	print("   Object position: ", object_copy.position)
 	
-	# Find and highlight the mesh
+	# Highlight clue
 	var mesh = object_copy.find_child("*MeshInstance3D*", true, false)
 	if mesh:
-		print("   Mesh found: ", mesh.name)
-		# Force bright red material
 		var red_mat = StandardMaterial3D.new()
 		red_mat.albedo_color = Color(1, 0, 0)
 		red_mat.emission_enabled = true
@@ -113,7 +118,15 @@ func show_object_in_viewport(interactable):
 	else:
 		print("   ❌ No mesh found in copied object!")
 	
-	# Double-check camera
+	# After adding all objects to the viewport
+	await get_tree().process_frame
+	# Optionally, force the viewport to update
+	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	
+	# Force the viewport to generate its render texture.
+	await RenderingServer.frame_post_draw
+	
+	# Confirm camera
 	var camera = viewport.find_child("InspectionCamera", true, false)
 	if camera:
 		print("   Camera position: ", camera.position)
@@ -123,14 +136,10 @@ func show_object_in_viewport(interactable):
 
 func _on_take():
 	print("Take button pressed")
-	
 	if on_take_callback.is_valid():
 		on_take_callback.call()
 	
-	# Disable viewport rendering
 	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
-	
-	# Remove objects (keep InspectionCamera and InspectionLight)
 	for child in viewport.get_children():
 		if child.name == "InspectionCamera" or child.name == "InspectionLight":
 			continue
@@ -138,21 +147,15 @@ func _on_take():
 	
 	CursorManager.reset_cursor()
 	hide()
-	
-	# Re-enable after a frame
 	await get_tree().process_frame
 	viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
 
 func _on_cancel():
 	print("Cancel button pressed")
-	
 	if on_cancel_callback.is_valid():
 		on_cancel_callback.call()
 	
-	# Disable viewport rendering
 	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
-	
-	# Remove objects (keep InspectionCamera and InspectionLight)
 	for child in viewport.get_children():
 		if child.name == "InspectionCamera" or child.name == "InspectionLight":
 			continue
@@ -160,7 +163,5 @@ func _on_cancel():
 	
 	CursorManager.reset_cursor()
 	hide()
-	
-	# Re-enable after a frame
 	await get_tree().process_frame
 	viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
