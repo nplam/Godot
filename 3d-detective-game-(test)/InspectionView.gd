@@ -1,68 +1,39 @@
 extends Control
 
-# Declare node references - match your scene exactly
+# Node references
 @onready var main_panel: Control = $MainPanel
 @onready var object_name_label: Label = $MainPanel/ObjectName
 @onready var description_label: RichTextLabel = $MainPanel/Description
-@onready var viewport_container = $MainPanel/ViewportContainer          # Name: ViewportContainer
-@onready var viewport: SubViewport = $MainPanel/ViewportContainer/SubViewport   # SubViewport inside
-@onready var close_button: Button = $MainPanel/CloseButton              # Fixed typo
+@onready var viewport_display: TextureRect = $MainPanel/ViewportDisplay
+@onready var render_viewport: SubViewport = $MainPanel/RenderViewport
+@onready var close_button: Button = $MainPanel/CloseButton
 @onready var take_button: Button = $MainPanel/ButtonContainer/TakeEvidenceButton
 @onready var cancel_button: Button = $MainPanel/ButtonContainer/CancelButton
 
-# Variables to store the current interactable and callbacks
+# Variables
 var current_interactable = null
 var on_take_callback: Callable
 var on_cancel_callback: Callable
 
 func _ready():
 	print("🔧 INSPECTION VIEW READY")
-	print("   main_panel: ", main_panel)
-	print("   viewport_container: ", viewport_container)
-	print("   viewport: ", viewport)
-	print("   close_button: ", close_button)
-	print("   take_button: ", take_button)
-	print("   cancel_button: ", cancel_button)
 	
-	# Connect signals
-	if cancel_button:
-		cancel_button.pressed.connect(_on_cancel)
-	else:
-		print("⚠️ cancel_button is null!")
+	# Connect buttons
+	cancel_button.pressed.connect(_on_cancel)
+	take_button.pressed.connect(_on_take)
+	close_button.pressed.connect(_on_cancel)
 	
-	if take_button:
-		take_button.pressed.connect(_on_take)
-	else:
-		print("⚠️ take_button is null!")
-	
-	if close_button:
-		close_button.pressed.connect(_on_cancel)
-	else:
-		print("⚠️ close_button is null!")
-	
-	# Check camera
-	var camera = viewport.find_child("InspectionCamera", true, false)
-	if camera:
-		camera.current = true
-		print("   InspectionCamera found and set to current")
-		print("   Camera position: ", camera.position)
-	else:
-		print("   ⚠️ InspectionCamera not found - check scene!")
-	
-	# Check light
-	var light = viewport.find_child("InspectionLight", true, false)
-	if light:
-		print("   InspectionLight found")
-		print("   Light rotation: ", light.rotation)
-	else:
-		print("   ⚠️ InspectionLight not found - check scene!")
+	# Setup viewport
+	render_viewport.world_3d = World3D.new()
+	render_viewport.disable_3d = false
+	render_viewport.transparent_bg = false
+	render_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	render_viewport.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
 	
 	hide()
 
 func inspect(interactable, take_callback: Callable, cancel_callback: Callable):
 	print("Inspect called for: ", interactable.object_name)
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	CursorManager.set_cursor(CursorManager.CursorState.NORMAL)
 	
 	current_interactable = interactable
 	on_take_callback = take_callback
@@ -71,97 +42,80 @@ func inspect(interactable, take_callback: Callable, cancel_callback: Callable):
 	object_name_label.text = interactable.object_name
 	description_label.text = "[b]" + interactable.object_name + "[/b]\n\n" + interactable.examination_text
 	
-	show_object_in_viewport(interactable)
+	await setup_viewport(interactable)
 	show()
 
-func show_object_in_viewport(interactable):
-	# Clear previous objects (keep camera and light)
-	for child in viewport.get_children():
-		if child.name == "InspectionCamera" or child.name == "InspectionLight":
-			continue
+func setup_viewport(interactable):
+	# Clear everything in viewport
+	for child in render_viewport.get_children():
 		child.queue_free()
 	
-	print("📦 Creating object copy for viewport")
-	print("Viewport size: ", viewport.size)
+	# Add camera
+	var cam = Camera3D.new()
+	cam.name = "InspectionCamera"
+	cam.current = true
+	cam.position = Vector3(0, 0, 3)
+	render_viewport.add_child(cam)
 	
-	# Test cube (bright green)
-	var test_cube = MeshInstance3D.new()
-	test_cube.mesh = BoxMesh.new()
-	test_cube.position = Vector3(1, 0, -2)
-	test_cube.scale = Vector3(0.3, 0.3, 0.3)
-	var green_mat = StandardMaterial3D.new()
-	green_mat.albedo_color = Color(0, 1, 0)
-	green_mat.emission_enabled = true
-	green_mat.emission = Color(0, 1, 0)
-	test_cube.material_override = green_mat
-	viewport.add_child(test_cube)
-	print("   ✅ Added bright green test cube at (1,0,-2)")
+	# Add light
+	var light = DirectionalLight3D.new()
+	light.name = "InspectionLight"
+	light.rotation = Vector3(-45, 45, 0)
+	light.light_energy = 1.5
+	render_viewport.add_child(light)
 	
-	# Clue object
+	# Add a subtle ambient light to fill shadows
+	var ambient = DirectionalLight3D.new()
+	ambient.name = "AmbientLight"
+	ambient.rotation = Vector3(45, -45, 0)
+	ambient.light_energy = 0.5
+	render_viewport.add_child(ambient)
+	
+	# Add the actual clue object
 	var object_copy = interactable.duplicate()
-	viewport.add_child(object_copy)
+	render_viewport.add_child(object_copy)
+	
+	# Position it nicely
 	object_copy.position = Vector3(0, 0, -2)
 	object_copy.rotation = Vector3(0, 0, 0)
 	object_copy.scale = Vector3(1, 1, 1)
-	print("   Object position: ", object_copy.position)
 	
-	# Highlight clue
-	var mesh = object_copy.find_child("*MeshInstance3D*", true, false)
-	if mesh:
-		var red_mat = StandardMaterial3D.new()
-		red_mat.albedo_color = Color(1, 0, 0)
-		red_mat.emission_enabled = true
-		red_mat.emission = Color(1, 0, 0)
-		mesh.material_override = red_mat
-		mesh.visible = true
-		print("   🔆 Applied bright red glowing material")
-	else:
-		print("   ❌ No mesh found in copied object!")
+	# Make the camera look at the clue
+	cam.look_at(object_copy.position, Vector3.UP)
 	
-	# After adding all objects to the viewport
-	await get_tree().process_frame
-	# Optionally, force the viewport to update
-	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	# Optional: Add a subtle rotation animation
+	# This makes the clue slowly rotate for better viewing
+	var tween = create_tween()
+	tween.tween_property(object_copy, "rotation:y", object_copy.rotation.y + 6.28, 10.0)
+	tween.set_loops()
 	
-	# Force the viewport to generate its render texture.
+	# Wait for first render
 	await RenderingServer.frame_post_draw
 	
-	# Confirm camera
-	var camera = viewport.find_child("InspectionCamera", true, false)
-	if camera:
-		print("   Camera position: ", camera.position)
-		print("   Camera is current: ", camera.current)
+	# Assign texture to display (remove any debug tint)
+	viewport_display.texture = render_viewport.get_texture()
+	viewport_display.modulate = Color.WHITE
 	
-	print("✅ Object setup complete")
+	print("✅ Clue object displayed: ", interactable.object_name)
 
 func _on_take():
 	print("Take button pressed")
 	if on_take_callback.is_valid():
 		on_take_callback.call()
 	
-	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
-	for child in viewport.get_children():
-		if child.name == "InspectionCamera" or child.name == "InspectionLight":
-			continue
+	# Cleanup
+	for child in render_viewport.get_children():
 		child.queue_free()
-	
-	CursorManager.reset_cursor()
+	viewport_display.texture = null
 	hide()
-	await get_tree().process_frame
-	viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
 
 func _on_cancel():
 	print("Cancel button pressed")
 	if on_cancel_callback.is_valid():
 		on_cancel_callback.call()
 	
-	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
-	for child in viewport.get_children():
-		if child.name == "InspectionCamera" or child.name == "InspectionLight":
-			continue
+	# Cleanup
+	for child in render_viewport.get_children():
 		child.queue_free()
-	
-	CursorManager.reset_cursor()
+	viewport_display.texture = null
 	hide()
-	await get_tree().process_frame
-	viewport.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE

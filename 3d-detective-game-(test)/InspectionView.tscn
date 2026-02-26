@@ -64,41 +64,19 @@ offset_right = 9.0
 offset_bottom = 34.0
 grow_horizontal = 2
 
-[node name="ViewportContainer" type="SubViewportContainer" parent="MainPanel" unique_id=1256254751]
-modulate = Color(1.0000322, 0, 0, 0.003921569)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="MainPanel/ViewportContainer" unique_id=457887760]
-handle_input_locally = false
-size = Vector2i(800, 600)
-render_target_update_mode = 4
-
-[node name="InspectionCamera" type="Camera3D" parent="MainPanel/ViewportContainer/SubViewport" unique_id=543683053]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
-cull_mask = 1048574
-current = true
-near = 0.1
-far = 100.0
-
-[node name="InspectionLight" type="DirectionalLight3D" parent="MainPanel/ViewportContainer/SubViewport" unique_id=2004094487]
-transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
-
 [node name="Description" type="RichTextLabel" parent="MainPanel" unique_id=1755078762]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -100.0
-offset_bottom = -50.0
+offset_left = 65.0
+offset_top = -114.0
+offset_right = 65.0
+offset_bottom = -64.0
 grow_horizontal = 2
 grow_vertical = 0
+scale = Vector2(0.83999985, 1.4)
 bbcode_enabled = true
 
 [node name="ButtonContainer" type="HBoxContainer" parent="MainPanel" unique_id=554401017]
@@ -124,3 +102,33 @@ layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_rm2fs")
 text = "Cancel
 "
+
+[node name="ViewportDisplay" type="TextureRect" parent="MainPanel" unique_id=1609917299]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -369.0
+offset_top = -534.0
+offset_right = 143.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1.4399991, 0.75999975)
+stretch_mode = 5
+
+[node name="RenderViewport" type="SubViewport" parent="MainPanel" unique_id=457887760]
+handle_input_locally = false
+render_target_update_mode = 4
+
+[node name="InspectionCamera" type="Camera3D" parent="MainPanel/RenderViewport" unique_id=543683053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+cull_mask = 1048574
+current = true
+near = 0.1
+far = 100.0
+
+[node name="InspectionLight" type="DirectionalLight3D" parent="MainPanel/RenderViewport" unique_id=2004094487]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
