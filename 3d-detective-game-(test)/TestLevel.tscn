@@ -124,7 +124,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 shape = SubResource("BoxShape3D_hij1a")
 
 [node name="Player" parent="." unique_id=566990049 node_paths=PackedStringArray("interaction_ui") instance=ExtResource("1_y1jsw")]
-transform = Transform3D(0.53896195, 0, 1.0034447, 0, 1, 0, -0.8423301, 0, 0.64205056, 5.167352, 1, 7.6761074)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.1912725, 0, 0, 0)
 interaction_ui = NodePath("../CanvasLayer")
 
 [node name="ClueNote" parent="." unique_id=1899240163 instance=ExtResource("4_waekl")]
