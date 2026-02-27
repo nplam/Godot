@@ -2,13 +2,17 @@
 
 [ext_resource type="PackedScene" uid="uid://nkcar76aqdb" path="res://player.tscn" id="1_y1jsw"]
 [ext_resource type="PackedScene" uid="uid://clg61px2by33h" path="res://InteractionPrompt.tscn" id="2_1kog2"]
+[ext_resource type="PackedScene" uid="uid://cpgeuvsopp4v3" path="res://Assets/Poly/vintage_wooden_drawer_01_4k.gltf/vintage_wooden_drawer_01_4k.gltf" id="2_7s355"]
 [ext_resource type="PackedScene" uid="uid://doca1npup2ak1" path="res://TestCube.tscn" id="3_2xot7"]
 [ext_resource type="PackedScene" uid="uid://bjmm4d7qr5y5h" path="res://EvidenceUI.tscn" id="3_mvtj7"]
+[ext_resource type="PackedScene" uid="uid://cvp5822g8qxl8" path="res://Assets/Poly/antique_ceramic_vase_01_4k.glb" id="3_w47ov"]
 [ext_resource type="PackedScene" uid="uid://nf3jen7bh5bl" path="res://Clue_Note.tscn" id="4_waekl"]
 [ext_resource type="PackedScene" uid="uid://tdugabfbyqal" path="res://InspectionView.tscn" id="6_xlsm3"]
 [ext_resource type="Script" uid="uid://bclmmhwc641e7" path="res://Interactable.gd" id="8_hij1a"]
 [ext_resource type="PackedScene" uid="uid://xhvf8fx7he47" path="res://addons/kaykit_prototype_bits/Assets/gltf/Barrel_A.gltf" id="8_vvvv7"]
 [ext_resource type="PackedScene" uid="uid://catjttt0pupcv" path="res://addons/kaykit_prototype_bits/Assets/gltf/Can_A.gltf" id="9_hij1a"]
+[ext_resource type="PackedScene" uid="uid://5w46sggrhsnw" path="res://Assets/Poly/painted_wooden_cabinet_4k.gltf" id="12_krkll"]
+[ext_resource type="PackedScene" uid="uid://dxr44kpb8gijd" path="res://Assets/Poly/marble_bust_01_4k.gltf" id="12_ng2ag"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.4045111, 0.40451115, 0.4045111, 1)
@@ -124,7 +128,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 shape = SubResource("BoxShape3D_hij1a")
 
 [node name="Player" parent="." unique_id=566990049 node_paths=PackedStringArray("interaction_ui") instance=ExtResource("1_y1jsw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.1912725, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.1912725, 0, 0, 6)
 interaction_ui = NodePath("../CanvasLayer")
 
 [node name="ClueNote" parent="." unique_id=1899240163 instance=ExtResource("4_waekl")]
@@ -165,3 +169,32 @@ shape = SubResource("BoxShape3D_w47ov")
 
 [node name="Can_A2" parent="StaticBody3D3" unique_id=1174679091 instance=ExtResource("9_hij1a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7271547, 0.7092345, 0)
+
+[node name="StaticBody3D4" type="StaticBody3D" parent="." unique_id=1775140534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
+script = ExtResource("8_hij1a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D4" unique_id=687896995]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 8, 1.5, -4)
+shape = SubResource("BoxShape3D_w47ov")
+
+[node name="antique_ceramic_vase_01_4k" parent="StaticBody3D4" unique_id=1901479055 instance=ExtResource("3_w47ov")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 8.766985, 1.4487026, -4.0172825)
+
+[node name="StaticBody3D5" type="StaticBody3D" parent="." unique_id=1756590540]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
+
+[node name="vintage_wooden_drawer_01_4k" parent="StaticBody3D5" unique_id=1548724497 instance=ExtResource("2_7s355")]
+transform = Transform3D(-1.3113416e-07, 0, -3, 0, 3, 0, 3, 0, -1.3113416e-07, 8.915403, -0.251, -4.5181513)
+
+[node name="StaticBody3D6" type="StaticBody3D" parent="." unique_id=19716571]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
+
+[node name="painted_wooden_cabinet_4k" parent="StaticBody3D6" unique_id=1749565067 instance=ExtResource("12_krkll")]
+transform = Transform3D(1.4974091, 0, -0.08812326, 0, 1.5, 0, 0.08812326, 0, 1.4974091, 0, 0, -7)
+
+[node name="StaticBody3D7" type="StaticBody3D" parent="." unique_id=207238661]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
+
+[node name="marble_bust_01_4k" parent="StaticBody3D7" unique_id=1320301840 instance=ExtResource("12_ng2ag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7692811, -7)
