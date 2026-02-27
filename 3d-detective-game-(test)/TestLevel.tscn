@@ -5,7 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://doca1npup2ak1" path="res://TestCube.tscn" id="3_2xot7"]
 [ext_resource type="PackedScene" uid="uid://bjmm4d7qr5y5h" path="res://EvidenceUI.tscn" id="3_mvtj7"]
 [ext_resource type="PackedScene" uid="uid://nf3jen7bh5bl" path="res://Clue_Note.tscn" id="4_waekl"]
+[ext_resource type="PackedScene" uid="uid://dte3bw4h0g5lp" path="res://addons/kaykit_prototype_bits/Assets/gltf/table_medium_Decorated.gltf" id="6_vvvv7"]
 [ext_resource type="PackedScene" uid="uid://tdugabfbyqal" path="res://InspectionView.tscn" id="6_xlsm3"]
+[ext_resource type="Script" uid="uid://bclmmhwc641e7" path="res://Interactable.gd" id="8_hij1a"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.4045111, 0.40451115, 0.4045111, 1)
@@ -55,6 +57,8 @@ albedo_color = Color(0.7607843, 0.83137256, 0.8784314, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hij1a"]
 size = Vector3(20, 3, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_w47ov"]
 
 [node name="World" type="Node3D" unique_id=1420371846]
 
@@ -139,7 +143,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6644492, 0.48232114)
 object_name = "Mysterious Note 1"
 
 [node name="ClueNote2" parent="." unique_id=1018665945 instance=ExtResource("4_waekl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.533517, -0.35521787, 1.2206113)
 object_name = "Mysterious Note 2"
 examination_text = "\"It says: 'I got your message'\""
 evidence_id = "\"note_2\""
@@ -150,3 +154,14 @@ evidence_id = "\"note_2\""
 scale = Vector2(1, 1.0256411)
 
 [node name="InspectionView" parent="UI" unique_id=723493698 instance=ExtResource("6_xlsm3")]
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="." unique_id=1297101189]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+script = ExtResource("8_hij1a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=78455671]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -1, 0, -4)
+shape = SubResource("BoxShape3D_w47ov")
+
+[node name="table_medium_Decorated2" parent="StaticBody3D2" unique_id=1716668426 instance=ExtResource("6_vvvv7")]
+transform = Transform3D(1.4056971, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -4)
