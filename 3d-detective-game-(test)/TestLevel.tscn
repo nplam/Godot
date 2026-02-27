@@ -5,9 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://doca1npup2ak1" path="res://TestCube.tscn" id="3_2xot7"]
 [ext_resource type="PackedScene" uid="uid://bjmm4d7qr5y5h" path="res://EvidenceUI.tscn" id="3_mvtj7"]
 [ext_resource type="PackedScene" uid="uid://nf3jen7bh5bl" path="res://Clue_Note.tscn" id="4_waekl"]
-[ext_resource type="PackedScene" uid="uid://dte3bw4h0g5lp" path="res://addons/kaykit_prototype_bits/Assets/gltf/table_medium_Decorated.gltf" id="6_vvvv7"]
 [ext_resource type="PackedScene" uid="uid://tdugabfbyqal" path="res://InspectionView.tscn" id="6_xlsm3"]
 [ext_resource type="Script" uid="uid://bclmmhwc641e7" path="res://Interactable.gd" id="8_hij1a"]
+[ext_resource type="PackedScene" uid="uid://xhvf8fx7he47" path="res://addons/kaykit_prototype_bits/Assets/gltf/Barrel_A.gltf" id="8_vvvv7"]
+[ext_resource type="PackedScene" uid="uid://catjttt0pupcv" path="res://addons/kaykit_prototype_bits/Assets/gltf/Can_A.gltf" id="9_hij1a"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.4045111, 0.40451115, 0.4045111, 1)
@@ -123,13 +124,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 shape = SubResource("BoxShape3D_hij1a")
 
 [node name="Player" parent="." unique_id=566990049 node_paths=PackedStringArray("interaction_ui") instance=ExtResource("1_y1jsw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.1912725, 0, 1, 0)
-walk_speed = 5.0
-sprint_speed = 8.0
-jump_velocity = 4.5
-mouse_sensitivity = 0.002
-gravity = 9.8
+transform = Transform3D(0.53896195, 0, 1.0034447, 0, 1, 0, -0.8423301, 0, 0.64205056, 5.167352, 1, 7.6761074)
 interaction_ui = NodePath("../CanvasLayer")
+
+[node name="ClueNote" parent="." unique_id=1899240163 instance=ExtResource("4_waekl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1410396, 0.68364096, 0.3922249)
 
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("2_1kog2")]
 
@@ -137,16 +136,6 @@ interaction_ui = NodePath("../CanvasLayer")
 
 [node name="StaticBody3D" parent="." unique_id=525741448 instance=ExtResource("3_2xot7")]
 transform = Transform3D(1.9200001, 0, 0, 0, 1.9826541, 0, 0, 0, 1.8, 0, 0, 0)
-
-[node name="ClueNote1" parent="." unique_id=1899240163 instance=ExtResource("4_waekl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6644492, 0.48232114)
-object_name = "Mysterious Note 1"
-
-[node name="ClueNote2" parent="." unique_id=1018665945 instance=ExtResource("4_waekl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.533517, -0.35521787, 1.2206113)
-object_name = "Mysterious Note 2"
-examination_text = "\"It says: 'I got your message'\""
-evidence_id = "\"note_2\""
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=448332793]
 
@@ -160,8 +149,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
 script = ExtResource("8_hij1a")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=78455671]
-transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -1, 0, -4)
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, -1, 0.5, -2)
 shape = SubResource("BoxShape3D_w47ov")
 
-[node name="table_medium_Decorated2" parent="StaticBody3D2" unique_id=1716668426 instance=ExtResource("6_vvvv7")]
-transform = Transform3D(1.4056971, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -4)
+[node name="Barrel_A2" parent="StaticBody3D2" unique_id=42339054 instance=ExtResource("8_vvvv7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.5, -2)
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="." unique_id=129918740]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.25144935, 0.24699736)
+script = ExtResource("8_hij1a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D3" unique_id=350103620]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, 0)
+shape = SubResource("BoxShape3D_w47ov")
+
+[node name="Can_A2" parent="StaticBody3D3" unique_id=1174679091 instance=ExtResource("9_hij1a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7271547, 0.7092345, 0)

@@ -13,15 +13,15 @@ extends CharacterBody3D
 @onready var interaction_ray: RayCast3D = $Head/Camera3D/InteractionRay
 
 var current_interactable: Node = null
-
 var current_speed: float
-# Declare the variable that will store this slot's evidence ID
-var evidence_id: String
 
 func _ready():
 	# Start with visible cursor (for UI)
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	current_speed = walk_speed
+	# Make the ray visible for debugging
+	interaction_ray.debug_shape_custom_color = Color.RED
+	interaction_ray.debug_shape_thickness = 2
 
 func _input(event):
 	# MOUSE LOOK: Only when right mouse button is held
@@ -85,6 +85,7 @@ func _process(delta):
 func check_interaction():
 	if interaction_ray.is_colliding():
 		var collider = interaction_ray.get_collider()
+		
 		if collider and collider.has_method("get_interaction_text"):
 			# Looking at an interactable object
 			CursorManager.set_cursor(CursorManager.CursorState.HOVER)
@@ -92,29 +93,30 @@ func check_interaction():
 			if current_interactable != collider:
 				# Unfocus previous
 				if current_interactable and current_interactable.has_method("on_unfocus"):
+					print("🔄 Unfocusing previous: ", current_interactable.name)
 					current_interactable.on_unfocus()
 				
 				# Focus new
 				current_interactable = collider
 				if current_interactable.has_method("on_focus"):
+					print("🔄 Focusing new: ", current_interactable.name)
 					current_interactable.on_focus()
 				
 				# Show the UI prompt
 				interaction_ui.show_prompt(collider.get_interaction_text())
-			return  # Important: Exit the function here!
+			return
 	
 	# If we get here, we're NOT looking at any interactable
+	
+	# Unfocus any previously focused object
+	if current_interactable:
+		if current_interactable.has_method("on_unfocus"):
+			print("🔄 Unfocusing (looked away): ", current_interactable.name)
+			current_interactable.on_unfocus()
+		current_interactable = null
+	
 	# Hide the UI prompt
 	interaction_ui.hide_prompt()
 	
 	# Reset cursor to normal
 	CursorManager.reset_cursor()
-	
-	# Unfocus any previously focused object
-	if current_interactable:
-		if current_interactable.has_method("on_unfocus"):
-			current_interactable.on_unfocus()
-		current_interactable = null
-
-
-	
