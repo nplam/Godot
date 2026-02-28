@@ -25,8 +25,7 @@ size = Vector3(20, 1, 20)
 [sub_resource type="BoxMesh" id="BoxMesh_y1jsw"]
 size = Vector3(20, 1, 20)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_waekl"]
-albedo_color = Color(0.69965345, 0.6996535, 0.6996533, 1)
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_ng2ag"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_1kog2"]
 size = Vector3(0.2, 3, 20)
@@ -81,7 +80,7 @@ shape = SubResource("BoxShape3D_34lg8")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=691654072]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_y1jsw")
-surface_material_override/0 = SubResource("StandardMaterial3D_waekl")
+surface_material_override/0 = SubResource("ORMMaterial3D_ng2ag")
 
 [node name="Wall_Left" type="StaticBody3D" parent="." unique_id=1567017875]
 
