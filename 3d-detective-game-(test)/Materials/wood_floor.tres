@@ -14,3 +14,4 @@ roughness_texture = ExtResource("2_ai0e3")
 roughness_texture_channel = 1
 normal_enabled = true
 normal_texture = ExtResource("3_cleom")
+uv1_scale = Vector3(15, 15, 15)

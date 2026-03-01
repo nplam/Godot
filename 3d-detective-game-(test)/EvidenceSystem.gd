@@ -33,5 +33,8 @@ func get_evidence(id: String):
 
 # Get an array of all collected evidence data
 func get_all_evidence() -> Array:
-	return collected_evidence.values()
-	
+	var result = collected_evidence.values()
+	print("📋 EvidenceSystem.get_all_evidence() returning ", result.size(), " items")
+	for i in range(result.size()):
+		print("   Item ", i, ": ", result[i])
+	return result

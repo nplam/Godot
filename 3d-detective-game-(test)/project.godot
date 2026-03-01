@@ -19,6 +19,11 @@ config/icon="res://icon.svg"
 
 EvidenceSystem="*uid://ci5wj31m45nye"
 CursorManager="*uid://bdeit0yvcrmx"
+SceneRenderManager="*uid://dqee5gokfoqfj"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/scene_texture/plugin.cfg")
 
 [input]
 
