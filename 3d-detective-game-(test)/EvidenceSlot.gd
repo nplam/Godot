@@ -1,50 +1,81 @@
 extends PanelContainer
 
-# Declare the variable that will store this slot's evidence ID
 var evidence_id: String
-var pending_data: Dictionary = {}
+var evidence_data: Dictionary
 
-# Find the nodes using find_child
 @onready var icon: TextureRect = find_child("Icon", true, false)
 @onready var label: Label = find_child("Label", true, false)
+@onready var remove_button: Button = find_child("RemoveButton", true, false)
 
-# Signal emitted when this slot is clicked
 signal clicked(ev_id: String)
+signal remove_requested(ev_id: String)
 
 func _ready():
-	# Apply any pending data if nodes are ready
-	if pending_data.size() > 0:
-		apply_setup(pending_data)
-		pending_data = {}
+	print("🔧 EvidenceSlot ready")
+	print("   Icon found: ", icon != null)
+	print("   Label found: ", label != null)
+	print("   Remove button found: ", remove_button != null)
+	
+	if remove_button:
+		remove_button.pressed.connect(_on_remove_pressed)
 
 func setup(data: Dictionary):
-	# Store the data temporarily
-	pending_data = data
+	print("📦 EvidenceSlot setup for: ", data.name)
+	
+	evidence_data = data
 	evidence_id = data.id
 	
-	# If we're already ready, apply immediately
-	if is_inside_tree():
-		apply_setup(data)
-
-func apply_setup(data: Dictionary):
-	# Set up the icon (image)
-	if icon:
-		if data.has("texture") and data.texture:
-			icon.texture = data.texture
-		else:
-			icon.texture = null
-		print("Icon configured for: ", data.name)
-	else:
-		print("Warning: Icon node not found for: ", data.name)
-	
-	# Set up the label (text)
+	# Set label
 	if label:
 		label.text = data.name
-		print("Label configured for: ", data.name)
+		print("   ✅ Label set to: ", data.name)
 	else:
-		print("Warning: Label node not found for: ", data.name)
+		print("   ❌ Label is null - attempting to find again")
+		label = find_child("Label", true, false)
+		if label:
+			label.text = data.name
+			print("   ✅ Label found and set on second attempt")
+	
+	# Set icon
+	if icon:
+		print("   ✅ Icon node exists")
+		if data.icon:
+			icon.texture = data.icon
+			print("   ✅ Icon texture assigned")
+			print("      Texture size: ", data.icon.get_size())
+			icon.visible = true
+			icon.modulate = Color.WHITE
+			# No need for update() - texture assignment is enough
+		else:
+			print("   ⚠️ No icon data")
+			create_placeholder()
+	else:
+		print("   ❌ Icon node is null - attempting to find again")
+		icon = find_child("Icon", true, false)
+		if icon:
+			print("   ✅ Icon found on second attempt")
+			if data.icon:
+				icon.texture = data.icon
+				icon.visible = true
+				icon.modulate = Color.WHITE
+			else:
+				create_placeholder()
+		else:
+			print("   ❌ Still cannot find Icon node")
+			create_placeholder()
+
+func create_placeholder():
+	# Create a colored rectangle as placeholder so we can see the slot
+	var placeholder = ColorRect.new()
+	placeholder.color = Color(0.5, 0.5, 0.8, 0.8)
+	placeholder.size = Vector2(80, 80)
+	placeholder.position = Vector2(10, 10)
+	add_child(placeholder)
+	print("   ✅ Added placeholder ColorRect")
 
 func _gui_input(event):
-	# Detect mouse click on this slot
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		clicked.emit(evidence_id)
+
+func _on_remove_pressed():
+	remove_requested.emit(evidence_id)

@@ -1,8 +1,15 @@
 [gd_scene format=3 uid="uid://nkcar76aqdb"]
 
 [ext_resource type="Script" uid="uid://yvhwrst546ut" path="res://player.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://3t4tq47n3fwh" path="res://uv_flashlight.gd" id="2_onrkg"]
+[ext_resource type="Material" uid="uid://50r1svsvm326" path="res://Materials/uv_beam_material_fixed.tres" id="3_i3pqv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_i3pqv"]
+material = ExtResource("3_i3pqv")
+top_radius = 0.3
+bottom_radius = 0.8
 
 [node name="Player" type="CharacterBody3D" unique_id=566990049]
 script = ExtResource("1_4flbx")
@@ -18,5 +25,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 [node name="InteractionRay" type="RayCast3D" parent="Head/Camera3D" unique_id=1104640937]
 target_position = Vector3(0, 0, -3)
 debug_shape_custom_color = Color(1, 0, 0, 1)
+
+[node name="UVFlashlight" type="SpotLight3D" parent="Head" unique_id=955049626]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0.2)
+layers = 2
+light_color = Color(0, 1, 1, 1)
+light_energy = 3.0
+light_cull_mask = 4293918722
+spot_range = 10.0
+script = ExtResource("2_onrkg")
+
+[node name="BeamMesh" type="MeshInstance3D" parent="Head" unique_id=794097416]
+transform = Transform3D(0.3, 0, 0, 0, -8.742278e-08, -0.3, 0, 2, -1.3113417e-08, 0, 0, -1.5)
+layers = 2
+mesh = SubResource("CylinderMesh_i3pqv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1032006996]

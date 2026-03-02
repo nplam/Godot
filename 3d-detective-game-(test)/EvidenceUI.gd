@@ -12,96 +12,142 @@ func _ready():
 	print("🔧 EVIDENCE UI READY")
 	print("   grid: ", grid)
 	print("   slot_scene: ", slot_scene)
-	print("   slot_scene path: ", slot_scene.resource_path if slot_scene else "null")
 	
 	# Connect to the evidence system signal
-	EvidenceSystem.evidence_collected.connect(_on_evidence_collected)
+	if EvidenceSystem:
+		EvidenceSystem.evidence_collected.connect(_on_evidence_collected)
+		EvidenceSystem.evidence_removed.connect(_on_evidence_removed)
+	else:
+		print("❌ EvidenceSystem not found!")
+	
+	# Connect close button
+	if close_button:
+		close_button.pressed.connect(_on_close_button_pressed)
+		print("   ✅ Close button connected")
+	
 	hide()
-	$Background.visible = false
-	details_panel.hide()
+	if $Background:
+		$Background.visible = false
+	if details_panel:
+		details_panel.hide()
 
 func _input(event):
 	if event.is_action_pressed("ui_focus_next"):  # Tab key
 		visible = !visible
 		print("📱 Evidence UI toggled: ", visible)
-		if visible:
-			# Show everything
+		if visible and $Background:
 			$Background.visible = true
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			refresh()  # Refresh whenever we open the inventory
-		else:
-			# Hide everything
+			refresh()
+		elif $Background:
 			$Background.visible = false
-			details_panel.hide()
+			if details_panel:
+				details_panel.hide()
 
 func refresh():
+	if not grid:
+		print("❌ Grid is null!")
+		return
+	
 	print("🔄 REFRESH STARTED")
 	print("   Clearing grid...")
 	for child in grid.get_children():
-		print("      Removing: ", child.name)
 		child.queue_free()
 	
-	print("   Getting evidence from system...")
-	var all_evidence = EvidenceSystem.get_all_evidence()
-	print("   EvidenceSystem returned: ", all_evidence)
-	print("   Number of items: ", all_evidence.size())
-	
-	if all_evidence.size() == 0:
-		print("   ⚠️ No evidence to display!")
+	if not EvidenceSystem:
+		print("❌ EvidenceSystem is null!")
 		return
 	
-	for i in range(all_evidence.size()):
-		var evidence = all_evidence[i]
-		print("   Processing evidence ", i, ": ", evidence)
-		print("      ID: ", evidence.id if evidence.has("id") else "missing")
-		print("      Name: ", evidence.name if evidence.has("name") else "missing")
+	var all_evidence = EvidenceSystem.get_all_evidence()
+	print("   Evidence items: ", all_evidence.size())
+	
+	if all_evidence.size() == 0:
+		print("   No evidence to display")
+		return
+	
+	for evidence in all_evidence:
+		print("\n   Processing: ", evidence.name)
 		
-		print("      Instantiating slot...")
+		if not slot_scene:
+			print("   ❌ slot_scene is null!")
+			continue
+			
 		var slot = slot_scene.instantiate()
-		print("      Slot instantiated: ", slot)
-		print("      Slot class: ", slot.get_class())
-		print("      Slot script: ", slot.get_script())
-		print("      Has setup method? ", slot.has_method("setup"))
+		if not slot:
+			print("   ❌ Failed to instantiate slot!")
+			continue
+			
+		# Connect signals
+		slot.clicked.connect(_on_slot_clicked)
+		slot.remove_requested.connect(_on_remove_requested)
 		
+		# Set up the slot
 		if slot.has_method("setup"):
-			print("      Calling setup with evidence...")
 			slot.setup(evidence)
-			print("      Connecting clicked signal...")
-			slot.clicked.connect(_on_slot_clicked)
-			print("      Adding to grid...")
-			grid.add_child(slot)
-			print("      ✅ Slot added successfully")
 		else:
-			print("      ❌ ERROR: Slot missing setup method!")
+			print("   ❌ Slot has no setup method!")
+			continue
+		
+		grid.add_child(slot)
+		print("   ✅ Slot added")
+	
 	print("🔄 REFRESH COMPLETE")
 
-func _on_evidence_collected(id, data):
-	print("📦 Evidence collected signal received: ", id)
-	print("   Data: ", data)
-	# If the inventory is currently open, refresh immediately
+func _on_evidence_collected(data):
+	print("📦 Evidence collected: ", data.name)
 	if visible:
-		print("   Inventory open, refreshing...")
 		refresh()
-	else:
-		print("   Inventory closed, will show on next open")
+
+func _on_evidence_removed(id):
+	print("🗑️ Evidence removed signal: ", id)
+	if visible:
+		refresh()
 
 func _on_slot_clicked(evidence_id):
 	print("🖱️ Slot clicked: ", evidence_id)
 	var data = EvidenceSystem.get_evidence(evidence_id)
-	if data:
-		print("   Showing details for: ", data.name)
-		details_texture.texture = data.texture
+	if data and details_panel and details_texture and details_label:
+		details_texture.texture = data.icon
 		details_label.text = "[b]" + data.name + "[/b]\n\n" + data.description
 		details_panel.show()
+
+func _on_remove_requested(evidence_id):
+	print("🗑️ Remove requested for: ", evidence_id)
+	
+	# Get the data before removing
+	var evidence_data = EvidenceSystem.get_evidence(evidence_id)
+	if not evidence_data:
+		print("   ❌ Evidence not found in system!")
+		return
+	
+	# Get the world object reference
+	var world_object = evidence_data.get("world_object")
+	if world_object and is_instance_valid(world_object):
+		print("   ✅ Found world object: ", world_object.name)
+		# Call remove_from_inventory on the world object
+		if world_object.has_method("remove_from_inventory"):
+			world_object.remove_from_inventory()
+			print("   ✅ Called remove_from_inventory on world object")
+		else:
+			print("   ❌ World object missing remove_from_inventory method")
 	else:
-		print("   ⚠️ No data found for evidence_id: ", evidence_id)
+		print("   ❌ World object reference is invalid or missing")
+	
+	# Remove from system
+	var removed = EvidenceSystem.remove_evidence(evidence_id)
+	if removed:
+		print("   ✅ Removed from EvidenceSystem")
+	
+	if details_panel and details_panel.visible:
+		details_panel.hide()
 
 func _on_close_details_pressed():
-	print("🔒 Details panel closed")
-	details_panel.hide()
+	if details_panel:
+		details_panel.hide()
 
 func _on_close_button_pressed():
-	print("❌ Evidence UI closed by button")
 	visible = false
-	$Background.visible = false
-	details_panel.hide()
+	if $Background:
+		$Background.visible = false
+	if details_panel:
+		details_panel.hide()

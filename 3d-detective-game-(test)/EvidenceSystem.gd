@@ -1,40 +1,45 @@
+# EvidenceSystem.gd
 extends Node
 
-# Dictionary to store all collected evidence
-# Key: evidence_id (String)
-# Value: Dictionary with keys: id, name, description, texture, time
-var collected_evidence = {}
+var collected_evidence = {}  # id -> Dictionary (using Dictionary for simplicity)
 
-# Signal emitted whenever new evidence is collected
-signal evidence_collected(evidence_id, data)
+signal evidence_collected(data)
+signal evidence_removed(id)
 
-# Add evidence to the collection
-func collect_evidence(id: String, name: String, description: String, texture = null) -> bool:
-	if not collected_evidence.has(id):
-		collected_evidence[id] = {
-			"id": id,
-			"name": name,
-			"description": description,
-			"texture": texture,
-			"time": Time.get_datetime_string_from_system()
-		}
-		print("Evidence collected: ", name, "(ID: ", id, ")")
-		evidence_collected.emit(id, collected_evidence[id])
+func _ready():
+	print("🔧 EVIDENCE SYSTEM READY")
+
+func collect_evidence(data: Dictionary):
+	if not collected_evidence.has(data.id):
+		collected_evidence[data.id] = data
+		evidence_collected.emit(data)
+		print("📦 Evidence collected: ", data.name, " (ID: ", data.id, ")")
 		return true
 	return false
-	
-# Check if a specific evidence ID has been collected
-func has_evidence(id: String) -> bool:
-	return collected_evidence.has(id)
 
-# Get data for a specific evidence ID
+func remove_evidence(id: String):
+	if collected_evidence.has(id):
+		var data = collected_evidence[id]
+		collected_evidence.erase(id)
+		evidence_removed.emit(id)
+		print("🗑️ Evidence removed: ", data.name, " (ID: ", id, ")")
+		return data
+	return null
+
 func get_evidence(id: String):
 	return collected_evidence.get(id)
 
-# Get an array of all collected evidence data
 func get_all_evidence() -> Array:
-	var result = collected_evidence.values()
-	print("📋 EvidenceSystem.get_all_evidence() returning ", result.size(), " items")
-	for i in range(result.size()):
-		print("   Item ", i, ": ", result[i])
-	return result
+	return collected_evidence.values()
+
+func has_evidence(id: String) -> bool:
+	return collected_evidence.has(id)
+
+func get_evidence_count() -> int:
+	return collected_evidence.size()
+
+func print_all_evidence():
+	print("📋 EvidenceSystem contents (", collected_evidence.size(), " items):")
+	for id in collected_evidence:
+		var data = collected_evidence[id]
+		print("   - ", id, ": ", data.name)

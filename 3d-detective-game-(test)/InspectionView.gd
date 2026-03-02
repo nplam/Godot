@@ -66,7 +66,7 @@ func inspect(interactable, take_callback: Callable, cancel_callback: Callable):
 	on_cancel_callback = cancel_callback
 	
 	object_name_label.text = interactable.object_name
-	description_label.text = "[b]" + interactable.object_name + "[/b]\n\n" + interactable.examination_text
+#	description_label.text = "[b]" + interactable.object_name + "[/b]\n\n" + interactable.examination_text
 	
 	# Show cursor
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
