@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://dh6b3yn4dh8gy" path="res://Assets/barrel_icon.png" id="13_mdcl8"]
 [ext_resource type="Texture2D" uid="uid://cgqrsocdmlbqw" path="res://Assets/vase_icon.png" id="15_mdcl8"]
 [ext_resource type="Material" uid="uid://dbv8cw5cfu12j" path="res://Materials/hidden_evidence.material.tres" id="17_iu18o"]
+[ext_resource type="Script" uid="uid://bmhemos4g3fmj" path="res://BloodStain.gd" id="17_sxsli"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -220,9 +221,9 @@ shape = SubResource("BoxShape3D_w47ov")
 [node name="antique_ceramic_vase_01_4k" parent="StaticBody3D4" unique_id=1901479055 instance=ExtResource("3_w47ov")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0.00043725967, -0.0002975464, -0.00026917458)
 
-[node name="BloodStain_Interactable" type="StaticBody3D" parent="." unique_id=1609273324]
+[node name="BloodStain_Interactable" type="Area3D" parent="." unique_id=225837450]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.05, 0)
-collision_layer = 2
+script = ExtResource("17_sxsli")
 
 [node name="HiddenBloodStain" type="MeshInstance3D" parent="BloodStain_Interactable" unique_id=1764148346]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.05, 0)
