@@ -72,18 +72,11 @@ size = Vector3(0.930603, 1, 1.133667)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iu18o"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iu18o"]
-albedo_color = Color(0.95686275, 0, 0, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_sxsli"]
-material = SubResource("StandardMaterial3D_iu18o")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_cprs5"]
-
 [node name="World" type="Node3D" unique_id=1420371846]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1951003062]
 transform = Transform3D(0.70710677, -0.35355338, 0.6123724, 0, 0.8660254, 0.5, -0.70710677, -0.35355338, 0.6123724, 0, 0, 0)
+visible = false
 layers = 1048573
 light_energy = 0.5
 light_cull_mask = 4293918721
@@ -240,15 +233,3 @@ mesh = SubResource("PlaneMesh_sxsli")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BloodStain_Interactable" unique_id=786122707]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.4459772, 0, -0.01265949)
 shape = SubResource("BoxShape3D_iu18o")
-
-[node name="TestInteractable" type="StaticBody3D" parent="." unique_id=1650020487]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1, 2)
-collision_layer = 2
-collision_mask = 2
-
-[node name="TestCube" type="MeshInstance3D" parent="TestInteractable" unique_id=1146904866]
-mesh = SubResource("BoxMesh_sxsli")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TestInteractable" unique_id=846338625]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
-shape = SubResource("BoxShape3D_cprs5")
