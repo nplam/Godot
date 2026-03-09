@@ -5,6 +5,9 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
 
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_onrkg"]
+exposure_multiplier = 1.5
+
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_hqtel"]
 height = 3.0
 radius = 1.0
@@ -19,6 +22,7 @@ shape = SubResource("CapsuleShape3D_4flbx")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=22418739]
+attributes = SubResource("CameraAttributesPractical_onrkg")
 
 [node name="InteractionRay" type="RayCast3D" parent="Head/Camera3D" unique_id=1104640937]
 target_position = Vector3(0, 0, -3)

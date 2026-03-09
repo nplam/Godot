@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://b6vp02f5xlfw2"]
+
+[ext_resource type="Texture2D" uid="uid://bxmucj7cdl2h4" path="res://Materials/Plaster001_1K-PNG/Plaster001_1K-PNG_Displacement.png" id="1_ifdn5"]
+
+[resource]
+albedo_color = Color(0.9607843, 0.9607843, 0.9607843, 1)
+albedo_texture = ExtResource("1_ifdn5")
+roughness = 0.8
+uv1_scale = Vector3(5, 5, 1)

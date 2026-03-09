@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bdwdukp3iuq6a"]
+
+[ext_resource type="Texture2D" uid="uid://cohi8htocmorl" path="res://Materials/Plaster001_1K-PNG/Plaster001_1K-PNG_Color.png" id="1_6vpno"]
+
+[resource]
+albedo_texture = ExtResource("1_6vpno")
+uv1_scale = Vector3(10, 1.5, 1)

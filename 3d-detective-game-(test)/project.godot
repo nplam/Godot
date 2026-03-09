@@ -25,6 +25,10 @@ SceneRenderManager="*uid://dqee5gokfoqfj"
 
 enabled=PackedStringArray("res://addons/scene_texture/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 forward={

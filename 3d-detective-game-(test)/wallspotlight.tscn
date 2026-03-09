@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://bnpyup5r266qu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2nt5u"]
+albedo_color = Color(0.2, 0.2, 0.2, 1)
+metallic = 1.0
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_hrft1"]
+size = Vector3(0.2, 0.1, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r3mkd"]
+albedo_color = Color(0.2, 0.2, 0.2, 1)
+metallic = 1.0
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_yvc5x"]
+material = SubResource("StandardMaterial3D_r3mkd")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tyame"]
+albedo_color = Color(0.4, 0.4, 0.4, 1)
+metallic = 0.8
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_thi5r"]
+material = SubResource("StandardMaterial3D_tyame")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.15
+
+[node name="Node3D" type="Node3D" unique_id=1073074194]
+
+[node name="Bracket" type="MeshInstance3D" parent="." unique_id=1513355124]
+material_override = SubResource("StandardMaterial3D_2nt5u")
+mesh = SubResource("BoxMesh_hrft1")
+
+[node name="Arm" type="MeshInstance3D" parent="." unique_id=1204424626]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, 0, 0)
+mesh = SubResource("CylinderMesh_yvc5x")
+
+[node name="Housing" type="MeshInstance3D" parent="." unique_id=1108803575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13, -0.22214688, -0.0024942309)
+mesh = SubResource("CylinderMesh_thi5r")
+
+[node name="SpotLight" type="SpotLight3D" parent="." unique_id=15192564]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.13423237, -0.24471295, -0.0028884038)
+light_color = Color(1, 0.93333334, 0.8666667, 1)
+shadow_enabled = true
+shadow_blur = 2.0
+spot_range = 3.0
