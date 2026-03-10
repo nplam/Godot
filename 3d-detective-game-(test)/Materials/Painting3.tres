@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bxlelytocla41"]
+
+[ext_resource type="Texture2D" uid="uid://nfhrk8i6llfl" path="res://Game/Painting/Claude-Monet-The-Poppy-Field-near-Argenteuil-1873.jpg" id="1_loqpc"]
+
+[resource]
+albedo_texture = ExtResource("1_loqpc")
+roughness = 0.8

@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://cgqrsocdmlbqw" path="res://Assets/vase_icon.png" id="15_po3a5"]
 [ext_resource type="PackedScene" uid="uid://cvp5822g8qxl8" path="res://Assets/Poly/antique_ceramic_vase_01_4k.glb" id="16_8myva"]
 [ext_resource type="PackedScene" uid="uid://bnpyup5r266qu" path="res://wallspotlight.tscn" id="16_i6a4r"]
+[ext_resource type="PackedScene" uid="uid://cbhirascueh18" path="res://Game/Painting.tscn" id="17_1a3ta"]
 [ext_resource type="Script" uid="uid://bmhemos4g3fmj" path="res://BloodStain.gd" id="17_5pje2"]
 [ext_resource type="Material" uid="uid://dbv8cw5cfu12j" path="res://Materials/hidden_evidence.material.tres" id="18_hvoaa"]
 
@@ -126,7 +127,7 @@ shape = SubResource("BoxShape3D_i6a4r")
 [node name="Wall_Right" type="StaticBody3D" parent="." unique_id=753389967]
 
 [node name="Mesh" type="MeshInstance3D" parent="Wall_Right" unique_id=350192569]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9991713, 1.5195186, 0.0074449778)
 mesh = SubResource("BoxMesh_q1g8n")
 surface_material_override/0 = ExtResource("2_q1g8n")
 
@@ -221,10 +222,19 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.4459772, 0, -0.01265949)
 shape = SubResource("BoxShape3D_iu18o")
 
 [node name="Spotlight_Painting1" parent="." unique_id=1073074194 instance=ExtResource("16_i6a4r")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.875, 3, 0.354)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.6604314, 3, 0.354)
 
 [node name="Spotlight_Painting2" parent="." unique_id=2040934734 instance=ExtResource("16_i6a4r")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.875, 3, 4)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.669322, 3, 4)
 
 [node name="Spotlight_Painting3" parent="." unique_id=1805613279 instance=ExtResource("16_i6a4r")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.875, 3, -3.5)
+
+[node name="Painting1" parent="." unique_id=860360706 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.840035, 1.8161964, 0.3257267)
+
+[node name="Painting2" parent="." unique_id=1454853276 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849467, 1.796859, 4.0856137)
+
+[editable path="Painting1"]
+[editable path="Painting2"]

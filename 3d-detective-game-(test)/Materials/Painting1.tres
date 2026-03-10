@@ -1,0 +1,5 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bqj2aylsuqfhm"]
+
+[resource]
+roughness = 0.8
+uv1_scale = Vector3(3, 2, 1)

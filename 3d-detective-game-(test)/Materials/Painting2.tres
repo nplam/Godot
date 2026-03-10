@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://deellby0l04fh"]
+
+[ext_resource type="Texture2D" uid="uid://cwutqpto0xd5e" path="res://Game/Painting/madame-monet-and-child(1).jpg!Large.jpg" id="1_0ofvd"]
+
+[resource]
+albedo_texture = ExtResource("1_0ofvd")
+roughness = 0.8

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cbhirascueh18"]
+
+[ext_resource type="Material" uid="uid://bqj2aylsuqfhm" path="res://Materials/Painting1.tres" id="1_lfg3o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p6m0g"]
+albedo_color = Color(0.54509807, 0.27058825, 0.07450981, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_lfg3o"]
+material = SubResource("StandardMaterial3D_p6m0g")
+size = Vector3(2, 1.5, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_aictr"]
+size = Vector3(1.8, 1.3, 0.05)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q2hud"]
+size = Vector3(2, 1.5, 0.1)
+
+[node name="Painting" type="StaticBody3D" unique_id=1454853276]
+
+[node name="Frame" type="MeshInstance3D" parent="." unique_id=1042888157]
+mesh = SubResource("BoxMesh_lfg3o")
+
+[node name="Canvas" type="MeshInstance3D" parent="Frame" unique_id=1230217130]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_aictr")
+surface_material_override/0 = ExtResource("1_lfg3o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1235947918]
+shape = SubResource("BoxShape3D_q2hud")
