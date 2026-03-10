@@ -17,6 +17,9 @@
 [ext_resource type="PackedScene" uid="uid://cbhirascueh18" path="res://Game/Painting.tscn" id="17_1a3ta"]
 [ext_resource type="Script" uid="uid://bmhemos4g3fmj" path="res://BloodStain.gd" id="17_5pje2"]
 [ext_resource type="Material" uid="uid://dbv8cw5cfu12j" path="res://Materials/hidden_evidence.material.tres" id="18_hvoaa"]
+[ext_resource type="Material" uid="uid://bqj2aylsuqfhm" path="res://Materials/Painting1.tres" id="18_ydbhv"]
+[ext_resource type="Material" uid="uid://deellby0l04fh" path="res://Materials/Painting2.tres" id="19_q1g8n"]
+[ext_resource type="Material" uid="uid://bxlelytocla41" path="res://Materials/Painting3.tres" id="20_q1g8n"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -69,6 +72,15 @@ size = Vector3(0.930603, 1, 1.133667)
 [sub_resource type="PlaneMesh" id="PlaneMesh_sxsli"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iu18o"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_1a3ta"]
+size = Vector3(1.8, 1.3, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_36yhk"]
+size = Vector3(1.8, 1.3, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ulosw"]
+size = Vector3(1.8, 1.3, 0.05)
 
 [node name="World" type="Node3D" unique_id=1420371846]
 
@@ -233,8 +245,23 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.87
 [node name="Painting1" parent="." unique_id=860360706 instance=ExtResource("17_1a3ta")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.840035, 1.8161964, 0.3257267)
 
+[node name="Canvas" type="MeshInstance3D" parent="Painting1" unique_id=1221749390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_1a3ta")
+surface_material_override/0 = ExtResource("18_ydbhv")
+
 [node name="Painting2" parent="." unique_id=1454853276 instance=ExtResource("17_1a3ta")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849467, 1.796859, 4.0856137)
 
-[editable path="Painting1"]
-[editable path="Painting2"]
+[node name="Canvas" type="MeshInstance3D" parent="Painting2" unique_id=65520588]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_36yhk")
+surface_material_override/0 = ExtResource("19_q1g8n")
+
+[node name="Painting3" parent="." unique_id=1912715199 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849, 1.797, -3.4985023)
+
+[node name="Canvas" type="MeshInstance3D" parent="Painting3" unique_id=824144152]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_ulosw")
+surface_material_override/0 = ExtResource("20_q1g8n")

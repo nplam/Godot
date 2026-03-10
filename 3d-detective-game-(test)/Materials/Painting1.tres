@@ -1,5 +1,8 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://bqj2aylsuqfhm"]
 
+[ext_resource type="Texture2D" uid="uid://ql0tm4nyppjj" path="res://Game/Painting/Claude-Monet-Exterior-of-Saint-Lazare-Station-Sunlight-Effect-1877.jpg" id="1_jjlfv"]
+
 [resource]
+albedo_texture = ExtResource("1_jjlfv")
 roughness = 0.8
 uv1_scale = Vector3(3, 2, 1)
