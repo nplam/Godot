@@ -7,8 +7,6 @@
 [ext_resource type="Material" uid="uid://cgc2i5dsyyjuf" path="res://Materials/WallPlaster.tres" id="3_u2ju2"]
 [ext_resource type="PackedScene" uid="uid://bjmm4d7qr5y5h" path="res://EvidenceUI.tscn" id="4_u2ju2"]
 [ext_resource type="PackedScene" uid="uid://tdugabfbyqal" path="res://InspectionView.tscn" id="6_ulosw"]
-[ext_resource type="PackedScene" uid="uid://cpgeuvsopp4v3" path="res://Assets/Poly/vintage_wooden_drawer_01_4k.gltf/vintage_wooden_drawer_01_4k.gltf" id="7_220ek"]
-[ext_resource type="PackedScene" uid="uid://5w46sggrhsnw" path="res://Assets/Poly/painted_wooden_cabinet_4k.gltf" id="8_cqj4e"]
 [ext_resource type="PackedScene" uid="uid://dxr44kpb8gijd" path="res://Assets/Poly/marble_bust_01_4k.gltf" id="9_lyw06"]
 [ext_resource type="Script" uid="uid://bclmmhwc641e7" path="res://Interactable.gd" id="10_f00s6"]
 [ext_resource type="Texture2D" uid="uid://cgqrsocdmlbqw" path="res://Assets/vase_icon.png" id="15_po3a5"]
@@ -20,6 +18,7 @@
 [ext_resource type="Material" uid="uid://bqj2aylsuqfhm" path="res://Materials/Painting1.tres" id="18_ydbhv"]
 [ext_resource type="Material" uid="uid://deellby0l04fh" path="res://Materials/Painting2.tres" id="19_q1g8n"]
 [ext_resource type="Material" uid="uid://bxlelytocla41" path="res://Materials/Painting3.tres" id="20_q1g8n"]
+[ext_resource type="PackedScene" uid="uid://cpvejqy6cqmqr" path="res://stand.tscn" id="21_u2ju2"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -120,7 +119,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
 shape = SubResource("BoxShape3D_34lg8")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ceiling" unique_id=1675849882]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5033445, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.005259037, -1.5114698, 0.005069256)
 mesh = SubResource("BoxMesh_y1jsw")
 surface_material_override/0 = SubResource("StandardMaterial3D_q1g8n")
 
@@ -170,7 +169,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 shape = SubResource("BoxShape3D_51hkx")
 
 [node name="Player" parent="." unique_id=566990049 node_paths=PackedStringArray("interaction_ui") instance=ExtResource("2_ydbhv")]
-transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 5)
+transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 8)
 interaction_ui = NodePath("../CanvasLayer")
 
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("3_q1g8n")]
@@ -184,23 +183,11 @@ scale = Vector2(1, 1.0256411)
 
 [node name="InspectionView" parent="UI" unique_id=1400097580 instance=ExtResource("6_ulosw")]
 
-[node name="StaticBody3D5" type="StaticBody3D" parent="." unique_id=1756590540]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
-
-[node name="vintage_wooden_drawer_01_4k" parent="StaticBody3D5" unique_id=1548724497 instance=ExtResource("7_220ek")]
-transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 6.1475015, -0.251, -4.5181513)
-
-[node name="StaticBody3D6" type="StaticBody3D" parent="." unique_id=19716571]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
-
-[node name="painted_wooden_cabinet_4k" parent="StaticBody3D6" unique_id=1749565067 instance=ExtResource("8_cqj4e")]
-transform = Transform3D(0.9982728, 0, -0.058748838, 0, 1, 0, 0.058748838, 0, 0.9982728, 0, 0, -7)
-
 [node name="StaticBody3D7" type="StaticBody3D" parent="." unique_id=207238661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
 
 [node name="marble_bust_01_4k" parent="StaticBody3D7" unique_id=1320301840 instance=ExtResource("9_lyw06")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1828432, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5111947, 1.2539322, -9.25265)
 
 [node name="Node3D" type="Node3D" parent="." unique_id=21590205]
 
@@ -217,7 +204,7 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.04524994, -0.10493088, -0.
 shape = SubResource("BoxShape3D_w47ov")
 
 [node name="antique_ceramic_vase_01_4k" parent="StaticBody3D4" unique_id=1901479055 instance=ExtResource("16_8myva")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3265924, -0.60052705, -0.00026917458)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.220297, -0.20597982, 5.725274)
 
 [node name="BloodStain_Interactable" type="Area3D" parent="." unique_id=225837450]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.05, 0)
@@ -234,34 +221,109 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.4459772, 0, -0.01265949)
 shape = SubResource("BoxShape3D_iu18o")
 
 [node name="Spotlight_Painting1" parent="." unique_id=1073074194 instance=ExtResource("16_i6a4r")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.6604314, 3, 0.354)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.7, 3.4, 0.354)
+
+[node name="Spotlight_Painting4" parent="." unique_id=2002576774 instance=ExtResource("16_i6a4r")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -4.7774935, 3.4, 0.354)
 
 [node name="Spotlight_Painting2" parent="." unique_id=2040934734 instance=ExtResource("16_i6a4r")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.669322, 3, 4)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.7, 3.4, 5)
+
+[node name="Spotlight_Painting5" parent="." unique_id=966433943 instance=ExtResource("16_i6a4r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.822, 3.4, 5)
 
 [node name="Spotlight_Painting3" parent="." unique_id=1805613279 instance=ExtResource("16_i6a4r")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.875, 3, -3.5)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4.7, 3.4, -5)
+
+[node name="Spotlight_Painting6" parent="." unique_id=2140729173 instance=ExtResource("16_i6a4r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.779, 3.4, -5)
+
+[node name="Spotlight_Painting7" parent="." unique_id=1432939283 instance=ExtResource("16_i6a4r")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.68, 3.4, -9.688)
+
+[node name="Spotlight_Painting8" parent="." unique_id=1868747220 instance=ExtResource("16_i6a4r")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.68, 3.4, -9.688)
 
 [node name="Painting1" parent="." unique_id=860360706 instance=ExtResource("17_1a3ta")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.840035, 1.8161964, 0.3257267)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.84, 2.2, 0.326)
 
 [node name="Canvas" type="MeshInstance3D" parent="Painting1" unique_id=1221749390]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
 mesh = SubResource("BoxMesh_1a3ta")
 surface_material_override/0 = ExtResource("18_ydbhv")
 
-[node name="Painting2" parent="." unique_id=1454853276 instance=ExtResource("17_1a3ta")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849467, 1.796859, 4.0856137)
+[node name="Painting4" parent="." unique_id=1454853276 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, -4.3711385e-08, -4.8094053, 2.2, 0.326)
+
+[node name="Canvas" type="MeshInstance3D" parent="Painting4" unique_id=1252121805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_1a3ta")
+surface_material_override/0 = ExtResource("18_ydbhv")
+
+[node name="Painting2" parent="." unique_id=1034868735 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849, 2.2, 5)
 
 [node name="Canvas" type="MeshInstance3D" parent="Painting2" unique_id=65520588]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
 mesh = SubResource("BoxMesh_36yhk")
 surface_material_override/0 = ExtResource("19_q1g8n")
 
+[node name="Painting5" parent="." unique_id=1939567867 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.85, 2.2, 5)
+
+[node name="Canvas" type="MeshInstance3D" parent="Painting5" unique_id=1177710362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_36yhk")
+surface_material_override/0 = ExtResource("19_q1g8n")
+
 [node name="Painting3" parent="." unique_id=1912715199 instance=ExtResource("17_1a3ta")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849, 1.797, -3.4985023)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849, 2.2, -5)
 
 [node name="Canvas" type="MeshInstance3D" parent="Painting3" unique_id=824144152]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
 mesh = SubResource("BoxMesh_ulosw")
 surface_material_override/0 = ExtResource("20_q1g8n")
+
+[node name="Painting6" parent="." unique_id=741073906 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.844, 2.2, -5)
+
+[node name="Canvas" type="MeshInstance3D" parent="Painting6" unique_id=1719919263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_ulosw")
+surface_material_override/0 = ExtResource("20_q1g8n")
+
+[node name="Painting7" parent="." unique_id=1156964552 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6828322, 2.2, -9.831972)
+
+[node name="Canvas" type="MeshInstance3D" parent="Painting7" unique_id=1921082928]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_ulosw")
+surface_material_override/0 = ExtResource("20_q1g8n")
+
+[node name="Painting8" parent="." unique_id=848533167 instance=ExtResource("17_1a3ta")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.68, 2.2, -9.832)
+
+[node name="Canvas" type="MeshInstance3D" parent="Painting8" unique_id=834518871]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
+mesh = SubResource("BoxMesh_ulosw")
+surface_material_override/0 = ExtResource("20_q1g8n")
+
+[node name="Stand1" type="Node3D" parent="." unique_id=2008776091]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 2)
+
+[node name="Stand" parent="Stand1" unique_id=1179507639 instance=ExtResource("21_u2ju2")]
+
+[node name="Stand2" type="Node3D" parent="." unique_id=302087176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -9)
+
+[node name="Stand" parent="Stand2" unique_id=1215047898 instance=ExtResource("21_u2ju2")]
+
+[node name="Stand3" type="Node3D" parent="." unique_id=604275274]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -3)
+
+[node name="Stand" parent="Stand3" unique_id=202037669 instance=ExtResource("21_u2ju2")]
+
+[node name="Stand4" type="Node3D" parent="." unique_id=1241661131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 6)
+
+[node name="Stand" parent="Stand4" unique_id=1749081322 instance=ExtResource("21_u2ju2")]
