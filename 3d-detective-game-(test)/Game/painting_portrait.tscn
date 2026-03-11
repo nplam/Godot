@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://d0d4s72ttowvd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p6m0g"]
+albedo_color = Color(0.54509807, 0.27058825, 0.07450981, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_lfg3o"]
+material = SubResource("StandardMaterial3D_p6m0g")
+size = Vector3(1.5, 2, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_q2hud"]
+size = Vector3(1.5, 2, 0.1)
+
+[node name="Painting" type="StaticBody3D" unique_id=1454853276]
+
+[node name="Frame" type="MeshInstance3D" parent="." unique_id=1042888157]
+mesh = SubResource("BoxMesh_lfg3o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1235947918]
+shape = SubResource("BoxShape3D_q2hud")

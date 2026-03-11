@@ -14,11 +14,17 @@
 [ext_resource type="PackedScene" uid="uid://bnpyup5r266qu" path="res://wallspotlight.tscn" id="16_i6a4r"]
 [ext_resource type="PackedScene" uid="uid://cbhirascueh18" path="res://Game/Painting.tscn" id="17_1a3ta"]
 [ext_resource type="Script" uid="uid://bmhemos4g3fmj" path="res://BloodStain.gd" id="17_5pje2"]
+[ext_resource type="Texture2D" uid="uid://chox864cu6qfr" path="res://Game/Painting/claude-monet-impression-sunrise-1872-obelisk-art-history.jpg" id="17_u2ju2"]
 [ext_resource type="Material" uid="uid://dbv8cw5cfu12j" path="res://Materials/hidden_evidence.material.tres" id="18_hvoaa"]
 [ext_resource type="Material" uid="uid://bqj2aylsuqfhm" path="res://Materials/Painting1.tres" id="18_ydbhv"]
+[ext_resource type="Texture2D" uid="uid://bfshqfv52r4y0" path="res://Game/Painting/Claude_Monet,_Saint-Georges_majeur_au_crépuscule.jpg" id="19_36yhk"]
 [ext_resource type="Material" uid="uid://deellby0l04fh" path="res://Materials/Painting2.tres" id="19_q1g8n"]
 [ext_resource type="Material" uid="uid://bxlelytocla41" path="res://Materials/Painting3.tres" id="20_q1g8n"]
 [ext_resource type="PackedScene" uid="uid://cpvejqy6cqmqr" path="res://stand.tscn" id="21_u2ju2"]
+[ext_resource type="Texture2D" uid="uid://bnpsyqij36y3p" path="res://Game/Painting/Regatta at Argenteuil is a c. 1872 painting by Claude Monet.jpg" id="21_ulosw"]
+[ext_resource type="PackedScene" uid="uid://d0d4s72ttowvd" path="res://Game/painting_portrait.tscn" id="23_220ek"]
+[ext_resource type="Texture2D" uid="uid://cg6apuwh3vyek" path="res://Game/Painting/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg" id="24_cqj4e"]
+[ext_resource type="Texture2D" uid="uid://bq6ipupxmhf08" path="res://Game/Painting/self-portrait-with-a-beret (1886).jpg" id="25_cqj4e"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -75,11 +81,45 @@ size = Vector3(0.930603, 1, 1.133667)
 [sub_resource type="BoxMesh" id="BoxMesh_1a3ta"]
 size = Vector3(1.8, 1.3, 0.05)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ulosw"]
+albedo_texture = ExtResource("17_u2ju2")
+roughness = 0.8
+uv1_scale = Vector3(3, 2, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_36yhk"]
 size = Vector3(1.8, 1.3, 0.05)
 
-[sub_resource type="BoxMesh" id="BoxMesh_ulosw"]
+[sub_resource type="BoxMesh" id="BoxMesh_220ek"]
 size = Vector3(1.8, 1.3, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cqj4e"]
+albedo_texture = ExtResource("19_36yhk")
+roughness = 0.8
+uv1_scale = Vector3(3, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cqj4e"]
+size = Vector3(1.8, 1.3, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lyw06"]
+size = Vector3(1.8, 1.3, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f00s6"]
+albedo_texture = ExtResource("21_ulosw")
+uv1_scale = Vector3(3, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f00s6"]
+size = Vector3(1.3, 1.8, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4dh4x"]
+albedo_texture = ExtResource("24_cqj4e")
+uv1_scale = Vector3(3, 2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4dh4x"]
+size = Vector3(1.3, 1.8, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b2g3v"]
+albedo_texture = ExtResource("25_cqj4e")
+uv1_scale = Vector3(3, 2, 1)
 
 [node name="World" type="Node3D" unique_id=1420371846]
 
@@ -258,7 +298,7 @@ transform = Transform3D(-4.3711385e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 
 [node name="Canvas" type="MeshInstance3D" parent="Painting4" unique_id=1252121805]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
 mesh = SubResource("BoxMesh_1a3ta")
-surface_material_override/0 = ExtResource("18_ydbhv")
+surface_material_override/0 = SubResource("StandardMaterial3D_ulosw")
 
 [node name="Painting2" parent="." unique_id=1034868735 instance=ExtResource("17_1a3ta")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849, 2.2, 5)
@@ -273,40 +313,24 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.8
 
 [node name="Canvas" type="MeshInstance3D" parent="Painting5" unique_id=1177710362]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
-mesh = SubResource("BoxMesh_36yhk")
-surface_material_override/0 = ExtResource("19_q1g8n")
+mesh = SubResource("BoxMesh_220ek")
+surface_material_override/0 = SubResource("StandardMaterial3D_cqj4e")
 
 [node name="Painting3" parent="." unique_id=1912715199 instance=ExtResource("17_1a3ta")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.849, 2.2, -5)
 
 [node name="Canvas" type="MeshInstance3D" parent="Painting3" unique_id=824144152]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
-mesh = SubResource("BoxMesh_ulosw")
+mesh = SubResource("BoxMesh_cqj4e")
 surface_material_override/0 = ExtResource("20_q1g8n")
 
 [node name="Painting6" parent="." unique_id=741073906 instance=ExtResource("17_1a3ta")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.844, 2.2, -5)
 
-[node name="Canvas" type="MeshInstance3D" parent="Painting6" unique_id=1719919263]
+[node name="Canvas" type="MeshInstance3D" parent="Painting6" unique_id=625789316]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
-mesh = SubResource("BoxMesh_ulosw")
-surface_material_override/0 = ExtResource("20_q1g8n")
-
-[node name="Painting7" parent="." unique_id=1156964552 instance=ExtResource("17_1a3ta")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6828322, 2.2, -9.831972)
-
-[node name="Canvas" type="MeshInstance3D" parent="Painting7" unique_id=1921082928]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
-mesh = SubResource("BoxMesh_ulosw")
-surface_material_override/0 = ExtResource("20_q1g8n")
-
-[node name="Painting8" parent="." unique_id=848533167 instance=ExtResource("17_1a3ta")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.68, 2.2, -9.832)
-
-[node name="Canvas" type="MeshInstance3D" parent="Painting8" unique_id=834518871]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.03)
-mesh = SubResource("BoxMesh_ulosw")
-surface_material_override/0 = ExtResource("20_q1g8n")
+mesh = SubResource("BoxMesh_lyw06")
+surface_material_override/0 = SubResource("StandardMaterial3D_f00s6")
 
 [node name="Stand1" type="Node3D" parent="." unique_id=2008776091]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 2)
@@ -327,3 +351,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -3)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 6)
 
 [node name="Stand" parent="Stand4" unique_id=1749081322 instance=ExtResource("21_u2ju2")]
+
+[node name="Painting7" parent="." unique_id=1045452178 instance=ExtResource("23_220ek")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.675, 2.1, -9.7)
+
+[node name="Canvas" type="MeshInstance3D" parent="Painting7" unique_id=1301733681]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.029999733)
+mesh = SubResource("BoxMesh_f00s6")
+surface_material_override/0 = SubResource("StandardMaterial3D_4dh4x")
+
+[node name="Painting8" parent="." unique_id=1516962124 instance=ExtResource("23_220ek")]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 2.69683, 2.369701, -9.7)
+
+[node name="Canvas" type="MeshInstance3D" parent="Painting8" unique_id=1378508306]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.029999733)
+mesh = SubResource("BoxMesh_4dh4x")
+surface_material_override/0 = SubResource("StandardMaterial3D_b2g3v")

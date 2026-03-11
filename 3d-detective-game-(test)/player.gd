@@ -22,8 +22,10 @@ func _ready():
 	current_speed = walk_speed
 	interaction_ray.debug_shape_custom_color = Color.RED
 	interaction_ray.debug_shape_thickness = 2
+	# UV light is now controlled by its own script on the Hand node
 
 func _input(event):
+	# MOUSE LOOK: Only when right mouse button is held
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		# Rotate entire player left/right (Y-axis)
 		rotate_y(-event.relative.x * mouse_sensitivity)
@@ -31,12 +33,14 @@ func _input(event):
 		camera.rotate_x(-event.relative.y * mouse_sensitivity)
 		camera.rotation.x = clamp(camera.rotation.x, -1.4, 1.4)
 	
+	# ESC key to toggle mouse capture
 	if event.is_action_pressed("ui_cancel"):
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
+	# LEFT CLICK to interact with clues
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if current_interactable:
 			print("🖱️ Left click on: ", current_interactable.name)
@@ -47,6 +51,9 @@ func _input(event):
 				CursorManager.set_cursor(CursorManager.CursorState.HOVER)
 			else:
 				CursorManager.reset_cursor()
+	
+	# Note: UV light toggling is now handled by UVLight.gd on the Hand node
+	# The F key is captured there
 
 func _physics_process(delta):
 	# Sprint
@@ -98,16 +105,20 @@ func check_interaction():
 			CursorManager.set_cursor(CursorManager.CursorState.HOVER)
 			
 			if current_interactable != collider:
+				# Unfocus previous
 				if current_interactable and current_interactable.has_method("on_unfocus"):
 					current_interactable.on_unfocus()
 				
+				# Focus new
 				current_interactable = collider
 				if current_interactable.has_method("on_focus"):
 					current_interactable.on_focus()
 				
+				# Show the UI prompt
 				interaction_ui.show_prompt(collider.get_interaction_text())
 			return
 	
+	# Not looking at any interactable
 	if current_interactable:
 		if current_interactable.has_method("on_unfocus"):
 			current_interactable.on_unfocus()

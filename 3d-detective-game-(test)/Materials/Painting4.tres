@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dl4mi6mqe2wlf"]
+
+[ext_resource type="Texture2D" uid="uid://chox864cu6qfr" path="res://Game/Painting/claude-monet-impression-sunrise-1872-obelisk-art-history.jpg" id="1_hlrxs"]
+
+[resource]
+albedo_texture = ExtResource("1_hlrxs")
+roughness = 0.8
+uv1_scale = Vector3(3, 2, 1)

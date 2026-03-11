@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://duxdu2wtvyqad" path="res://InteractionPrompt.gd" id="1_6sflo"]
 
 [node name="CanvasLayer" type="CanvasLayer" unique_id=1172188472]
+follow_viewport_enabled = true
 script = ExtResource("1_6sflo")
 
 [node name="BackgroundPanel" type="Panel" parent="." unique_id=99880764]
