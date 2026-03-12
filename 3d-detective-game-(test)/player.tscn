@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://yvhwrst546ut" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://8e6unnp2rc4j" path="res://UVLight.gd" id="2_i3pqv"]
+[ext_resource type="PackedScene" uid="uid://brbo6abd3rpy5" path="res://FingerprintBrush.tscn" id="3_i3pqv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
 
@@ -47,3 +48,6 @@ spot_range = 10.0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hand/DetectionArea" unique_id=955897420]
 transform = Transform3D(1.5, 0, 0, 0, -6.556708e-08, -2, 0, 1.5, -8.742278e-08, 0, 0, -1.5)
 shape = SubResource("CylinderShape3D_hqtel")
+
+[node name="FingerprintBrush" parent="Hand" unique_id=462093230 instance=ExtResource("3_i3pqv")]
+transform = Transform3D(0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 0, 0, 1, 0.1, -0.05, 0)
