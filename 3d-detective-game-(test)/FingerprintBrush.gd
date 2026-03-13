@@ -1,13 +1,16 @@
 # FingerprintBrush.gd
-extends Node3D
+extends RigidBody3D
 
 @onready var brush_model: Node3D = $BrushModel  # Reference to the GLB model
 @onready var detection_area: Area3D = $DetectionArea
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
 
 var is_active: bool = false
 var detected_surfaces: Array = []
 
 func _ready():
+	# Disable physics when not active
+	freeze = true  # RigidBody3D won't move when frozen
 	# Start hidden
 	hide()
 	if detection_area:
@@ -21,9 +24,12 @@ func toggle_active():
 	is_active = !is_active
 	visible = is_active
 	
+	# Unfreeze when active so hand can move it
+	freeze = !is_active
+	
 	if detection_area:
 		detection_area.monitoring = is_active
-	
+		
 	print("🖌️ Brush ", "equipped" if is_active else "stowed")
 
 func _input(event):

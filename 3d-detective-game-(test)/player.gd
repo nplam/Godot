@@ -11,11 +11,13 @@ extends CharacterBody3D
 @onready var camera: Camera3D = $Head/Camera3D
 @onready var hand: Node3D = $Hand
 @onready var interaction_ray: RayCast3D = $Head/Camera3D/InteractionRay
+@onready var fingerprint_brush: Node3D = $Hand/FingerprintBrush
 
 @export var interaction_ui: CanvasLayer
 
 var current_interactable: Node = null
 var current_speed: float
+var hand_target_position: Vector3  # For brush physics movement
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -52,8 +54,13 @@ func _input(event):
 			else:
 				CursorManager.reset_cursor()
 	
-	# Note: UV light toggling is now handled by UVLight.gd on the Hand node
-	# The F key is captured there
+	# Toggle fingerprint brush with B key
+	if event.is_action_pressed("toggle_brush"):
+		if fingerprint_brush:
+			print("🖌️ Toggle brush called")
+			fingerprint_brush.toggle_active()
+		else:
+			print("❌ fingerprint_brush is null!")
 
 func _physics_process(delta):
 	# Sprint
@@ -92,6 +99,10 @@ func _physics_process(delta):
 func _process(delta):
 	check_interaction()
 	rotate_hand_toward_camera(delta)
+	
+	# Calculate hand target position and move brush if active
+	hand_target_position = camera.global_position + camera.global_transform.basis * Vector3(0.2, -0.2, 0.3)
+	move_brush_to_hand_target(hand_target_position, delta)
 
 func rotate_hand_toward_camera(delta):
 	var target_x_rotation = camera.rotation.x
@@ -126,3 +137,11 @@ func check_interaction():
 	
 	interaction_ui.hide_prompt()
 	CursorManager.reset_cursor()
+
+# Function to move brush with physics (to prevent clipping)
+func move_brush_to_hand_target(target_pos: Vector3, delta):
+	if fingerprint_brush and fingerprint_brush.has_method("toggle_active") and fingerprint_brush.is_active:
+		var direction = (target_pos - fingerprint_brush.global_position).normalized()
+		var distance = target_pos.distance_to(fingerprint_brush.global_position)
+		var speed = min(distance * 10.0, 20.0)  # Speed based on distance
+		fingerprint_brush.linear_velocity = direction * speed

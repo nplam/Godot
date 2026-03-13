@@ -7,7 +7,9 @@
 [ext_resource type="Material" uid="uid://cgc2i5dsyyjuf" path="res://Materials/WallPlaster.tres" id="3_u2ju2"]
 [ext_resource type="PackedScene" uid="uid://bjmm4d7qr5y5h" path="res://EvidenceUI.tscn" id="4_u2ju2"]
 [ext_resource type="PackedScene" uid="uid://tdugabfbyqal" path="res://InspectionView.tscn" id="6_ulosw"]
+[ext_resource type="PackedScene" uid="uid://dys268n0evd3s" path="res://Assets/Poly/brass_vase_01_1k.gltf/brass_vase_01_1k.gltf" id="9_f00s6"]
 [ext_resource type="PackedScene" uid="uid://dxr44kpb8gijd" path="res://Assets/Poly/marble_bust_01_4k.gltf" id="9_lyw06"]
+[ext_resource type="PackedScene" uid="uid://cyfhqk58boywv" path="res://Assets/Poly/brass_vase_03_1k.gltf/brass_vase_03_1k.gltf" id="10_4dh4x"]
 [ext_resource type="Script" uid="uid://bclmmhwc641e7" path="res://Interactable.gd" id="10_f00s6"]
 [ext_resource type="Texture2D" uid="uid://cgqrsocdmlbqw" path="res://Assets/vase_icon.png" id="15_po3a5"]
 [ext_resource type="PackedScene" uid="uid://cvp5822g8qxl8" path="res://Assets/Poly/antique_ceramic_vase_01_4k.glb" id="16_8myva"]
@@ -208,9 +210,8 @@ surface_material_override/0 = ExtResource("2_q1g8n")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 shape = SubResource("BoxShape3D_51hkx")
 
-[node name="Player" parent="." unique_id=566990049 node_paths=PackedStringArray("interaction_ui") instance=ExtResource("2_ydbhv")]
+[node name="Player" parent="." unique_id=566990049 instance=ExtResource("2_ydbhv")]
 transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 8)
-interaction_ui = NodePath("../CanvasLayer")
 
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("3_q1g8n")]
 
@@ -228,6 +229,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
 
 [node name="marble_bust_01_4k" parent="StaticBody3D7" unique_id=1320301840 instance=ExtResource("9_lyw06")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5111947, 1.2539322, -9.25265)
+
+[node name="StaticBody3D8" type="StaticBody3D" parent="." unique_id=826371547]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
+
+[node name="brass_vase_01_1k" parent="StaticBody3D8" unique_id=1223466888 instance=ExtResource("9_f00s6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.543264, 1.2484045, -3.2466207)
+
+[node name="StaticBody3D9" type="StaticBody3D" parent="." unique_id=1614217397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
+
+[node name="blend_export" parent="StaticBody3D9" unique_id=20421813 instance=ExtResource("10_4dh4x")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 2.5168555, 1.2548552, 5.7503123)
 
 [node name="Node3D" type="Node3D" parent="." unique_id=21590205]
 

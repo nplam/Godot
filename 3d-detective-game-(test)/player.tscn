@@ -50,4 +50,4 @@ transform = Transform3D(1.5, 0, 0, 0, -6.556708e-08, -2, 0, 1.5, -8.742278e-08, 
 shape = SubResource("CylinderShape3D_hqtel")
 
 [node name="FingerprintBrush" parent="Hand" unique_id=462093230 instance=ExtResource("3_i3pqv")]
-transform = Transform3D(0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 0, 0, 1, 0.1, -0.05, 0)
+transform = Transform3D(1.4488888, 0.3882286, 0, -0.3882286, 1.4488888, 0, 0, 0, 1.5, 0.1, 0.5, -1)
