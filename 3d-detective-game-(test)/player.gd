@@ -17,7 +17,7 @@ extends CharacterBody3D
 
 var current_interactable: Node = null
 var current_speed: float
-var hand_target_position: Vector3  # For brush physics movement
+# var hand_target_position: Vector3  # No longer needed for physics movement
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -100,9 +100,8 @@ func _process(delta):
 	check_interaction()
 	rotate_hand_toward_camera(delta)
 	
-	# Calculate hand target position and move brush if active
-	hand_target_position = camera.global_position + camera.global_transform.basis * Vector3(0.2, -0.2, 0.3)
-	move_brush_to_hand_target(hand_target_position, delta)
+	# No need to move brush - it's a child of Hand and moves automatically!
+	# The line below is removed to prevent physics errors
 
 func rotate_hand_toward_camera(delta):
 	var target_x_rotation = camera.rotation.x
@@ -125,8 +124,9 @@ func check_interaction():
 				if current_interactable.has_method("on_focus"):
 					current_interactable.on_focus()
 				
-				# Show the UI prompt
-				interaction_ui.show_prompt(collider.get_interaction_text())
+				# Show the UI prompt (with safety check)
+				if interaction_ui and interaction_ui.has_method("show_prompt"):
+					interaction_ui.show_prompt(collider.get_interaction_text())
 			return
 	
 	# Not looking at any interactable
@@ -135,13 +135,10 @@ func check_interaction():
 			current_interactable.on_unfocus()
 		current_interactable = null
 	
-	interaction_ui.hide_prompt()
+	# Hide the UI prompt (with safety check)
+	if interaction_ui and interaction_ui.has_method("hide_prompt"):
+		interaction_ui.hide_prompt()
+	
 	CursorManager.reset_cursor()
 
-# Function to move brush with physics (to prevent clipping)
-func move_brush_to_hand_target(target_pos: Vector3, delta):
-	if fingerprint_brush and fingerprint_brush.has_method("toggle_active") and fingerprint_brush.is_active:
-		var direction = (target_pos - fingerprint_brush.global_position).normalized()
-		var distance = target_pos.distance_to(fingerprint_brush.global_position)
-		var speed = min(distance * 10.0, 20.0)  # Speed based on distance
-		fingerprint_brush.linear_velocity = direction * speed
+# Function removed - brush now moves as child of Hand automatically

@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://d0d4s72ttowvd" path="res://Game/painting_portrait.tscn" id="23_220ek"]
 [ext_resource type="Texture2D" uid="uid://cg6apuwh3vyek" path="res://Game/Painting/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg" id="24_cqj4e"]
 [ext_resource type="Texture2D" uid="uid://bq6ipupxmhf08" path="res://Game/Painting/self-portrait-with-a-beret (1886).jpg" id="25_cqj4e"]
+[ext_resource type="PackedScene" uid="uid://b61bc37q3ie31" path="res://TestFingerprintSurface.tscn" id="28_4dh4x"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -55,11 +56,11 @@ size = Vector3(0.2, 5, 20)
 [sub_resource type="BoxShape3D" id="BoxShape3D_i6a4r"]
 size = Vector3(0.2, 5, 20)
 
-[sub_resource type="BoxMesh" id="BoxMesh_q1g8n"]
+[sub_resource type="BoxMesh" id="BoxMesh_b2g3v"]
 size = Vector3(0.2, 5, 20)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_mvtj7"]
-size = Vector3(0.2, 3, 20)
+[sub_resource type="BoxShape3D" id="BoxShape3D_dsomm"]
+size = Vector3(0.2, 5, 20)
 
 [sub_resource type="BoxMesh" id="BoxMesh_xlsm3"]
 size = Vector3(10, 5, 0.2)
@@ -181,12 +182,12 @@ shape = SubResource("BoxShape3D_i6a4r")
 
 [node name="Mesh" type="MeshInstance3D" parent="Wall_Right" unique_id=350192569]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9991713, 1.5195186, 0.0074449778)
-mesh = SubResource("BoxMesh_q1g8n")
+mesh = SubResource("BoxMesh_b2g3v")
 surface_material_override/0 = ExtResource("2_q1g8n")
 
 [node name="Collision" type="CollisionShape3D" parent="Wall_Right" unique_id=130317911]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 0)
-shape = SubResource("BoxShape3D_mvtj7")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 0)
+shape = SubResource("BoxShape3D_dsomm")
 
 [node name="Wall_front" type="StaticBody3D" parent="." unique_id=1311095966]
 
@@ -210,8 +211,9 @@ surface_material_override/0 = ExtResource("2_q1g8n")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 shape = SubResource("BoxShape3D_51hkx")
 
-[node name="Player" parent="." unique_id=566990049 instance=ExtResource("2_ydbhv")]
+[node name="Player" parent="." unique_id=566990049 node_paths=PackedStringArray("interaction_ui") instance=ExtResource("2_ydbhv")]
 transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 8)
+interaction_ui = NodePath("../CanvasLayer")
 
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("3_q1g8n")]
 
@@ -380,3 +382,6 @@ transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 2.69683, 2.369701, -9.7
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.029999733)
 mesh = SubResource("BoxMesh_4dh4x")
 surface_material_override/0 = SubResource("StandardMaterial3D_b2g3v")
+
+[node name="TestFingerprintSurface" parent="." unique_id=2051471120 instance=ExtResource("28_4dh4x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.070951045, 1.3628583, 2.2662182)

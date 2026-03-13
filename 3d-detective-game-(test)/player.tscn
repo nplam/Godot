@@ -49,5 +49,5 @@ spot_range = 10.0
 transform = Transform3D(1.5, 0, 0, 0, -6.556708e-08, -2, 0, 1.5, -8.742278e-08, 0, 0, -1.5)
 shape = SubResource("CylinderShape3D_hqtel")
 
-[node name="FingerprintBrush" parent="Hand" unique_id=462093230 instance=ExtResource("3_i3pqv")]
-transform = Transform3D(1.4488888, 0.3882286, 0, -0.3882286, 1.4488888, 0, 0, 0, 1.5, 0.1, 0.5, -1)
+[node name="FingerprintBrush" parent="Hand" unique_id=1177124621 instance=ExtResource("3_i3pqv")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.34099758, -1.2633348)
