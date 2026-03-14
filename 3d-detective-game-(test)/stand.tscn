@@ -9,7 +9,7 @@ albedo_color = Color(0.20392157, 0.10980392, 0.007843138, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_1ejoh"]
 size = Vector3(0.3, 1.5, 0.3)
 
-[node name="Stand" type="Node3D" unique_id=1179507639]
+[node name="Stand" type="StaticBody3D" unique_id=327416701]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1232939298]
 mesh = SubResource("BoxMesh_yav51")

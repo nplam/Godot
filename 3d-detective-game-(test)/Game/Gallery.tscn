@@ -362,7 +362,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -3)
 
 [node name="Stand" parent="Stand3" unique_id=202037669 instance=ExtResource("21_u2ju2")]
 
-[node name="Stand4" type="Node3D" parent="." unique_id=1241661131]
+[node name="Stand4" type="Node3D" parent="." unique_id=1256106789]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 6)
 
 [node name="Stand" parent="Stand4" unique_id=1749081322 instance=ExtResource("21_u2ju2")]
