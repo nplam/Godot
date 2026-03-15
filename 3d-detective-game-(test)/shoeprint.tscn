@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dnjg4lsp7yhcn"]
+
+[ext_resource type="Script" uid="uid://cfj7j5i07spvi" path="res://shoeprint.gd" id="1_kbx6c"]
+[ext_resource type="Material" uid="uid://dmx6px3wwrb2j" path="res://Assets/footprint_material.tres" id="2_mlm2r"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_mlm2r"]
+size = Vector2(0.3, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qgwfj"]
+transparency = 1
+emission_enabled = true
+emission = Color(0, 1, 0, 1)
+emission_energy_multiplier = 2.0
+uv1_scale = Vector3(1, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2sl6y"]
+size = Vector3(0.4, 0.05, 0.2)
+
+[node name="Shoeprint" type="Area3D" unique_id=901596888 groups=["shoeprint"]]
+collision_layer = 8
+script = ExtResource("1_kbx6c")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1570523981]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0124205, 0, 0.010758683, 0)
+material_override = ExtResource("2_mlm2r")
+mesh = SubResource("PlaneMesh_mlm2r")
+surface_material_override/0 = SubResource("StandardMaterial3D_qgwfj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1769601563]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+shape = SubResource("BoxShape3D_2sl6y")

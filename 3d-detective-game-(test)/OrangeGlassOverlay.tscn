@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://duuwukjtwn8nn"]
+
+[ext_resource type="Script" uid="uid://dkr3ya8mq56xr" path="res://OrangeGlassOverlay.gd" id="1_sgurh"]
+
+[node name="ColorRect" type="ColorRect" unique_id=1475515266]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 0.6, 0, 0.14901961)
+script = ExtResource("1_sgurh")

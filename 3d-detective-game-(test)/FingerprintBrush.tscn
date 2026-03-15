@@ -4,24 +4,22 @@
 [ext_resource type="Script" uid="uid://cfw0qpgdbl20y" path="res://FingerprintBrush_Test.gd" id="1_u7rnt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rele0"]
-size = Vector3(0.2, 0.2, 0.2)
+size = Vector3(0.3, 0.3, 0.4)
 
 [node name="FingerprintBrush" type="Node3D" unique_id=1225539843]
 script = ExtResource("1_u7rnt")
 
-[node name="BrushModel" parent="." unique_id=1667318828 instance=ExtResource("1_rele0")]
+[node name="BrushModel" parent="." unique_id=785876774 instance=ExtResource("1_rele0")]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 
-[node name="brush_large_fan_001" parent="BrushModel/RootNode" parent_id_path=PackedInt32Array(1667318828, 293032862) index="0" unique_id=1518554129]
+[node name="brush_large_fan_001" parent="BrushModel/RootNode" parent_id_path=PackedInt32Array(785876774, 2028124731) index="0" unique_id=326589104]
 transform = Transform3D(2, 1.7484555e-07, 1.7484555e-07, 1.7484555e-07, -2, 0, 1.7484555e-07, 1.5285484e-14, -2, 3.3715528e-12, 7.7132136e-05, 0)
 
 [node name="DetectionArea" type="Area3D" parent="." unique_id=183351789]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.015434414)
 collision_layer = 2
 collision_mask = 4
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea" unique_id=232598876]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.003986966, 0, -0.07496742)
 shape = SubResource("BoxShape3D_rele0")
 
 [editable path="BrushModel"]

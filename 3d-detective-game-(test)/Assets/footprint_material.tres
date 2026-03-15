@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dmx6px3wwrb2j"]
+
+[ext_resource type="Texture2D" uid="uid://14akp6wgvdj0" path="res://Assets/footprint.png" id="1_g1l3s"]
+
+[resource]
+transparency = 1
+albedo_texture = ExtResource("1_g1l3s")
+emission_enabled = true
+emission = Color(0, 1, 0, 1)
+emission_energy_multiplier = 3.0
+uv1_scale = Vector3(1, 2, 1)

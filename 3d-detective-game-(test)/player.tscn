@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://yvhwrst546ut" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://8e6unnp2rc4j" path="res://UVLight.gd" id="2_i3pqv"]
-[ext_resource type="PackedScene" uid="uid://brbo6abd3rpy5" path="res://FingerprintBrush.tscn" id="3_i3pqv"]
+[ext_resource type="Script" uid="uid://cf5dl3yhgl4vg" path="res://BlueLight.gd" id="3_i3pqv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
 
@@ -13,7 +13,7 @@ exposure_multiplier = 1.5
 height = 3.0
 radius = 1.0
 
-[node name="Player" type="CharacterBody3D" unique_id=566990049]
+[node name="Player" type="CharacterBody3D" unique_id=566990049 groups=["player"]]
 script = ExtResource("1_4flbx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1441527204]
@@ -32,11 +32,12 @@ debug_shape_custom_color = Color(1, 0, 0, 1)
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1032006996]
 
 [node name="Hand" type="Node3D" parent="." unique_id=1756283343]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.2, -0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.1, -0.3)
 script = ExtResource("2_i3pqv")
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Hand" unique_id=955049626]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+[node name="UVLight" type="SpotLight3D" parent="Hand" unique_id=955049626]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.1, -0.3)
+visible = false
 layers = 3
 light_color = Color(0.6666667, 0.53333336, 1, 1)
 light_energy = 5.0
@@ -44,10 +45,24 @@ light_cull_mask = 4293918723
 spot_range = 10.0
 
 [node name="DetectionArea" type="Area3D" parent="Hand" unique_id=983188115]
+collision_layer = 2
+collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hand/DetectionArea" unique_id=955897420]
 transform = Transform3D(1.5, 0, 0, 0, -6.556708e-08, -2, 0, 1.5, -8.742278e-08, 0, 0, -1.5)
 shape = SubResource("CylinderShape3D_hqtel")
 
-[node name="FingerprintBrush" parent="Hand" unique_id=1177124621 instance=ExtResource("3_i3pqv")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.34099758, -0.89410585)
+[node name="BlueLight" type="Node3D" parent="Hand" unique_id=918202239]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.1, -0.3)
+script = ExtResource("3_i3pqv")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Hand/BlueLight" unique_id=1490858246]
+layers = 3
+light_color = Color(0.26666668, 0.53333336, 1, 1)
+light_energy = 1.5
+light_cull_mask = 4293918723
+spot_range = 10.0
+
+[node name="DetectionArea" type="Area3D" parent="Hand/BlueLight" unique_id=1386196408]
+collision_layer = 4
+collision_mask = 16

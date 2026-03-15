@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dixuvypg7hyqj" path="res://FingerprintSurface.gd" id="1_dyqqh"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_nongw"]
-size = Vector3(0.5, 0.5, 0.1)
+size = Vector3(0.2, 0.2, 0.01)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dyqqh"]
 albedo_color = Color(0.6542321, 0.6542321, 0.654232, 1)
@@ -11,12 +11,13 @@ albedo_color = Color(0.6542321, 0.6542321, 0.654232, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_w1t4g"]
 size = Vector3(0.2, 0.2, 0.01)
 
-[node name="TestFingerprintSurface" type="Area3D" unique_id=2051471120]
+[node name="TestFingerprintSurface" type="Area3D" unique_id=2051471120 groups=["fingerprint_surface"]]
 collision_layer = 4
 collision_mask = 2
 script = ExtResource("1_dyqqh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=453915262]
+transform = Transform3D(1, 0, 0, 0, -4.3711385e-08, 0.99999994, 0, -0.99999994, -4.3711385e-08, 0, 0, 0)
 mesh = SubResource("BoxMesh_nongw")
 surface_material_override/0 = SubResource("StandardMaterial3D_dyqqh")
 

@@ -20,6 +20,9 @@ func _ready():
 	# Add to group for detection
 	add_to_group("blood_stain")
 	
+	# Set collision layer for UV light detection
+	collision_layer = 4  # Blood stains layer
+	
 	# Store original material (if any)
 	if mesh_instance:
 		original_material = mesh_instance.material_override
