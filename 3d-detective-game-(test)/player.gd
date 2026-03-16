@@ -12,9 +12,9 @@ extends CharacterBody3D
 @onready var hand: Node3D = $Hand
 @onready var interaction_ray: RayCast3D = $Head/Camera3D/InteractionRay
 
-# Forensic tools
-@onready var uv_light_system: Node3D = $Hand  # Hand node with UVLight.gd
-@onready var blue_light: Node3D = $Hand/BlueLight
+# Forensic tools - UPDATED to reference the DETECTION AREAS, not the visual lights
+@onready var uv_light_system: Area3D = $Hand/UVLightDetectionArea  # UVLight_new.gd attached here
+@onready var blue_light: Area3D = $Hand/BlueLightDetectionArea     # BlueLight_new.gd attached here
 @onready var glasses_overlay = get_node("/root/World/CanvasLayer/OrangeGlassesOverlay")
 
 @export var interaction_ui: CanvasLayer
@@ -30,7 +30,7 @@ func _ready():
 	interaction_ray.debug_shape_custom_color = Color.RED
 	interaction_ray.debug_shape_thickness = 2
 	
-	# Verify forensic tools are ready
+	# Verify forensic tools are ready - they should start OFF
 	if uv_light_system and uv_light_system.has_method("set_active"):
 		uv_light_system.set_active(false)
 	if blue_light and blue_light.has_method("set_active"):
@@ -83,11 +83,11 @@ func _input(event):
 	# Toggle orange glasses
 	if event.is_action_pressed("toggle_glasses"):
 		print("👓 toggle_glasses action detected!")
-		if glasses_overlay:
+		if glasses_overlay and glasses_overlay.has_method("toggle"):
 			print("   Glasses overlay exists, toggling...")
 			glasses_overlay.toggle()
 		else:
-			print("   ❌ glasses_overlay is null!")
+			print("   ❌ glasses_overlay is null or missing toggle method!")
 
 func set_tool(tool: ForensicTool):
 	# Turn off all lights first
@@ -102,7 +102,7 @@ func set_tool(tool: ForensicTool):
 		ForensicTool.UV:
 			if uv_light_system and uv_light_system.has_method("set_active"):
 				uv_light_system.set_active(true)
-			print("🔦 UV Light selected - detects blood stains")
+			print("🔦 UV Light selected - detects blood stains and shoeprints")
 		ForensicTool.BLUE:
 			if blue_light and blue_light.has_method("set_active"):
 				blue_light.set_active(true)

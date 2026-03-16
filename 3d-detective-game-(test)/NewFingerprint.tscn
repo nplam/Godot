@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://dkal0dg73wr5y"]
+
+[ext_resource type="Script" uid="uid://cympyi0val5fo" path="res://NewFingerprint.gd" id="1_17bkx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_m5d35"]
+size = Vector3(0.5, 0.5, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_17bkx"]
+albedo_color = Color(0, 0.84313726, 0.21176471, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_d63rc"]
+size = Vector3(0.5, 0.5, 0.1)
+
+[node name="NewFingerprint" type="Area3D" unique_id=749428020]
+script = ExtResource("1_17bkx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1841603371]
+mesh = SubResource("BoxMesh_m5d35")
+surface_material_override/0 = SubResource("StandardMaterial3D_17bkx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1429812102]
+shape = SubResource("BoxShape3D_d63rc")

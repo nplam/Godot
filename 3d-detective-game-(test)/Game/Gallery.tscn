@@ -28,8 +28,8 @@
 [ext_resource type="PackedScene" uid="uid://d0d4s72ttowvd" path="res://Game/painting_portrait.tscn" id="23_220ek"]
 [ext_resource type="Texture2D" uid="uid://cg6apuwh3vyek" path="res://Game/Painting/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg" id="24_cqj4e"]
 [ext_resource type="Texture2D" uid="uid://bq6ipupxmhf08" path="res://Game/Painting/self-portrait-with-a-beret (1886).jpg" id="25_cqj4e"]
-[ext_resource type="PackedScene" uid="uid://b61bc37q3ie31" path="res://TestFingerprintSurface.tscn" id="28_4dh4x"]
 [ext_resource type="PackedScene" uid="uid://dnjg4lsp7yhcn" path="res://shoeprint.tscn" id="30_dsomm"]
+[ext_resource type="PackedScene" uid="uid://dkal0dg73wr5y" path="res://NewFingerprint.tscn" id="30_oas7p"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -82,6 +82,7 @@ size = Vector3(0.930603, 1, 1.133667)
 [sub_resource type="PlaneMesh" id="PlaneMesh_sxsli"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iu18o"]
+size = Vector3(2, 0.1, 2)
 
 [sub_resource type="BoxMesh" id="BoxMesh_1a3ta"]
 size = Vector3(1.8, 1.3, 0.05)
@@ -213,9 +214,8 @@ surface_material_override/0 = ExtResource("2_q1g8n")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 10)
 shape = SubResource("BoxShape3D_51hkx")
 
-[node name="Player" parent="." unique_id=566990049 node_paths=PackedStringArray("interaction_ui") instance=ExtResource("2_ydbhv")]
+[node name="Player" parent="." unique_id=566990049 instance=ExtResource("2_ydbhv")]
 transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 8)
-interaction_ui = NodePath("../CanvasLayer")
 
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("3_q1g8n")]
 
@@ -266,6 +266,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.220297, -0.20597982, 5.725
 [node name="BloodStain_Interactable" type="Area3D" parent="." unique_id=225837450 groups=["blood_stain"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.05, 0)
 collision_layer = 8
+collision_mask = 0
 script = ExtResource("17_5pje2")
 
 [node name="HiddenBloodStain" type="MeshInstance3D" parent="BloodStain_Interactable" unique_id=1764148346]
@@ -275,7 +276,6 @@ material_override = ExtResource("18_hvoaa")
 mesh = SubResource("PlaneMesh_sxsli")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BloodStain_Interactable" unique_id=786122707]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.4459772, 0, -0.01265949)
 shape = SubResource("BoxShape3D_iu18o")
 
 [node name="Spotlight_Painting1" parent="." unique_id=1073074194 instance=ExtResource("16_i6a4r")]
@@ -386,8 +386,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.029999733)
 mesh = SubResource("BoxMesh_4dh4x")
 surface_material_override/0 = SubResource("StandardMaterial3D_b2g3v")
 
-[node name="TestFingerprintSurface" parent="." unique_id=2051471120 instance=ExtResource("28_4dh4x")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15802628, 1.5299339, 2.170788)
-
 [node name="Shoeprint" parent="." unique_id=901596888 instance=ExtResource("30_dsomm")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 4.4085665, 0.025116563, 0)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 4.4085665, 0.0021876395, 0)
+visible = false
+
+[node name="NewFingerprint" parent="." unique_id=749428020 instance=ExtResource("30_oas7p")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 2, 0.05, 3)

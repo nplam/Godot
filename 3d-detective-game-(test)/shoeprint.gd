@@ -14,6 +14,13 @@ var original_material: Material
 var is_collected: bool = false
 
 func _ready():
+	print("👣 Shoeprint _ready(): ", print_name)
+	print("   Layer: ", collision_layer)
+	print("   Groups: ", get_groups())
+	print("   CollisionShape exists: ", $CollisionShape3D != null)
+	if $CollisionShape3D:
+		print("   Shape position: ", $CollisionShape3D.position)
+		print("   Shape disabled: ", $CollisionShape3D.disabled)
 	# Add to group for UV detection
 	add_to_group("shoeprint")
 	
