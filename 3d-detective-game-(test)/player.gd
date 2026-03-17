@@ -14,7 +14,7 @@ extends CharacterBody3D
 
 # Forensic tools - UPDATED to reference the DETECTION AREAS, not the visual lights
 @onready var uv_light_system: Area3D = $Hand/UVLightDetectionArea  # UVLight_new.gd attached here
-@onready var blue_light: Area3D = $Hand/BlueLightDetectionArea     # BlueLight_new.gd attached here
+@onready var blue_light: Area3D = $Hand/BlueLightDetectionArea     # BlueLight_Fresh.gd attached here
 @onready var glasses_overlay = get_node("/root/World/CanvasLayer/OrangeGlassesOverlay")
 
 @export var interaction_ui: CanvasLayer

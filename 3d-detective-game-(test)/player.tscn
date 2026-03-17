@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://yvhwrst546ut" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://g1j8ergd165v" path="res://UVLight_new.gd" id="3_hqtel"]
-[ext_resource type="Script" uid="uid://bbsp53pfh01bp" path="res://BlueLight_New.gd" id="4_sweqy"]
+[ext_resource type="Script" uid="uid://ct0afkxjlk7yc" path="res://BlueLight_Fresh.gd" id="3_i3pqv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
 
@@ -12,10 +12,6 @@ exposure_multiplier = 1.5
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_hqtel"]
 height = 3.0
 radius = 1.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_i3pqv"]
-height = 6.0
-radius = 2.0
 
 [node name="Player" type="CharacterBody3D" unique_id=566990049 groups=["player"]]
 script = ExtResource("1_4flbx")
@@ -56,21 +52,20 @@ script = ExtResource("3_hqtel")
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -1.5)
 shape = SubResource("CylinderShape3D_hqtel")
 
-[node name="BlueLight" type="SpotLight3D" parent="Hand" unique_id=1490858246]
+[node name="BlueLight" type="SpotLight3D" parent="Hand" unique_id=276782421]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.1, -0.3)
-visible = false
-layers = 3
+layers = 4
 light_color = Color(0.26666668, 0.53333336, 1, 1)
-light_energy = 1.5
-light_cull_mask = 4293918723
+light_energy = 5.0
+light_cull_mask = 4293918721
 spot_range = 10.0
 
-[node name="BlueLightDetectionArea" type="Area3D" parent="Hand" unique_id=1386196408]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -2.6)
+[node name="BlueLightDetectionArea" type="Area3D" parent="Hand" unique_id=1095798526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.5)
 collision_layer = 4
 collision_mask = 16
-script = ExtResource("4_sweqy")
+script = ExtResource("3_i3pqv")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Hand/BlueLightDetectionArea" unique_id=937458076]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hand/BlueLightDetectionArea" unique_id=727968021]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -1.5)
-shape = SubResource("CylinderShape3D_i3pqv")
+shape = SubResource("CylinderShape3D_hqtel")
