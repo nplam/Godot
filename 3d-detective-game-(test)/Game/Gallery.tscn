@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bjmm4d7qr5y5h" path="res://EvidenceUI.tscn" id="4_u2ju2"]
 [ext_resource type="PackedScene" uid="uid://duuwukjtwn8nn" path="res://OrangeGlassOverlay.tscn" id="6_b2g3v"]
 [ext_resource type="PackedScene" uid="uid://tdugabfbyqal" path="res://InspectionView.tscn" id="6_ulosw"]
+[ext_resource type="Script" uid="uid://1jpivr5eqhn0" path="res://MagnifierUI.gd" id="7_oas7p"]
 [ext_resource type="PackedScene" uid="uid://dys268n0evd3s" path="res://Assets/Poly/brass_vase_01_1k.gltf/brass_vase_01_1k.gltf" id="9_f00s6"]
 [ext_resource type="PackedScene" uid="uid://dxr44kpb8gijd" path="res://Assets/Poly/marble_bust_01_4k.gltf" id="9_lyw06"]
 [ext_resource type="PackedScene" uid="uid://cyfhqk58boywv" path="res://Assets/Poly/brass_vase_03_1k.gltf/brass_vase_03_1k.gltf" id="10_4dh4x"]
@@ -29,6 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://d0d4s72ttowvd" path="res://Game/painting_portrait.tscn" id="23_220ek"]
 [ext_resource type="Texture2D" uid="uid://cg6apuwh3vyek" path="res://Game/Painting/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg" id="24_cqj4e"]
 [ext_resource type="Texture2D" uid="uid://bq6ipupxmhf08" path="res://Game/Painting/self-portrait-with-a-beret (1886).jpg" id="25_cqj4e"]
+[ext_resource type="Script" uid="uid://bewukms3t2luq" path="res://MagnifierRegistrar.gd" id="31_po3a5"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -74,6 +76,9 @@ size = Vector3(10, 5, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_51hkx"]
 size = Vector3(10, 5, 0.2)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_8myva"]
+viewport_path = NodePath("MagnifierViewport")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_w47ov"]
 size = Vector3(0.930603, 1, 1.133667)
@@ -225,6 +230,16 @@ transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 8)
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("3_q1g8n")]
 
 [node name="OrangeGlassesOverlay" parent="CanvasLayer" unique_id=1475515266 instance=ExtResource("6_b2g3v")]
+
+[node name="MagnifierTexture" type="TextureRect" parent="CanvasLayer" unique_id=889492077]
+visible = false
+z_index = 10
+offset_right = 200.0
+offset_bottom = 200.0
+mouse_filter = 2
+texture = SubResource("ViewportTexture_8myva")
+stretch_mode = 4
+script = ExtResource("7_oas7p")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=448332793]
 
@@ -405,3 +420,16 @@ transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 2.69683, 2.369701, -9.7
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.029999733)
 mesh = SubResource("BoxMesh_4dh4x")
 surface_material_override/0 = SubResource("StandardMaterial3D_b2g3v")
+
+[node name="MagnifierViewport" type="SubViewport" parent="." unique_id=1020536380]
+size = Vector2i(256, 256)
+render_target_update_mode = 4
+
+[node name="MagnifierCamera" type="Camera3D" parent="MagnifierViewport" unique_id=641925961]
+current = true
+fov = 12.0
+near = 0.1
+far = 1000.0
+
+[node name="MagnifierRegistrar" type="Node" parent="." unique_id=1773548555]
+script = ExtResource("31_po3a5")

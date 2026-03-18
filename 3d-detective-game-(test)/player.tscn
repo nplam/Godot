@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://yvhwrst546ut" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://g1j8ergd165v" path="res://UVLight_new.gd" id="3_hqtel"]
 [ext_resource type="Script" uid="uid://ct0afkxjlk7yc" path="res://BlueLight_Fresh.gd" id="3_i3pqv"]
+[ext_resource type="Script" uid="uid://cakt0yx1g5p1b" path="res://MagnifierTool.gd" id="4_hqtel"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
 
@@ -69,3 +70,6 @@ script = ExtResource("3_i3pqv")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Hand/BlueLightDetectionArea" unique_id=727968021]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, -1.5)
 shape = SubResource("CylinderShape3D_hqtel")
+
+[node name="MagnifierTool" type="Node3D" parent="Hand" unique_id=890351015]
+script = ExtResource("4_hqtel")

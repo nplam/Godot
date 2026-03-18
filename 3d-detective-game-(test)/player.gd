@@ -12,14 +12,16 @@ extends CharacterBody3D
 @onready var hand: Node3D = $Hand
 @onready var interaction_ray: RayCast3D = $Head/Camera3D/InteractionRay
 
-# Forensic tools - UPDATED to reference the DETECTION AREAS, not the visual lights
-@onready var uv_light_system: Area3D = $Hand/UVLightDetectionArea  # UVLight_new.gd attached here
-@onready var blue_light: Area3D = $Hand/BlueLightDetectionArea     # BlueLight_Fresh.gd attached here
+# Forensic tools
+@onready var uv_light_system: Area3D = $Hand/UVLightDetectionArea
+@onready var blue_light: Area3D = $Hand/BlueLightDetectionArea
+@onready var magnifier_tool: Node3D = $Hand/MagnifierTool  # NEW: Magnifier tool
 @onready var glasses_overlay = get_node("/root/World/CanvasLayer/OrangeGlassesOverlay")
 
 @export var interaction_ui: CanvasLayer
 
-enum ForensicTool { NONE, UV, BLUE }
+# Updated enum to include MAGNIFIER
+enum ForensicTool { NONE, UV, BLUE, MAGNIFIER }
 var current_tool: ForensicTool = ForensicTool.NONE
 var current_interactable: Node = null
 var current_speed: float
@@ -30,12 +32,14 @@ func _ready():
 	interaction_ray.debug_shape_custom_color = Color.RED
 	interaction_ray.debug_shape_thickness = 2
 	
-	# Verify forensic tools are ready - they should start OFF
+	# Verify forensic tools are ready
 	if uv_light_system and uv_light_system.has_method("set_active"):
 		uv_light_system.set_active(false)
 	if blue_light and blue_light.has_method("set_active"):
 		blue_light.set_active(false)
-	print("🔧 Forensic tools ready - 1:UV, 2:Blue, 0:None, G:Glasses")
+	if magnifier_tool and magnifier_tool.has_method("set_active"):  # NEW
+		magnifier_tool.set_active(false)
+	print("🔧 Forensic tools ready - 1:UV, 2:Blue, 3:Magnifier, 0:None, G:Glasses")  # Updated
 	
 	# Debug glasses overlay
 	if glasses_overlay:
@@ -46,21 +50,25 @@ func _ready():
 	# Verify toggle_glasses action
 	print("🔍 Input Map has toggle_glasses: ", InputMap.has_action("toggle_glasses"))
 
+	# Register this player's camera with the magnifier system
+	MagnifierManager.register_player_camera(camera)
+	print("📷 Player camera registered with magnifier system")
+	
 func _input(event):
-	# MOUSE LOOK: Only when right mouse button is held
+	# MOUSE LOOK
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		rotate_y(-event.relative.x * mouse_sensitivity)
 		camera.rotate_x(-event.relative.y * mouse_sensitivity)
 		camera.rotation.x = clamp(camera.rotation.x, -1.4, 1.4)
 	
-	# ESC key to toggle mouse capture
+	# ESC key
 	if event.is_action_pressed("ui_cancel"):
 		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	# LEFT CLICK to interact with clues
+	# LEFT CLICK to interact
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if current_interactable:
 			print("🖱️ Left click on: ", current_interactable.name)
@@ -72,11 +80,13 @@ func _input(event):
 			else:
 				CursorManager.reset_cursor()
 	
-	# Forensic tool selection
+	# Forensic tool selection - UPDATED to include magnifier
 	if event.is_action_pressed("tool_uv"):
 		set_tool(ForensicTool.UV)
 	elif event.is_action_pressed("tool_blue"):
 		set_tool(ForensicTool.BLUE)
+	elif event.is_action_pressed("tool_magnifier"):  # NEW
+		set_tool(ForensicTool.MAGNIFIER)
 	elif event.is_action_pressed("tool_none"):
 		set_tool(ForensicTool.NONE)
 	
@@ -90,11 +100,13 @@ func _input(event):
 			print("   ❌ glasses_overlay is null or missing toggle method!")
 
 func set_tool(tool: ForensicTool):
-	# Turn off all lights first
+	# Turn off all tools first
 	if uv_light_system and uv_light_system.has_method("set_active"):
 		uv_light_system.set_active(false)
 	if blue_light and blue_light.has_method("set_active"):
 		blue_light.set_active(false)
+	if magnifier_tool and magnifier_tool.has_method("set_active"):  # NEW
+		magnifier_tool.set_active(false)
 	
 	current_tool = tool
 	
@@ -107,6 +119,10 @@ func set_tool(tool: ForensicTool):
 			if blue_light and blue_light.has_method("set_active"):
 				blue_light.set_active(true)
 			print("🔵 Blue Light selected - detects fingerprints (requires orange glasses)")
+		ForensicTool.MAGNIFIER:  # NEW
+			if magnifier_tool and magnifier_tool.has_method("set_active"):
+				magnifier_tool.set_active(true)
+			print("🔍 Magnifier selected - zoom in on details")
 		ForensicTool.NONE:
 			print("🔧 No tool selected")
 
@@ -121,14 +137,10 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
 
-	# Get input direction
+	# Movement
 	var input_dir = Input.get_vector("left", "right", "forward", "back")
-	
-	# Create a basis from just the player's Y rotation
 	var player_basis = Basis()
 	player_basis = player_basis.rotated(Vector3.UP, rotation.y)
-	
-	# Convert input to world space
 	var direction = (player_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	if direction:
@@ -160,27 +172,22 @@ func check_interaction():
 			CursorManager.set_cursor(CursorManager.CursorState.HOVER)
 			
 			if current_interactable != collider:
-				# Unfocus previous
 				if current_interactable and current_interactable.has_method("on_unfocus"):
 					current_interactable.on_unfocus()
 				
-				# Focus new
 				current_interactable = collider
 				if current_interactable.has_method("on_focus"):
 					current_interactable.on_focus()
 				
-				# Show the UI prompt
 				if interaction_ui and interaction_ui.has_method("show_prompt"):
 					interaction_ui.show_prompt(collider.get_interaction_text())
 			return
 	
-	# Not looking at any interactable
 	if current_interactable:
 		if current_interactable.has_method("on_unfocus"):
 			current_interactable.on_unfocus()
 		current_interactable = null
 	
-	# Hide the UI prompt
 	if interaction_ui and interaction_ui.has_method("hide_prompt"):
 		interaction_ui.hide_prompt()
 	
