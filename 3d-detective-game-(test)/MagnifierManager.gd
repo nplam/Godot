@@ -1,4 +1,4 @@
-# MagnifierManager.gd - With adjustable speed and smoothing
+# MagnifierManager.gd - Cursor-aligned magnifier
 extends Node
 
 var magnifier_ui = null
@@ -6,15 +6,9 @@ var player_camera = null
 var magnifier_viewport = null
 var magnifier_cam = null
 
-# Adjust these values to control speed
-var mouse_sensitivity: float = 0.001  # Much slower (was 0.005)
-var magnifier_yaw: float = 0.0
-var magnifier_pitch: float = 0.0
-
-# Smoothing variables
-var target_yaw: float = 0.0
-var target_pitch: float = 0.0
-var smooth_speed: float = 10.0  # Higher = faster response
+# Smoothing for cursor movement
+var smoothed_dir: Vector3 = Vector3.ZERO
+var smoothing_factor: float = 0.3  # Lower = smoother, higher = more responsive
 
 func register_magnifier_ui(ui_node):
 	magnifier_ui = ui_node
@@ -32,36 +26,35 @@ func set_magnifier_active(active: bool):
 	if magnifier_ui and magnifier_ui.has_method("set_active"):
 		magnifier_ui.set_active(active)
 	
-	if active and player_camera:
-		# Initialize magnifier camera to look where player is looking
-		var player_basis = player_camera.global_transform.basis
-		var player_euler = player_basis.get_euler()
-		target_yaw = player_euler.y
-		target_pitch = player_euler.x
-		magnifier_yaw = target_yaw
-		magnifier_pitch = target_pitch
+	# Reset smoothing when activating
+	if active:
+		smoothed_dir = Vector3.ZERO
 
 func update_magnifier_position(mouse_pos: Vector2):
 	if magnifier_ui and magnifier_ui.has_method("update_position"):
 		magnifier_ui.update_position(mouse_pos)
 
 func _process(delta):
-	if magnifier_ui and magnifier_ui.is_active and magnifier_cam:
-		# Get mouse movement (use relative motion instead of velocity)
-		var mouse_motion = Input.get_last_mouse_velocity()
+	if magnifier_ui and magnifier_ui.is_active and player_camera and magnifier_cam:
+		# Get current mouse position
+		var mouse_pos = get_viewport().get_mouse_position()
 		
-		# Update target rotation with much lower sensitivity
-		target_yaw -= mouse_motion.x * mouse_sensitivity
-		target_pitch -= mouse_motion.y * mouse_sensitivity
-		target_pitch = clamp(target_pitch, -1.4, 1.4)  # Limit up/down
+		# Calculate ray from camera through mouse position
+		var from = player_camera.project_ray_origin(mouse_pos)
+		var dir = player_camera.project_ray_normal(mouse_pos)
 		
-		# Smoothly interpolate to target rotation
-		magnifier_yaw = lerp(magnifier_yaw, target_yaw, smooth_speed * delta)
-		magnifier_pitch = lerp(magnifier_pitch, target_pitch, smooth_speed * delta)
+		# Smooth the direction to prevent shaking
+		if smoothed_dir == Vector3.ZERO:
+			smoothed_dir = dir
+		else:
+			smoothed_dir = smoothed_dir.lerp(dir, smoothing_factor)
 		
-		# Apply rotation to magnifier camera
-		magnifier_cam.rotation = Vector3(magnifier_pitch, magnifier_yaw, 0)
+		# Position magnifier camera at player's eye
+		magnifier_cam.global_position = player_camera.global_position
 		
-		# Position at player's location
-		if player_camera:
-			magnifier_cam.global_position = player_camera.global_position
+		# Make magnifier camera look at where mouse is pointing
+		var look_at_pos = from + smoothed_dir * 10.0
+		magnifier_cam.look_at(look_at_pos, Vector3.UP)
+		
+		# Small forward offset to better match perspective
+		magnifier_cam.global_position += smoothed_dir * 0.2
