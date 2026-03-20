@@ -54,15 +54,16 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0
 shape = SubResource("CylinderShape3D_hqtel")
 
 [node name="BlueLight" type="SpotLight3D" parent="Hand" unique_id=276782421]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, -0.1, -0.3)
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0.2, -0.1, -0.3)
 layers = 4
 light_color = Color(0.26666668, 0.53333336, 1, 1)
 light_energy = 5.0
 light_cull_mask = 4293918721
 spot_range = 10.0
+spot_angle = 60.0
 
 [node name="BlueLightDetectionArea" type="Area3D" parent="Hand" unique_id=1095798526]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0.5)
 collision_layer = 4
 collision_mask = 16
 script = ExtResource("3_i3pqv")

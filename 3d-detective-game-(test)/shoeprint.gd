@@ -21,6 +21,7 @@ func _ready():
 	if $CollisionShape3D:
 		print("   Shape position: ", $CollisionShape3D.position)
 		print("   Shape disabled: ", $CollisionShape3D.disabled)
+	
 	# Add to group for UV detection
 	add_to_group("shoeprint")
 	
@@ -35,6 +36,12 @@ func _ready():
 		print("⚠️ No MeshInstance3D found in shoeprint")
 	
 	print("👣 Shoeprint ready (invisible): ", print_name)
+
+# Click detection
+func _input_event(camera: Camera3D, event: InputEvent, position: Vector3, normal: Vector3, shape_idx: int):
+	# Only collect if glowing and left-clicked
+	if is_glowing and not is_collected and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		collect_evidence()
 
 # Called by UV light when detected
 func on_uv_detected():

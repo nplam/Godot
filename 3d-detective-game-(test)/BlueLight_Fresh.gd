@@ -1,4 +1,4 @@
-# BlueLight_Fresh.gd - Based on working UVLight template
+# BlueLight_Fresh.gd - With full debug
 extends Area3D
 
 # References
@@ -17,7 +17,6 @@ func _ready():
 	print("   Visual light via $../BlueLight: ", visual_light)
 	
 	if not visual_light:
-		# Try alternative methods
 		var parent = get_parent()
 		if parent:
 			for child in parent.get_children():
@@ -37,9 +36,9 @@ func _ready():
 	monitoring = false
 	print("   Monitoring disabled")
 	
-	# Connect signals - BOTH entered and exited
+	# Connect signals
 	area_entered.connect(_on_area_entered)
-	area_exited.connect(_on_area_exited)  # ← CRITICAL: Add this line!
+	area_exited.connect(_on_area_exited)
 	print("   Signals connected (entered and exited)")
 	
 	print("🔵 Blue Light Fresh ready\n")
@@ -53,9 +52,6 @@ func set_active(active: bool):
 	if visual_light:
 		visual_light.visible = active
 		print("   ✅ Visual light set to ", active)
-		print("   Light energy: ", visual_light.light_energy)
-		print("   Light range: ", visual_light.spot_range)
-		print("   Light cull mask: ", visual_light.light_cull_mask)
 	else:
 		print("   ⚠️ visual_light is null!")
 	
@@ -64,16 +60,33 @@ func set_active(active: bool):
 	print("🔵 Blue Light active: ", active)
 
 func _on_area_entered(area: Area3D):
+	print("\n🔵🔵🔵 AREA ENTERED: ", area.name)
+	print("   is_on: ", is_on)
+	print("   area groups: ", area.get_groups())
+	print("   area has on_blue_light_detected: ", area.has_method("on_blue_light_detected"))
+	
 	if not is_on:
+		print("   ❌ Light is off - ignoring")
 		return
 	
 	var glasses_on = glasses_overlay and glasses_overlay.is_on if glasses_overlay else false
+	print("   Glasses on: ", glasses_on)
+	
 	if not glasses_on:
+		print("   👓 Glasses off - fingerprint invisible")
 		return
 	
+	print("   ✅ Glasses on - can detect")
+	
 	if area.is_in_group("fingerprint_surface") and area.has_method("on_blue_light_detected"):
-		print("🔵 Fingerprint detected!")
+		print("   ✅✅✅ Fingerprint detected! Calling on_blue_light_detected()")
 		area.on_blue_light_detected()
+	else:
+		print("   ❌ Not a valid fingerprint surface")
+		if not area.is_in_group("fingerprint_surface"):
+			print("      - Wrong group (should be 'fingerprint_surface')")
+		if not area.has_method("on_blue_light_detected"):
+			print("      - Missing on_blue_light_detected method")
 
 func _on_area_exited(area: Area3D):
 	print("\n🔵 AREA EXITED: ", area.name)
