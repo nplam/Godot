@@ -100,13 +100,15 @@ func _input(event):
 			print("   ❌ glasses_overlay is null or missing toggle method!")
 
 func set_tool(tool: ForensicTool):
-	# Turn off all tools first
-	if uv_light_system and uv_light_system.has_method("set_active"):
-		uv_light_system.set_active(false)
-	if blue_light and blue_light.has_method("set_active"):
-		blue_light.set_active(false)
-	if magnifier_tool and magnifier_tool.has_method("set_active"):  # NEW
-		magnifier_tool.set_active(false)
+	# Only turn off the previous light, NOT the magnifier
+	match current_tool:
+		ForensicTool.UV:
+			if uv_light_system and uv_light_system.has_method("set_active"):
+				uv_light_system.set_active(false)
+		ForensicTool.BLUE:
+			if blue_light and blue_light.has_method("set_active"):
+				blue_light.set_active(false)
+		# MAGNIFIER doesn't need deactivation here
 	
 	current_tool = tool
 	
@@ -119,11 +121,14 @@ func set_tool(tool: ForensicTool):
 			if blue_light and blue_light.has_method("set_active"):
 				blue_light.set_active(true)
 			print("🔵 Blue Light selected - detects fingerprints (requires orange glasses)")
-		ForensicTool.MAGNIFIER:  # NEW
+		ForensicTool.MAGNIFIER:
 			if magnifier_tool and magnifier_tool.has_method("set_active"):
 				magnifier_tool.set_active(true)
 			print("🔍 Magnifier selected - zoom in on details")
 		ForensicTool.NONE:
+			# Turn off everything including magnifier
+			if magnifier_tool and magnifier_tool.has_method("set_active"):
+				magnifier_tool.set_active(false)
 			print("🔧 No tool selected")
 
 func _physics_process(delta):
