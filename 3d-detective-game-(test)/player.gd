@@ -1,3 +1,4 @@
+# player.gd
 extends CharacterBody3D
 
 @export var walk_speed := 5.0
@@ -15,12 +16,14 @@ extends CharacterBody3D
 # Forensic tools
 @onready var uv_light_system: Area3D = $Hand/UVLightDetectionArea
 @onready var blue_light: Area3D = $Hand/BlueLightDetectionArea
-@onready var magnifier_tool: Node3D = $Hand/MagnifierTool  # NEW: Magnifier tool
+@onready var magnifier_tool: Node3D = $Hand/MagnifierTool
 @onready var glasses_overlay = get_node("/root/World/CanvasLayer/OrangeGlassesOverlay")
 
 @export var interaction_ui: CanvasLayer
 
-# Updated enum to include MAGNIFIER
+# Debug marker
+var hit_glow_marker: MeshInstance3D = null
+
 enum ForensicTool { NONE, UV, BLUE, MAGNIFIER }
 var current_tool: ForensicTool = ForensicTool.NONE
 var current_interactable: Node = null
@@ -32,14 +35,26 @@ func _ready():
 	interaction_ray.debug_shape_custom_color = Color.RED
 	interaction_ray.debug_shape_thickness = 2
 	
+	# Create glow marker for debugging
+	hit_glow_marker = MeshInstance3D.new()
+	hit_glow_marker.mesh = SphereMesh.new()
+	hit_glow_marker.scale = Vector3(0.1, 0.1, 0.1)
+	var glow_mat = StandardMaterial3D.new()
+	glow_mat.albedo_color = Color(1, 0, 0, 0.8)
+	glow_mat.emission_enabled = true
+	glow_mat.emission = Color.RED
+	hit_glow_marker.material_override = glow_mat
+	add_child(hit_glow_marker)
+	hit_glow_marker.visible = false
+	
 	# Verify forensic tools are ready
 	if uv_light_system and uv_light_system.has_method("set_active"):
 		uv_light_system.set_active(false)
 	if blue_light and blue_light.has_method("set_active"):
 		blue_light.set_active(false)
-	if magnifier_tool and magnifier_tool.has_method("set_active"):  # NEW
+	if magnifier_tool and magnifier_tool.has_method("set_active"):
 		magnifier_tool.set_active(false)
-	print("🔧 Forensic tools ready - 1:UV, 2:Blue, 3:Magnifier, 0:None, G:Glasses")  # Updated
+	print("🔧 Forensic tools ready - 1:UV, 2:Blue, 3:Magnifier, 0:None, G:Glasses")
 	
 	# Debug glasses overlay
 	if glasses_overlay:
@@ -80,12 +95,12 @@ func _input(event):
 			else:
 				CursorManager.reset_cursor()
 	
-	# Forensic tool selection - UPDATED to include magnifier
+	# Forensic tool selection
 	if event.is_action_pressed("tool_uv"):
 		set_tool(ForensicTool.UV)
 	elif event.is_action_pressed("tool_blue"):
 		set_tool(ForensicTool.BLUE)
-	elif event.is_action_pressed("tool_magnifier"):  # NEW
+	elif event.is_action_pressed("tool_magnifier"):
 		set_tool(ForensicTool.MAGNIFIER)
 	elif event.is_action_pressed("tool_none"):
 		set_tool(ForensicTool.NONE)
@@ -108,7 +123,6 @@ func set_tool(tool: ForensicTool):
 		ForensicTool.BLUE:
 			if blue_light and blue_light.has_method("set_active"):
 				blue_light.set_active(false)
-		# MAGNIFIER doesn't need deactivation here
 	
 	current_tool = tool
 	
@@ -126,7 +140,6 @@ func set_tool(tool: ForensicTool):
 				magnifier_tool.set_active(true)
 			print("🔍 Magnifier selected - zoom in on details")
 		ForensicTool.NONE:
-			# Turn off everything including magnifier
 			if magnifier_tool and magnifier_tool.has_method("set_active"):
 				magnifier_tool.set_active(false)
 			print("🔧 No tool selected")
@@ -172,6 +185,14 @@ func rotate_hand_toward_camera(delta):
 func check_interaction():
 	if interaction_ray.is_colliding():
 		var collider = interaction_ray.get_collider()
+		var hit_point = interaction_ray.get_collision_point()
+		
+		# Show red glow at hit point
+		if hit_glow_marker:
+			hit_glow_marker.global_position = hit_point
+			hit_glow_marker.visible = true
+		
+		print("🎯 Ray hit: ", collider.name, " at ", hit_point)
 		
 		if collider and collider.has_method("get_interaction_text"):
 			CursorManager.set_cursor(CursorManager.CursorState.HOVER)
@@ -187,6 +208,9 @@ func check_interaction():
 				if interaction_ui and interaction_ui.has_method("show_prompt"):
 					interaction_ui.show_prompt(collider.get_interaction_text())
 			return
+	else:
+		if hit_glow_marker:
+			hit_glow_marker.visible = false
 	
 	if current_interactable:
 		if current_interactable.has_method("on_unfocus"):

@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://caq274pyk70hn"]
+
+[ext_resource type="AudioStream" uid="uid://dk4avq1xvm8w1" path="res://Assets/soundreality-opening-door-411632.mp3" id="1_riey8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ww3x0"]
+albedo_color = Color(0.54509807, 0.3529412, 0.16862746, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_lu3cx"]
+material = SubResource("StandardMaterial3D_ww3x0")
+size = Vector3(0.9, 2.1, 0.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_riey8"]
+size = Vector3(0.9, 2.1, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cuwmv"]
+albedo_color = Color(0.76862746, 0.6431373, 0.5176471, 1)
+roughness = 0.07
+
+[sub_resource type="BoxMesh" id="BoxMesh_0choy"]
+size = Vector3(0.8, 2, 0.1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pvcax"]
+top_radius = 0.04
+bottom_radius = 0.04
+height = 0.3
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ww3x0"]
+size = Vector3(0.8, 2, 0.1)
+
+[node name="LockDoor" type="Node3D" unique_id=1500794749]
+
+[node name="DoorFrame" type="StaticBody3D" parent="." unique_id=1197452720]
+
+[node name="FrameMesh" type="MeshInstance3D" parent="DoorFrame" unique_id=239286242]
+mesh = SubResource("BoxMesh_lu3cx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorFrame" unique_id=780950129]
+shape = SubResource("BoxShape3D_riey8")
+
+[node name="Door" type="StaticBody3D" parent="." unique_id=1510772341]
+
+[node name="DoorMesh" type="MeshInstance3D" parent="Door" unique_id=1363460121]
+material_override = SubResource("StandardMaterial3D_cuwmv")
+mesh = SubResource("BoxMesh_0choy")
+
+[node name="DoorNob" type="MeshInstance3D" parent="Door" unique_id=2012273621]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.2688724, 0.027837992, -0.0056670606)
+mesh = SubResource("CylinderMesh_pvcax")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door" unique_id=1490510296]
+shape = SubResource("BoxShape3D_ww3x0")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Door" unique_id=892481252]
+stream = ExtResource("1_riey8")

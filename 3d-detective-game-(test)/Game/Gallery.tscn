@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://caaifp46knfmi"]
 
-[ext_resource type="Material" uid="uid://br0d5h8x0kgnp" path="res://Materials/wood_floor.tres" id="1_51hkx"]
+[ext_resource type="Texture2D" uid="uid://h4d4srdvvygu" path="res://Assets/Poly/textures/wood_floor_arm_4k.jpg" id="1_po3a5"]
+[ext_resource type="Texture2D" uid="uid://dxr167po7mr0" path="res://Assets/Poly/textures/wood_floor_nor_gl_4k.jpg" id="2_8myva"]
 [ext_resource type="Material" uid="uid://bdwdukp3iuq6a" path="res://Materials/WallPlaster_Tiled.tres" id="2_q1g8n"]
 [ext_resource type="PackedScene" uid="uid://nkcar76aqdb" path="res://player.tscn" id="2_ydbhv"]
 [ext_resource type="PackedScene" uid="uid://clg61px2by33h" path="res://InteractionPrompt.tscn" id="3_q1g8n"]
@@ -19,10 +20,9 @@
 [ext_resource type="PackedScene" uid="uid://cbhirascueh18" path="res://Game/Painting.tscn" id="17_1a3ta"]
 [ext_resource type="Script" uid="uid://bmhemos4g3fmj" path="res://BloodStain.gd" id="17_5pje2"]
 [ext_resource type="Script" uid="uid://dixuvypg7hyqj" path="res://FingerprintSurface.gd" id="17_b2g3v"]
-[ext_resource type="Texture2D" uid="uid://14akp6wgvdj0" path="res://Assets/footprint.png" id="17_po3a5"]
 [ext_resource type="Texture2D" uid="uid://chox864cu6qfr" path="res://Game/Painting/claude-monet-impression-sunrise-1872-obelisk-art-history.jpg" id="17_u2ju2"]
-[ext_resource type="Material" uid="uid://dbv8cw5cfu12j" path="res://Materials/hidden_evidence.material.tres" id="18_hvoaa"]
 [ext_resource type="Material" uid="uid://bqj2aylsuqfhm" path="res://Materials/Painting1.tres" id="18_ydbhv"]
+[ext_resource type="Texture2D" uid="uid://daefj81w8474y" path="res://Assets/fingerprint.png" id="19_8myva"]
 [ext_resource type="Texture2D" uid="uid://bfshqfv52r4y0" path="res://Game/Painting/Claude_Monet,_Saint-Georges_majeur_au_crépuscule.jpg" id="19_36yhk"]
 [ext_resource type="Material" uid="uid://deellby0l04fh" path="res://Materials/Painting2.tres" id="19_q1g8n"]
 [ext_resource type="Material" uid="uid://bxlelytocla41" path="res://Materials/Painting3.tres" id="20_q1g8n"]
@@ -32,6 +32,8 @@
 [ext_resource type="Texture2D" uid="uid://cg6apuwh3vyek" path="res://Game/Painting/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg" id="24_cqj4e"]
 [ext_resource type="Texture2D" uid="uid://bq6ipupxmhf08" path="res://Game/Painting/self-portrait-with-a-beret (1886).jpg" id="25_cqj4e"]
 [ext_resource type="Script" uid="uid://bewukms3t2luq" path="res://MagnifierRegistrar.gd" id="31_po3a5"]
+[ext_resource type="PackedScene" uid="uid://caq274pyk70hn" path="res://Game/LockDoor.tscn" id="33_8myva"]
+[ext_resource type="PackedScene" uid="uid://dwkrus6mdtn52" path="res://Game/keypad.tscn" id="34_5pje2"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -46,6 +48,21 @@ size = Vector3(10, 1, 20)
 
 [sub_resource type="BoxMesh" id="BoxMesh_po3a5"]
 size = Vector3(10, 1, 20)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hvoaa"]
+load_path = "res://.godot/imported/wood_floor_diff_4k.jpg-49d2364a201629053e4398cbd2d33874.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0opgy"]
+resource_name = "wood_floor"
+cull_mode = 2
+albedo_texture = SubResource("CompressedTexture2D_hvoaa")
+metallic_texture = ExtResource("1_po3a5")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("1_po3a5")
+roughness_texture_channel = 1
+normal_enabled = true
+normal_texture = ExtResource("2_8myva")
+uv1_scale = Vector3(15, 15, 15)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_34lg8"]
 size = Vector3(10, 1, 20)
@@ -87,10 +104,13 @@ viewport_path = NodePath("MagnifierViewport")
 [sub_resource type="BoxShape3D" id="BoxShape3D_w47ov"]
 size = Vector3(0.930603, 1, 1.133667)
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_t6gkp"]
+load_path = "res://.godot/imported/footprint.png-8c23ed1a8bb13a8b6deaca6ec2b44fd3.s3tc.ctex"
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8myva"]
 transparency = 1
 albedo_color = Color(0.5019608, 0.5019608, 0.5019608, 1)
-albedo_texture = ExtResource("17_po3a5")
+albedo_texture = SubResource("CompressedTexture2D_t6gkp")
 emission_enabled = true
 emission = Color(0.16924527, 0.1692453, 0.16924527, 1)
 emission_energy_multiplier = 3.0
@@ -101,8 +121,23 @@ size = Vector2(0.3, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_iu18o"]
 size = Vector3(2, 0.1, 2)
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_po3a5"]
+load_path = "res://.godot/imported/fingerprint.png-f95f5963eac1df38459f7292542d8d1d.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gn80i"]
+transparency = 1
+albedo_color = Color(0.5019608, 0.5019608, 0.5019608, 0.007843138)
+albedo_texture = SubResource("CompressedTexture2D_po3a5")
+emission_enabled = true
+emission = Color(0.16924527, 0.1692453, 0.16924527, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po3a5"]
+albedo_color = Color(0.20392157, 0.10980392, 0.007843138, 0.47843137)
+albedo_texture = ExtResource("19_8myva")
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_dsomm"]
-size = Vector2(0.3, 0.3)
+size = Vector2(0.15, 0.2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oas7p"]
 size = Vector3(0.5, 0.1, 0.5)
@@ -179,7 +214,7 @@ shape = SubResource("BoxShape3D_ydbhv")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=691654072]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 mesh = SubResource("BoxMesh_po3a5")
-surface_material_override/0 = ExtResource("1_51hkx")
+surface_material_override/0 = SubResource("StandardMaterial3D_0opgy")
 
 [node name="Ceiling" type="StaticBody3D" parent="." unique_id=508533093]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
@@ -316,11 +351,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13904855, 1.4604535, 1.8477
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("17_b2g3v")
+glow_intensity = 0.3
 
 [node name="HiddenFingerprint" type="MeshInstance3D" parent="Fingerprint_Interactable2" unique_id=1486895267]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.05, 0)
 layers = 2
-material_override = ExtResource("18_hvoaa")
+material_override = SubResource("StandardMaterial3D_gn80i")
+material_overlay = SubResource("StandardMaterial3D_po3a5")
 mesh = SubResource("PlaneMesh_dsomm")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Fingerprint_Interactable2" unique_id=1768672210]
@@ -446,3 +483,9 @@ far = 1000.0
 
 [node name="MagnifierRegistrar" type="Node" parent="." unique_id=1773548555]
 script = ExtResource("31_po3a5")
+
+[node name="LockDoor" parent="." unique_id=1500794749 instance=ExtResource("33_8myva")]
+transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 1.8237405, 1.5485854, 9.906324)
+
+[node name="Keypad" parent="." unique_id=531938731 instance=ExtResource("34_5pje2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.239461, 1.830802, 9.640066)

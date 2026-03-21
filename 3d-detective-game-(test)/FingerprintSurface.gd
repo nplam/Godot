@@ -1,11 +1,11 @@
-# FingerprintSurface.gd - Based on working BloodStain template
+# FingerprintSurface.gd - With subtle glow that preserves texture
 extends Area3D
 
 @export var print_name: String = "Fingerprint"
 @export var evidence_id: String = "fp_1"
 @export var evidence_description: String = "A latent fingerprint that glows under blue light."
 @export var glow_color: Color = Color(1.0, 0.5, 0.0)  # Orange glow
-@export var glow_intensity: float = 3.0
+@export var glow_intensity: float = 0.8  # Lower intensity for subtle glow
 
 # References - make sure these paths are correct
 @onready var mesh_instance: MeshInstance3D = $HiddenFingerprint
@@ -96,38 +96,47 @@ func on_blue_light_detected():
 	is_glowing = true
 	print("🔵 Fingerprint REVEALED: ", print_name)
 	
-	# Make visible and apply glow
+	# Make visible
 	mesh_instance.visible = true
 	print("   Mesh visibility set to: ", mesh_instance.visible)
 	
-	# Create glow material
-	var glow_mat = StandardMaterial3D.new()
-	glow_mat.albedo_color = glow_color
-	glow_mat.emission_enabled = true
-	glow_mat.emission = glow_color
-	glow_mat.emission_energy_multiplier = glow_intensity
+	# Get current material (with your fingerprint texture)
+	var current_mat = mesh_instance.material_override
 	
-	# Apply glow
-	mesh_instance.material_override = glow_mat
-	print("   Glow material applied")
+	# If no material, create one
+	if not current_mat:
+		current_mat = StandardMaterial3D.new()
+		mesh_instance.material_override = current_mat
 	
-	# Optional: Add a subtle pulsing effect - with null check
+	# Preserve the original texture if available
+	if original_material and original_material.albedo_texture:
+		current_mat.albedo_texture = original_material.albedo_texture
+	
+	# Add subtle orange glow to the existing material (preserves texture!)
+	current_mat.emission_enabled = true
+	current_mat.emission = glow_color
+	current_mat.emission_energy_multiplier = glow_intensity
+	
+	# Make sure the base color is white to show the texture properly
+	current_mat.albedo_color = Color.WHITE
+	
+	print("   Subtle glow added to fingerprint material")
+	
+	# Optional: Add a subtle pulsing effect
 	if mesh_instance:
 		create_glow_animation()
-	else:
-		print("   ⚠️ Cannot animate - mesh_instance null")
 	
 	print("=== END on_blue_light_detected ===\n")
 
 func create_glow_animation():
 	if not mesh_instance:
-		print("   ⚠️ Cannot animate - mesh_instance null")
 		return
 	
 	var tween = create_tween()
 	tween.set_loops()
-	tween.tween_property(mesh_instance, "scale", mesh_instance.scale * 1.1, 0.5)
-	tween.tween_property(mesh_instance, "scale", mesh_instance.scale, 0.5)
+	# Scale pulse - very subtle (1.02 instead of 1.1)
+	tween.tween_property(mesh_instance, "scale", mesh_instance.scale * 1.02, 0.8)
+	tween.tween_property(mesh_instance, "scale", mesh_instance.scale, 0.8)
 
 # Called by player when interacting with glowing fingerprint
 func collect_evidence():

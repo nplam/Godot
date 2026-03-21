@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://drjy1qilkv6b6"]
+
+[ext_resource type="Texture2D" uid="uid://daefj81w8474y" path="res://Assets/fingerprint.png" id="1_d5aam"]
+
+[resource]
+albedo_color = Color(0.20392157, 0.10980392, 0.007843138, 1)
+albedo_texture = ExtResource("1_d5aam")
