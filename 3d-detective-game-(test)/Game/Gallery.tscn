@@ -6,15 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://nkcar76aqdb" path="res://player.tscn" id="2_ydbhv"]
 [ext_resource type="PackedScene" uid="uid://clg61px2by33h" path="res://InteractionPrompt.tscn" id="3_q1g8n"]
 [ext_resource type="Material" uid="uid://cgc2i5dsyyjuf" path="res://Materials/WallPlaster.tres" id="3_u2ju2"]
-[ext_resource type="PackedScene" uid="uid://bjmm4d7qr5y5h" path="res://EvidenceUI.tscn" id="4_u2ju2"]
 [ext_resource type="PackedScene" uid="uid://duuwukjtwn8nn" path="res://OrangeGlassOverlay.tscn" id="6_b2g3v"]
-[ext_resource type="PackedScene" uid="uid://tdugabfbyqal" path="res://InspectionView.tscn" id="6_ulosw"]
 [ext_resource type="Script" uid="uid://1jpivr5eqhn0" path="res://MagnifierUI.gd" id="7_oas7p"]
+[ext_resource type="PackedScene" uid="uid://cincg2qg4o3vo" path="res://Game/CaseBoard.tscn" id="7_po3a5"]
 [ext_resource type="PackedScene" uid="uid://dys268n0evd3s" path="res://Assets/Poly/brass_vase_01_1k.gltf/brass_vase_01_1k.gltf" id="9_f00s6"]
 [ext_resource type="PackedScene" uid="uid://dxr44kpb8gijd" path="res://Assets/Poly/marble_bust_01_4k.gltf" id="9_lyw06"]
 [ext_resource type="PackedScene" uid="uid://cyfhqk58boywv" path="res://Assets/Poly/brass_vase_03_1k.gltf/brass_vase_03_1k.gltf" id="10_4dh4x"]
-[ext_resource type="Script" uid="uid://bclmmhwc641e7" path="res://Interactable.gd" id="10_f00s6"]
-[ext_resource type="Texture2D" uid="uid://cgqrsocdmlbqw" path="res://Assets/vase_icon.png" id="15_po3a5"]
+[ext_resource type="Texture2D" uid="uid://br151pp5gmx8r" path="res://Assets/footprint_icon.png" id="15_oas7p"]
 [ext_resource type="PackedScene" uid="uid://cvp5822g8qxl8" path="res://Assets/Poly/antique_ceramic_vase_01_4k.glb" id="16_8myva"]
 [ext_resource type="PackedScene" uid="uid://bnpyup5r266qu" path="res://wallspotlight.tscn" id="16_i6a4r"]
 [ext_resource type="PackedScene" uid="uid://cbhirascueh18" path="res://Game/Painting.tscn" id="17_1a3ta"]
@@ -33,7 +31,6 @@
 [ext_resource type="Texture2D" uid="uid://bq6ipupxmhf08" path="res://Game/Painting/self-portrait-with-a-beret (1886).jpg" id="25_cqj4e"]
 [ext_resource type="Script" uid="uid://bewukms3t2luq" path="res://MagnifierRegistrar.gd" id="31_po3a5"]
 [ext_resource type="PackedScene" uid="uid://caq274pyk70hn" path="res://Game/LockDoor.tscn" id="33_8myva"]
-[ext_resource type="PackedScene" uid="uid://dwkrus6mdtn52" path="res://Game/keypad.tscn" id="34_5pje2"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -44,7 +41,7 @@ tonemap_mode = 2
 tonemap_exposure = 1.5
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ydbhv"]
-size = Vector3(10, 1, 20)
+size = Vector3(10, 0.2, 20)
 
 [sub_resource type="BoxMesh" id="BoxMesh_po3a5"]
 size = Vector3(10, 1, 20)
@@ -119,7 +116,7 @@ emission_energy_multiplier = 3.0
 size = Vector2(0.3, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iu18o"]
-size = Vector3(2, 0.1, 2)
+size = Vector3(0.5, 0.1, 1)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_po3a5"]
 load_path = "res://.godot/imported/fingerprint.png-f95f5963eac1df38459f7292542d8d1d.s3tc.ctex"
@@ -277,6 +274,8 @@ transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 8)
 
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("3_q1g8n")]
 
+[node name="CaseBoard" parent="CanvasLayer" unique_id=679401411 instance=ExtResource("7_po3a5")]
+
 [node name="OrangeGlassesOverlay" parent="CanvasLayer" unique_id=1475515266 instance=ExtResource("6_b2g3v")]
 
 [node name="MagnifierTexture" type="TextureRect" parent="CanvasLayer" unique_id=889492077]
@@ -288,13 +287,6 @@ mouse_filter = 2
 texture = SubResource("ViewportTexture_8myva")
 stretch_mode = 4
 script = ExtResource("7_oas7p")
-
-[node name="UI" type="CanvasLayer" parent="." unique_id=448332793]
-
-[node name="Control" parent="UI" unique_id=1328873859 instance=ExtResource("4_u2ju2")]
-scale = Vector2(1, 1.0256411)
-
-[node name="InspectionView" parent="UI" unique_id=1400097580 instance=ExtResource("6_ulosw")]
 
 [node name="StaticBody3D7" type="StaticBody3D" parent="." unique_id=207238661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
@@ -318,11 +310,6 @@ transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 2.5168555, 1.2548552, 5.75031
 
 [node name="StaticBody3D4" type="StaticBody3D" parent="." unique_id=1775140534]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.235, 1.7, -3.716)
-script = ExtResource("10_f00s6")
-object_name = "Vase"
-examination_text = ""
-evidence_id = "Vase"
-evidence_texture = ExtResource("15_po3a5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D4" unique_id=687896995]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.04524994, -0.10493088, -0.44682837)
@@ -331,19 +318,21 @@ shape = SubResource("BoxShape3D_w47ov")
 [node name="antique_ceramic_vase_01_4k" parent="StaticBody3D4" unique_id=1901479055 instance=ExtResource("16_8myva")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.220297, -0.20597982, 5.725274)
 
-[node name="BloodStain_Interactable" type="Area3D" parent="." unique_id=225837450 groups=["blood_stain"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.05, 0)
+[node name="BloodStain_Interactable" type="StaticBody3D" parent="." unique_id=1439379330 groups=["blood_stain"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.1, 0)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("17_5pje2")
+evidence_texture = ExtResource("15_oas7p")
 
 [node name="HiddenBloodStain" type="MeshInstance3D" parent="BloodStain_Interactable" unique_id=1764148346]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.05, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.2, 0)
 layers = 2
 material_override = SubResource("StandardMaterial3D_8myva")
 mesh = SubResource("PlaneMesh_sxsli")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BloodStain_Interactable" unique_id=786122707]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 shape = SubResource("BoxShape3D_iu18o")
 
 [node name="Fingerprint_Interactable2" type="Area3D" parent="." unique_id=1594921073]
@@ -486,6 +475,3 @@ script = ExtResource("31_po3a5")
 
 [node name="LockDoor" parent="." unique_id=1500794749 instance=ExtResource("33_8myva")]
 transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 1.8237405, 1.5485854, 9.906324)
-
-[node name="Keypad" parent="." unique_id=531938731 instance=ExtResource("34_5pje2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.239461, 1.830802, 9.640066)

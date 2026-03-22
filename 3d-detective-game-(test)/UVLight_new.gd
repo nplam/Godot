@@ -1,4 +1,4 @@
-# UVLight_new.gd - Complete version with robust node finding
+# UVLight_new.gd - Detects both Area3D and StaticBody3D
 extends Area3D
 
 # Track light state
@@ -39,16 +39,33 @@ func _ready():
 		print("   ❌ CRITICAL: UVLight node not found anywhere!")
 		print("   Parent children: ", get_parent().get_children())
 	
+	# DEBUG: Print detection area info (this node itself)
+	print("\n🔦 UV LIGHT DETECTION AREA:")
+	print("   Position: ", global_position)
+	print("   Local position: ", position)
+	var shape_node = $CollisionShape3D
+	if shape_node and shape_node.shape:
+		print("   Shape type: ", shape_node.shape.get_class())
+		if shape_node.shape is BoxShape3D:
+			print("   Box size: ", shape_node.shape.size)
+		elif shape_node.shape is CylinderShape3D:
+			print("   Cylinder radius: ", shape_node.shape.radius)
+			print("   Cylinder height: ", shape_node.shape.height)
+	else:
+		print("   ⚠️ No collision shape found!")
+	
 	# Start disabled
 	if visual_light:
 		visual_light.visible = false
 	monitoring = false
 	
-	# Connect signals
+	# Connect signals for BOTH Area3D and StaticBody3D
 	area_entered.connect(_on_area_entered)
 	area_exited.connect(_on_area_exited)
+	body_entered.connect(_on_body_entered)   # ← NEW: Detect StaticBody3D
+	body_exited.connect(_on_body_exited)     # ← NEW: Detect StaticBody3D
 	
-	print("🔦 UV Light ready")
+	print("🔦 UV Light ready (detects both Area3D and StaticBody3D)\n")
 
 func set_active(active: bool):
 	is_on = active
@@ -66,14 +83,23 @@ func set_active(active: bool):
 
 func reset_all_evidence():
 	print("🔄 Resetting all evidence")
-	var overlapping = get_overlapping_areas()
-	for area in overlapping:
+	# Reset areas (Area3D)
+	for area in get_overlapping_areas():
 		if area.has_method("reset_glow"):
-			print("   Resetting glow for: ", area.name)
+			print("   Resetting glow for area: ", area.name)
 			area.reset_glow()
+	# Reset bodies (StaticBody3D)
+	for body in get_overlapping_bodies():
+		if body.has_method("reset_glow"):
+			print("   Resetting glow for body: ", body.name)
+			body.reset_glow()
 
+# Detect Area3D (like blood stains)
 func _on_area_entered(area: Area3D):
-	print("🔦 Area entered: ", area.name)
+	print("\n🔦 AREA ENTERED: ", area.name)
+	print("   Area position: ", area.global_position)
+	print("   Area groups: ", area.get_groups())
+	print("   Area layer: ", area.collision_layer)
 	
 	if not is_on:
 		print("   Light off - ignoring")
@@ -82,14 +108,32 @@ func _on_area_entered(area: Area3D):
 	if area.is_in_group("blood_stain") and area.has_method("on_uv_detected"):
 		print("   ✅ Blood stain detected!")
 		area.on_uv_detected()
+	else:
+		print("   ❌ Not a valid blood stain")
+
+# Detect StaticBody3D (like shoeprints)
+func _on_body_entered(body: Node3D):
+	print("\n🔦 BODY ENTERED: ", body.name)
+	print("   Body position: ", body.global_position)
+	print("   Body groups: ", body.get_groups())
+	print("   Body layer: ", body.collision_layer)
 	
-	elif area.is_in_group("shoeprint") and area.has_method("on_uv_detected"):
+	if not is_on:
+		print("   Light off - ignoring")
+		return
+	
+	if body.is_in_group("shoeprint") and body.has_method("on_uv_detected"):
 		print("   ✅ Shoeprint detected!")
-		area.on_uv_detected()
+		body.on_uv_detected()
+	else:
+		print("   ❌ Not a valid shoeprint")
 
 func _on_area_exited(area: Area3D):
-	print("🔦 Area exited: ", area.name)
-	
+	print("\n🔦 AREA EXITED: ", area.name)
 	if area.has_method("reset_glow"):
-		print("   Resetting glow for: ", area.name)
 		area.reset_glow()
+
+func _on_body_exited(body: Node3D):
+	print("\n🔦 BODY EXITED: ", body.name)
+	if body.has_method("reset_glow"):
+		body.reset_glow()

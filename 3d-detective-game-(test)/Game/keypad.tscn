@@ -2,22 +2,25 @@
 
 [ext_resource type="Script" uid="uid://byxk1be1ps0lq" path="res://Keypad.gd" id="1_yw8ra"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yw8ra"]
+albedo_color = Color(0.40069774, 0.40069774, 0.40069768, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_ww3x0"]
+material = SubResource("StandardMaterial3D_yw8ra")
 size = Vector3(0.15, 0.2, 0.05)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lu3cx"]
 size = Vector3(0.3, 0.35, 0.2)
 
-[node name="Keypad" type="Area3D" unique_id=531938731 node_paths=PackedStringArray("door")]
+[node name="Keypad" type="Area3D" unique_id=531938731]
 script = ExtResource("1_yw8ra")
-door = NodePath("")
 
 [node name="KeypadMesh" type="MeshInstance3D" parent="." unique_id=483731536]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.27, 0.16299999, 0.11263702)
 mesh = SubResource("BoxMesh_ww3x0")
 
 [node name="KeypadDisplay" type="Label3D" parent="." unique_id=243742885]
-transform = Transform3D(0.40318653, 0, 0, 0, 0.34074453, 0, 0, 0, 0.48813915, 0.27432555, 0.21188018, 0.14182287)
+transform = Transform3D(0.40318653, 0, 0, 0, 0.34074453, 0, 0, 0, 0.48813915, 0.26951027, 0.21422315, 0.14182287)
 text = "____"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2020746579]

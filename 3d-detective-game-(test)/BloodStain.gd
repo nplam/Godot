@@ -1,11 +1,12 @@
-# BloodStain.gd - Updated for shoeprint with glow
-extends Area3D
+# Shoeprint.gd - Uses interact() for click detection
+extends StaticBody3D
 
-@export var stain_name: String = "Shoeprint"  # Changed from Blood Stain
-@export var stain_description: String = "A muddy shoeprint that glows under UV light."  # Changed
-@export var evidence_id: String = "shoe_1"  # Changed
-@export var glow_color: Color = Color(0, 1, 0)  # Green glow (changed from red)
-@export var glow_intensity: float = 3.0  # Slightly lower for shoeprint
+@export var stain_name: String = "Shoeprint"
+@export var stain_description: String = "A muddy shoeprint that glows under UV light."
+@export var evidence_id: String = "shoe_1"
+@export var glow_color: Color = Color(0, 1, 0)  # Green glow
+@export var glow_intensity: float = 3.0
+@export var evidence_texture: Texture2D  # ← ADD THIS LINE
 
 # References
 @onready var mesh_instance: MeshInstance3D = $HiddenBloodStain
@@ -14,144 +15,126 @@ extends Area3D
 # State tracking
 var is_glowing: bool = false
 var original_material: Material
-var is_collected: bool = false
+var is_added_to_case: bool = false
+
+# Double-click detection
+var last_click_time: float = 0
+var double_click_threshold: float = 0.3  # 0.3 seconds between clicks
 
 func _ready():
-	# Debug initial state
-	print("\n=== SHOEPRINT READY ===")
-	print("Name: ", stain_name)
-	print("Node: ", name)
-	print("Path: ", get_path())
+	print("\n========== SHOEPRINT READY ==========")
+	print("📍 POSITION: ", global_position)
 	
-	# Add to group for detection
-	add_to_group("shoeprint")  # Changed from blood_stain
-	print("Groups after adding: ", get_groups())
-	
-	# Set collision layer for UV light detection
-	collision_layer = 4  # UV evidence layer
-	# Force layer bits
+	# Set collision layer (Layer 4)
+	collision_layer = 4
+	set_collision_layer_value(3, false)
 	set_collision_layer_value(4, true)
-	set_collision_layer_value(3, false)  # Explicitly turn off layer 3
-	print("Collision Layer set to: ", collision_layer)
 	
-	# Verify layer bits
-	var layers = []
-	for i in range(1, 6):
-		if get_collision_layer_value(i):
-			layers.append(str(i))
-	print("Active Layers: ", "Layer " + ", Layer ".join(layers) if layers else "None")
+	# Enable input detection
+	input_ray_pickable = true
+	print("   Input ray pickable: ", input_ray_pickable)
 	
-	# Store original material (if any)
+	# Add to groups
+	add_to_group("blood_stain")
+	add_to_group("shoeprint")
+	print("👥 GROUPS: ", get_groups())
+	
+	# Store original material and start invisible
 	if mesh_instance:
 		original_material = mesh_instance.material_override
-		# Start invisible
 		mesh_instance.visible = false
-		print("Mesh instance found: ", mesh_instance.name)
-		print("Mesh visible: ", mesh_instance.visible)
-	else:
-		print("⚠️ No MeshInstance3D found in shoeprint")
 	
-	# Check collision shape
-	if collision_shape:
-		print("CollisionShape3D found")
-		print("   Position: ", collision_shape.position)
-		print("   Scale: ", collision_shape.scale)
-		print("   Disabled: ", collision_shape.disabled)
-		if collision_shape.shape:
-			print("   Shape type: ", collision_shape.shape.get_class())
-			if collision_shape.shape is BoxShape3D:
-				print("   Shape size: ", collision_shape.shape.size)
-		else:
-			print("   ⚠️ No shape assigned!")
-	else:
-		print("⚠️ No CollisionShape3D found!")
-	
-	print("=== END SHOEPRINT READY ===\n")
+	print("👣 Shoeprint ready - UV light to reveal, double-click to add to case board")
 
-# Called by UV light when detected
-func on_uv_detected():
-	print("\n👣 on_uv_detected() CALLED for: ", stain_name)
-	print("   is_collected: ", is_collected)
+func get_interaction_text() -> String:
+	return "Examine " + stain_name
+
+# Called by Player.gd when clicking
+func interact():
+	print("🖱️ interact() called on shoeprint")
 	print("   is_glowing: ", is_glowing)
+	print("   is_added_to_case: ", is_added_to_case)
 	
-	if is_collected or is_glowing:
-		print("   Already glowing or collected - ignoring")
+	if is_glowing and not is_added_to_case:
+		var current_time = Time.get_ticks_msec() / 1000.0
+		var time_diff = current_time - last_click_time
+		
+		print("   Time since last click: ", time_diff)
+		
+		if time_diff < double_click_threshold and time_diff > 0.01:
+			print("\n📋📋📋 DOUBLE CLICK DETECTED! Adding to case board 📋📋📋")
+			add_to_case_board()
+		else:
+			print("   Single click detected (double-click within ", double_click_threshold, "s to add)")
+		
+		last_click_time = current_time
+
+func on_uv_detected():
+	print("\n🔆 UV DETECTED! Shoeprint at ", global_position)
+	
+	if is_added_to_case or is_glowing:
 		return
 	
 	is_glowing = true
-	print("👣 Shoeprint REVEALED: ", stain_name)
+	print("✨ Shoeprint REVEALED! (Green glow)")
 	
-	# Make visible and add glow to existing material
 	if mesh_instance:
 		mesh_instance.visible = true
 		
-		# Get the current material (with your shoeprint texture)
 		var current_mat = mesh_instance.material_override
-		
-		# If there's no material, create one
 		if not current_mat:
 			current_mat = StandardMaterial3D.new()
 			mesh_instance.material_override = current_mat
 		
-		# Add green glow to the existing material (preserves texture!)
 		current_mat.emission_enabled = true
 		current_mat.emission = glow_color
 		current_mat.emission_energy_multiplier = glow_intensity
-		
-		print("   Mesh visibility set to: ", mesh_instance.visible)
-		print("   Glow added to existing shoeprint material")
-	else:
-		print("   ⚠️ No mesh instance to show!")
+
+func add_to_case_board():
+	print("\n📋 add_to_case_board() CALLED")
+	print("   stain_name: ", stain_name)
+	print("   evidence_id: ", evidence_id)
+	print("   is_added_to_case: ", is_added_to_case)
 	
-	# Optional: Add a subtle pulsing effect
-	create_glow_animation()
-	print("=== END on_uv_detected ===\n")
-
-func create_glow_animation():
-	var tween = create_tween()
-	tween.set_loops()
-	tween.tween_property(mesh_instance, "scale", mesh_instance.scale * 1.05, 0.5)
-	tween.tween_property(mesh_instance, "scale", mesh_instance.scale, 0.5)
-
-# Called by player when interacting with glowing shoeprint
-func collect_evidence():
-	print("\n💰 collect_evidence() CALLED for: ", stain_name)
-	if is_collected:
-		print("   Already collected - ignoring")
+	if is_added_to_case:
+		print("   Already added to case board - ignoring")
 		return
 	
-	is_collected = true
-	print("✅ Collecting shoeprint: ", stain_name)
+	is_added_to_case = true
+	print("📋 Adding to case board: ", stain_name)
 	
-	# Pass a Dictionary to EvidenceSystem
 	var data = {
 		"id": evidence_id,
 		"name": stain_name,
-		"description": stain_description
+		"description": stain_description,
+		"texture": evidence_texture  # ← ADD THIS LINE
 	}
-	EvidenceSystem.collect_evidence(data)
-	print("   Evidence system called with ID: ", evidence_id)
 	
-	queue_free()
-	print("   Shoeprint removed from scene")
-	print("=== END collect_evidence ===\n")
+	var case_board = get_tree().get_first_node_in_group("case_board")
+	print("   case_board found: ", case_board)
+	
+	if case_board and case_board.has_method("add_evidence"):
+		case_board.add_evidence(data)
+		print("   ✅ Added to case board!")
+		
+		# Visual feedback - flash green to confirm
+		if mesh_instance:
+			var flash_mat = StandardMaterial3D.new()
+			flash_mat.albedo_color = Color(0, 1, 0)
+			flash_mat.emission_enabled = true
+			flash_mat.emission = Color(0, 1, 0)
+			mesh_instance.material_override = flash_mat
+			await get_tree().create_timer(0.2).timeout
+			mesh_instance.material_override = original_material
+	else:
+		print("   ⚠️ Case board not found or missing add_evidence method")
 
-# Reset when UV light moves away
 func reset_glow():
-	print("\n🔄 reset_glow() CALLED for: ", stain_name)
 	if not is_glowing:
-		print("   Not glowing - ignoring")
 		return
 	is_glowing = false
-	print("👣 Shoeprint hidden again: ", stain_name)
+	print("👣 Shoeprint hidden (glow removed)")
 	
-	# Hide and restore original material
 	if mesh_instance:
 		mesh_instance.visible = false
 		mesh_instance.material_override = original_material
-		print("   Mesh hidden and material restored")
-	
-	# Stop any animations
-	var tween = get_tree().create_tween()
-	tween.kill()
-	print("=== END reset_glow ===\n")

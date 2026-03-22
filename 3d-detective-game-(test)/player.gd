@@ -1,4 +1,4 @@
-# player.gd
+# player.gd - With ray hit visual marker and layer debug
 extends CharacterBody3D
 
 @export var walk_speed := 5.0
@@ -13,6 +13,8 @@ extends CharacterBody3D
 @onready var hand: Node3D = $Hand
 @onready var interaction_ray: RayCast3D = $Head/Camera3D/InteractionRay
 
+@onready var case_board: Control = get_tree().root.find_child("CaseBoard", true, false)
+
 # Forensic tools
 @onready var uv_light_system: Area3D = $Hand/UVLightDetectionArea
 @onready var blue_light: Area3D = $Hand/BlueLightDetectionArea
@@ -21,7 +23,7 @@ extends CharacterBody3D
 
 @export var interaction_ui: CanvasLayer
 
-# Debug marker
+# Ray hit visual marker
 var hit_glow_marker: MeshInstance3D = null
 
 enum ForensicTool { NONE, UV, BLUE, MAGNIFIER }
@@ -35,10 +37,10 @@ func _ready():
 	interaction_ray.debug_shape_custom_color = Color.RED
 	interaction_ray.debug_shape_thickness = 2
 	
-	# Create glow marker for debugging
+	# Create red glow marker for ray hit
 	hit_glow_marker = MeshInstance3D.new()
 	hit_glow_marker.mesh = SphereMesh.new()
-	hit_glow_marker.scale = Vector3(0.1, 0.1, 0.1)
+	hit_glow_marker.scale = Vector3(0.08, 0.08, 0.08)
 	var glow_mat = StandardMaterial3D.new()
 	glow_mat.albedo_color = Color(1, 0, 0, 0.8)
 	glow_mat.emission_enabled = true
@@ -47,7 +49,7 @@ func _ready():
 	add_child(hit_glow_marker)
 	hit_glow_marker.visible = false
 	
-	# Verify forensic tools are ready
+	# Initialize forensic tools
 	if uv_light_system and uv_light_system.has_method("set_active"):
 		uv_light_system.set_active(false)
 	if blue_light and blue_light.has_method("set_active"):
@@ -56,21 +58,26 @@ func _ready():
 		magnifier_tool.set_active(false)
 	print("🔧 Forensic tools ready - 1:UV, 2:Blue, 3:Magnifier, 0:None, G:Glasses")
 	
-	# Debug glasses overlay
-	if glasses_overlay:
-		print("✅ Glasses overlay found: ", glasses_overlay)
-	else:
-		print("❌ Glasses overlay NOT found - check path!")
-		
-	# Verify toggle_glasses action
-	print("🔍 Input Map has toggle_glasses: ", InputMap.has_action("toggle_glasses"))
-
-	# Register this player's camera with the magnifier system
+	# Register camera for magnifier
 	MagnifierManager.register_player_camera(camera)
-	print("📷 Player camera registered with magnifier system")
 	
+	# DEBUG: Print raycast mask layers
+	print("🔍 RAYCAST DEBUG:")
+	print("   Raycast collision mask: ", interaction_ray.collision_mask)
+	var masks = []
+	for i in range(1, 33):
+		if interaction_ray.get_collision_mask_value(i):
+			masks.append(str(i))
+	print("   Active mask layers: ", "Layer " + ", Layer ".join(masks))
+	
+	print("🔍 CaseBoard found: ", case_board)
+	if case_board:
+		print("   Path: ", case_board.get_path())
+	else:
+		print("   ❌ CaseBoard not found - check node name!")
+
 func _input(event):
-	# MOUSE LOOK
+	# Mouse look
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		rotate_y(-event.relative.x * mouse_sensitivity)
 		camera.rotate_x(-event.relative.y * mouse_sensitivity)
@@ -83,10 +90,11 @@ func _input(event):
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	# LEFT CLICK to interact
+	# Left click to collect evidence
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if current_interactable:
 			print("🖱️ Left click on: ", current_interactable.name)
+			print("   Calling interact() on: ", current_interactable.name)  # DEBUG
 			CursorManager.set_cursor(CursorManager.CursorState.CLICK)
 			current_interactable.interact()
 			await get_tree().create_timer(0.1).timeout
@@ -95,7 +103,7 @@ func _input(event):
 			else:
 				CursorManager.reset_cursor()
 	
-	# Forensic tool selection
+	# Tool selection
 	if event.is_action_pressed("tool_uv"):
 		set_tool(ForensicTool.UV)
 	elif event.is_action_pressed("tool_blue"):
@@ -107,15 +115,20 @@ func _input(event):
 	
 	# Toggle orange glasses
 	if event.is_action_pressed("toggle_glasses"):
-		print("👓 toggle_glasses action detected!")
 		if glasses_overlay and glasses_overlay.has_method("toggle"):
-			print("   Glasses overlay exists, toggling...")
 			glasses_overlay.toggle()
+			
+	if event.is_action_pressed("open_case_board"):  # Add to Input Map (C key)
+		print("🔑 C key pressed - toggling case board")
+		print("   case_board node: ", case_board)
+		if case_board:
+			case_board.visible = !case_board.visible
+			print("   case_board visible: ", case_board.visible)
 		else:
-			print("   ❌ glasses_overlay is null or missing toggle method!")
+			print("   ❌ case_board is null!")
 
 func set_tool(tool: ForensicTool):
-	# Only turn off the previous light, NOT the magnifier
+	# Turn off previous light
 	match current_tool:
 		ForensicTool.UV:
 			if uv_light_system and uv_light_system.has_method("set_active"):
@@ -130,15 +143,15 @@ func set_tool(tool: ForensicTool):
 		ForensicTool.UV:
 			if uv_light_system and uv_light_system.has_method("set_active"):
 				uv_light_system.set_active(true)
-			print("🔦 UV Light selected - detects blood stains and shoeprints")
+			print("🔦 UV Light selected")
 		ForensicTool.BLUE:
 			if blue_light and blue_light.has_method("set_active"):
 				blue_light.set_active(true)
-			print("🔵 Blue Light selected - detects fingerprints (requires orange glasses)")
+			print("🔵 Blue Light selected")
 		ForensicTool.MAGNIFIER:
 			if magnifier_tool and magnifier_tool.has_method("set_active"):
 				magnifier_tool.set_active(true)
-			print("🔍 Magnifier selected - zoom in on details")
+			print("🔍 Magnifier selected")
 		ForensicTool.NONE:
 			if magnifier_tool and magnifier_tool.has_method("set_active"):
 				magnifier_tool.set_active(false)
@@ -187,12 +200,12 @@ func check_interaction():
 		var collider = interaction_ray.get_collider()
 		var hit_point = interaction_ray.get_collision_point()
 		
-		# Show red glow at hit point
+		# Show red marker at hit point
 		if hit_glow_marker:
 			hit_glow_marker.global_position = hit_point
 			hit_glow_marker.visible = true
 		
-		print("🎯 Ray hit: ", collider.name, " at ", hit_point)
+		# DEBUG prints commented out
 		
 		if collider and collider.has_method("get_interaction_text"):
 			CursorManager.set_cursor(CursorManager.CursorState.HOVER)
