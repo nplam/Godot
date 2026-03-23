@@ -1,4 +1,4 @@
-# SuspectSlot.gd - Updated with debug for evidence placement
+# SuspectSlot.gd - Updated with 2-evidence culprit detection
 extends PanelContainer
 
 signal evidence_placed(evidence_id, suspect_id, is_correct)
@@ -6,7 +6,7 @@ signal evidence_removed(evidence_id, suspect_id)
 
 var suspect_data: SuspectData
 var suspect_id: String = ""
-var placed_evidence: Dictionary = {}
+var placed_evidence: Dictionary = {}  # {evidence_type: evidence_info}
 var case_board: Node = null
 
 # Node references
@@ -99,8 +99,8 @@ func _apply_setup(setup_data: Dictionary):
 			placeholder.bg_color = Color(0.4, 0.4, 0.5, 1)
 			fingerprint_display.add_theme_stylebox_override("panel", placeholder)
 		if fingerprint_label:
-			fingerprint_label.text = "FP"
-			fingerprint_label.add_theme_font_size_override("font_size", 8)
+			fingerprint_label.text = "FINGERPRINT"
+			fingerprint_label.add_theme_font_size_override("font_size", 10)
 	
 	if shoe_label:
 		shoe_label.text = data.get_display_shoe()
@@ -110,34 +110,30 @@ func _apply_setup(setup_data: Dictionary):
 	
 	if evidence_container:
 		evidence_container.alignment = BoxContainer.ALIGNMENT_CENTER
+		evidence_container.add_theme_constant_override("separation", 8)
+		evidence_container.custom_minimum_size = Vector2(180, 60)
+		evidence_container.visible = true
 	
 	visible = true
 	show()
 	print("✅ Suspect created: ", data.name)
 
 func attempt_place_evidence(evidence_data: Dictionary) -> bool:
-	print("\n📌 SUSPECT SLOT - attempt_place_evidence")
-	print("   Suspect: ", suspect_data.name)
-	print("   Evidence: ", evidence_data.get("name", "Unknown"))
-	print("   Type: ", evidence_data.get("type", -1))
-	print("   Match value: ", evidence_data.get("match_value", ""))
-	
 	var evidence_type = evidence_data.get("type", -1)
 	var evidence_name = evidence_data.get("name", "Unknown")
 	var match_value = evidence_data.get("match_value", "")
 	
 	if evidence_type == -1:
-		print("   ❌ Invalid evidence type")
 		return false
 	
+	# Check if already has this evidence type
 	if placed_evidence.has(evidence_type):
-		print("   ❌ Already has this evidence type!")
 		if case_board and case_board.has_method("show_message"):
 			case_board.show_message("Already have " + evidence_name + " on " + suspect_data.name, Color(1, 0.5, 0))
 		return false
 	
+	# Check if matches using SuspectData
 	var is_correct = suspect_data.check_evidence_match(evidence_type, match_value)
-	print("   Match result: ", is_correct)
 	
 	# Create icon
 	var icon = TextureRect.new()
@@ -145,19 +141,27 @@ func attempt_place_evidence(evidence_data: Dictionary) -> bool:
 		icon.texture = evidence_data.texture
 	icon.custom_minimum_size = Vector2(45, 45)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.visible = true
 	
 	if is_correct:
-		icon.modulate = Color(0.3, 1, 0.3)
+		icon.modulate = Color(0.3, 1, 0.3)  # Green
 	else:
-		icon.modulate = Color(1, 0.3, 0.3)
+		icon.modulate = Color(1, 0.3, 0.3)  # Red
 	
-	placed_evidence[evidence_type] = icon
+	# Store evidence info with is_correct flag
+	placed_evidence[evidence_type] = {
+		"id": evidence_data.id,
+		"name": evidence_name,
+		"type": evidence_type,
+		"match_value": match_value,
+		"node": icon,
+		"is_correct": is_correct
+	}
 	
 	if evidence_container:
 		evidence_container.add_child(icon)
-		print("   ✅ Icon added to evidence_container")
+		evidence_container.queue_sort()
 	else:
-		print("   ❌ evidence_container is null!")
 		return false
 	
 	# Animate
@@ -165,35 +169,55 @@ func attempt_place_evidence(evidence_data: Dictionary) -> bool:
 	tween.tween_property(icon, "scale", Vector2(1.2, 1.2), 0.1)
 	tween.tween_property(icon, "scale", Vector2(1.0, 1.0), 0.1)
 	
+	# Emit signal
 	evidence_placed.emit(evidence_data.id, suspect_id, is_correct)
-	print("   ✅ Evidence placed successfully!")
+	
 	return true
 
 func get_placed_evidence_count() -> int:
 	return placed_evidence.size()
 
+func get_correct_evidence_count() -> int:
+	"""Return number of correct evidence placed on this suspect"""
+	var count = 0
+	for evidence in placed_evidence.values():
+		if evidence.is_correct:
+			count += 1
+	return count
+
+func get_wrong_evidence_count() -> int:
+	"""Return number of wrong evidence placed on this suspect"""
+	var count = 0
+	for evidence in placed_evidence.values():
+		if not evidence.is_correct:
+			count += 1
+	return count
+
 func is_culprit() -> bool:
-	if placed_evidence.size() != 3:
-		return false
-	for icon in placed_evidence.values():
-		if icon.modulate != Color(0.3, 1, 0.3):
-			return false
-	return true
+	"""Check if suspect is the culprit (2 or more correct evidence)"""
+	return get_correct_evidence_count() >= 2
+
+func has_correct_evidence_type(evidence_type: int) -> bool:
+	"""Check if a specific evidence type is correctly placed"""
+	if placed_evidence.has(evidence_type):
+		return placed_evidence[evidence_type].is_correct
+	return false
 
 func reset_slot():
-	for icon in placed_evidence.values():
-		icon.queue_free()
+	for evidence in placed_evidence.values():
+		if evidence.node and is_instance_valid(evidence.node):
+			evidence.node.queue_free()
 	placed_evidence.clear()
+
+func highlight_as_culprit():
+	"""Flash the suspect slot to indicate they are the culprit"""
+	var tween = create_tween()
+	tween.set_loops(5)
+	tween.tween_property(self, "modulate", Color(1, 1, 0, 1), 0.2)
+	tween.tween_property(self, "modulate", Color(1, 1, 1, 1), 0.2)
 
 func _gui_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print("\n🖱️ SUSPECT CLICKED: ", suspect_data.name if suspect_data else "Unknown")
 		if case_board:
-			print("   case_board.current_phase: ", case_board.current_phase)
 			if case_board.current_phase == case_board.GamePhase.PLACING_EVIDENCE:
-				print("   ✅ In placement mode, attempting to place evidence")
 				case_board.attempt_place_evidence_on_suspect(self)
-			else:
-				print("   ❌ Not in placement mode!")
-		else:
-			print("   ❌ case_board is null!")

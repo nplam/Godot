@@ -1,4 +1,4 @@
-# UVLight_new.gd - Detects both Area3D and StaticBody3D
+# UVLight_new.gd - Detects shoeprints AND hair
 extends Area3D
 
 # Track light state
@@ -62,10 +62,10 @@ func _ready():
 	# Connect signals for BOTH Area3D and StaticBody3D
 	area_entered.connect(_on_area_entered)
 	area_exited.connect(_on_area_exited)
-	body_entered.connect(_on_body_entered)   # ← NEW: Detect StaticBody3D
-	body_exited.connect(_on_body_exited)     # ← NEW: Detect StaticBody3D
+	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
 	
-	print("🔦 UV Light ready (detects both Area3D and StaticBody3D)\n")
+	print("🔦 UV Light ready (detects shoeprints and hair)\n")
 
 func set_active(active: bool):
 	is_on = active
@@ -83,12 +83,10 @@ func set_active(active: bool):
 
 func reset_all_evidence():
 	print("🔄 Resetting all evidence")
-	# Reset areas (Area3D)
 	for area in get_overlapping_areas():
 		if area.has_method("reset_glow"):
 			print("   Resetting glow for area: ", area.name)
 			area.reset_glow()
-	# Reset bodies (StaticBody3D)
 	for body in get_overlapping_bodies():
 		if body.has_method("reset_glow"):
 			print("   Resetting glow for body: ", body.name)
@@ -97,36 +95,50 @@ func reset_all_evidence():
 # Detect Area3D (like blood stains)
 func _on_area_entered(area: Area3D):
 	print("\n🔦 AREA ENTERED: ", area.name)
-	print("   Area position: ", area.global_position)
 	print("   Area groups: ", area.get_groups())
-	print("   Area layer: ", area.collision_layer)
 	
 	if not is_on:
 		print("   Light off - ignoring")
 		return
 	
-	if area.is_in_group("blood_stain") and area.has_method("on_uv_detected"):
-		print("   ✅ Blood stain detected!")
-		area.on_uv_detected()
+	# Check for blood_stain (shoeprint) OR hair_evidence
+	if area.has_method("on_uv_detected"):
+		if area.is_in_group("blood_stain"):
+			print("   ✅ Blood stain (shoeprint) detected!")
+			area.on_uv_detected()
+		elif area.is_in_group("hair_evidence"):
+			print("   ✅ Hair evidence detected!")
+			area.on_uv_detected()
+		else:
+			print("   ❌ Not a valid evidence type (wrong group)")
 	else:
-		print("   ❌ Not a valid blood stain")
+		print("   ❌ No on_uv_detected method")
 
-# Detect StaticBody3D (like shoeprints)
+# Detect StaticBody3D (like shoeprints and hair)
 func _on_body_entered(body: Node3D):
 	print("\n🔦 BODY ENTERED: ", body.name)
-	print("   Body position: ", body.global_position)
 	print("   Body groups: ", body.get_groups())
-	print("   Body layer: ", body.collision_layer)
 	
 	if not is_on:
 		print("   Light off - ignoring")
 		return
 	
-	if body.is_in_group("shoeprint") and body.has_method("on_uv_detected"):
-		print("   ✅ Shoeprint detected!")
-		body.on_uv_detected()
+	# Check if body has the detection method
+	if body.has_method("on_uv_detected"):
+		# Check for any of the evidence groups
+		if body.is_in_group("shoeprint"):
+			print("   ✅ Shoeprint detected!")
+			body.on_uv_detected()
+		elif body.is_in_group("blood_stain"):
+			print("   ✅ Blood stain (shoeprint) detected!")
+			body.on_uv_detected()
+		elif body.is_in_group("hair_evidence"):
+			print("   ✅ Hair evidence detected!")
+			body.on_uv_detected()
+		else:
+			print("   ❌ Not a valid evidence type (wrong group)")
 	else:
-		print("   ❌ Not a valid shoeprint")
+		print("   ❌ No on_uv_detected method")
 
 func _on_area_exited(area: Area3D):
 	print("\n🔦 AREA EXITED: ", area.name)

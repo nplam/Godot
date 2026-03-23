@@ -207,6 +207,10 @@ func check_interaction():
 		var collider = interaction_ray.get_collider()
 		var hit_point = interaction_ray.get_collision_point()
 		
+		# DEBUG: Print what you're hitting
+		#print("🎯 Raycast hit: ", collider.name)
+		#print("   Groups: ", collider.get_groups() if collider else "null")
+		
 		# Show red marker at hit point
 		if hit_glow_marker:
 			hit_glow_marker.global_position = hit_point

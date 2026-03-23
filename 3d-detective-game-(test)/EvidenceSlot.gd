@@ -1,4 +1,4 @@
-# EvidenceSlot.gd - Fixed version (removed problematic await)
+# EvidenceSlot.gd - Updated version (test texture removed)
 extends PanelContainer
 
 enum Mode { INVENTORY, CASE_BOARD }
@@ -124,28 +124,16 @@ func _setup_icon(data: Dictionary):
 		print("      Texture path: ", data.texture.resource_path if data.texture else "none")
 		icon.modulate = Color(1, 1, 1, 1)
 		
-		# Verify texture was applied (without await to avoid errors)
+		# Verify texture was applied
 		if icon.texture:
 			print("      ✅ Icon texture verified")
 		else:
 			print("      ❌ Icon texture is null after assignment!")
 	else:
 		print("   ⚠️ No texture provided in data!")
-		print("   🔧 Creating test texture for debugging")
-		
-		# Create a test texture so we can see something
-		var test_image = Image.create(64, 64, false, Image.FORMAT_RGBA8)
-		test_image.fill(Color(1, 0.5, 0, 1))  # Orange square
-		test_image.fill_rect(Rect2(16, 16, 32, 32), Color(1, 1, 0, 1))  # Yellow center
-		
-		# Draw a simple shoeprint-like shape
-		test_image.fill_rect(Rect2(20, 40, 24, 6), Color(0.3, 0.2, 0.1, 1))
-		test_image.fill_rect(Rect2(24, 46, 16, 4), Color(0.3, 0.2, 0.1, 1))
-		
-		var test_texture = ImageTexture.create_from_image(test_image)
-		icon.texture = test_texture
-		icon.modulate = Color(1, 1, 1, 1)
-		print("   ✅ Test texture created and assigned (orange square with yellow center)")
+		print("   Using default gray color")
+		icon.texture = null
+		icon.modulate = Color(0.8, 0.8, 0.8, 1.0)
 
 func _setup_buttons():
 	if mode == Mode.INVENTORY:

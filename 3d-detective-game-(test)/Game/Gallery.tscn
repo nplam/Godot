@@ -31,7 +31,9 @@
 [ext_resource type="Texture2D" uid="uid://cg6apuwh3vyek" path="res://Game/Painting/Claude_Monet_-_Woman_with_a_Parasol_-_Madame_Monet_and_Her_Son_-_Google_Art_Project.jpg" id="24_cqj4e"]
 [ext_resource type="Texture2D" uid="uid://bq6ipupxmhf08" path="res://Game/Painting/self-portrait-with-a-beret (1886).jpg" id="25_cqj4e"]
 [ext_resource type="Script" uid="uid://bewukms3t2luq" path="res://MagnifierRegistrar.gd" id="31_po3a5"]
+[ext_resource type="Texture2D" uid="uid://c0y6aymvier8p" path="res://Assets/redhair01_icon.png" id="33_5pje2"]
 [ext_resource type="PackedScene" uid="uid://caq274pyk70hn" path="res://Game/LockDoor.tscn" id="33_8myva"]
+[ext_resource type="Script" uid="uid://fm7ulwxvedh6" path="res://HairEvidence.gd" id="33_hvoaa"]
 
 [sub_resource type="Environment" id="Environment_xlsm3"]
 background_color = Color(0.6133899, 0.61339045, 0.61339, 1)
@@ -183,6 +185,9 @@ size = Vector3(1.3, 1.8, 0.05)
 albedo_texture = ExtResource("25_cqj4e")
 uv1_scale = Vector3(3, 2, 1)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_hvoaa"]
+size = Vector3(0.5, 0.05, 0.3)
+
 [node name="World" type="Node3D" unique_id=1420371846]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1951003062]
@@ -210,7 +215,7 @@ environment = SubResource("Environment_xlsm3")
 shape = SubResource("BoxShape3D_ydbhv")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=691654072]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0037578344, -0.5, -0.0018053651)
 mesh = SubResource("BoxMesh_po3a5")
 surface_material_override/0 = SubResource("StandardMaterial3D_0opgy")
 
@@ -480,3 +485,17 @@ script = ExtResource("31_po3a5")
 
 [node name="LockDoor" parent="." unique_id=1500794749 instance=ExtResource("33_8myva")]
 transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 1.8237405, 1.5485854, 9.906324)
+
+[node name="RedHair_Interactable" type="StaticBody3D" parent="." unique_id=1677681889 groups=["hair_evidence"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016549349, 0.05, -3.2977026)
+collision_layer = 65
+script = ExtResource("33_hvoaa")
+evidence_texture = ExtResource("33_5pje2")
+
+[node name="HairSprite" type="Sprite3D" parent="RedHair_Interactable" unique_id=44464064]
+transform = Transform3D(0.2, 0, 0, 0, -8.742278e-09, -0.2, 0, 0.2, -8.742278e-09, 0, 0.03, 0)
+texture = ExtResource("33_5pje2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RedHair_Interactable" unique_id=615982150]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+shape = SubResource("BoxShape3D_hvoaa")
