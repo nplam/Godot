@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://cincg2qg4o3vo"]
+
+[ext_resource type="Script" uid="uid://dfsgojqak4jo5" path="res://CaseBoard.gd" id="1_54yya"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_54yya"]
+bg_color = Color(0.69135684, 0.6913568, 0.69135684, 0.7019608)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qssdb"]
+bg_color = Color(0.9411765, 0.9411765, 0.9098039, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.54509807, 0.3529412, 0.16862746, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="CaseBoard" type="Control" unique_id=679401411]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_54yya")
+
+[node name="Background" type="Panel" parent="." unique_id=1681507258]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_54yya")
+
+[node name="MainPanel" type="Panel" parent="." unique_id=1318328450]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -300.0
+offset_right = 500.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qssdb")
+
+[node name="Label" type="Label" parent="MainPanel" unique_id=1729830160]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -74.0
+offset_right = 74.0
+offset_bottom = 34.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.31061712, 0.31061712, 0.3106171, 1)
+theme_override_font_sizes/font_size = 24
+text = "CASE BOARD"
+
+[node name="MarginContainer" type="MarginContainer" parent="MainPanel" unique_id=821545584]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 60
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 60
+
+[node name="MainVBox" type="VBoxContainer" parent="MainPanel/MarginContainer" unique_id=1163783066]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="SuspectsLabel" type="Label" parent="MainPanel/MarginContainer/MainVBox" unique_id=1692354023]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.41981313, 0.41981313, 0.4198131, 1)
+theme_override_font_sizes/font_size = 20
+text = "SUSPECTS"
+
+[node name="SuspectsGrid" type="GridContainer" parent="MainPanel/MarginContainer/MainVBox" unique_id=1622216093]
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 0
+columns = 4
+
+[node name="EvidenceLabel" type="Label" parent="MainPanel/MarginContainer/MainVBox" unique_id=535222243]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.41960785, 0.41960785, 0.41960785, 1)
+theme_override_font_sizes/font_size = 20
+text = "EVIDENCE"
+
+[node name="EvidenceGrid" type="GridContainer" parent="MainPanel/MarginContainer/MainVBox" unique_id=1566625747]
+layout_mode = 2
+theme_override_constants/h_separation = 25
+theme_override_constants/v_separation = 15
+columns = 3
+
+[node name="CloseButton" type="Button" parent="MainPanel" unique_id=1304209497]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -18.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "X"
+
+[node name="SubmitButton" type="Button" parent="MainPanel" unique_id=2046100539]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -65.0
+offset_top = -31.0
+offset_right = 61.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "SUBMMIT CASE"
+
+[node name="FeedbackLabel" type="Label" parent="MainPanel" unique_id=879733790]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -24.0
+offset_top = -65.0
+offset_right = 16.0
+offset_bottom = -42.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.9137255, 0.45490196, 0, 1)
+theme_override_font_sizes/font_size = 18

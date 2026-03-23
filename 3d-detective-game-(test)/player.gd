@@ -190,6 +190,13 @@ func _physics_process(delta):
 func _process(delta):
 	check_interaction()
 	rotate_hand_toward_camera(delta)
+	
+	# DEBUG: Print raycast hit every 60 frames (about 1 second)
+	#if Engine.get_frames_drawn() % 60 == 0:
+	#	if interaction_ray.is_colliding():
+	#		var collider = interaction_ray.get_collider()
+	#		print("🎯 Raycast hitting: ", collider.name if collider else "null")
+	#		print("   Groups: ", collider.get_groups() if collider else "null")
 
 func rotate_hand_toward_camera(delta):
 	var target_x_rotation = camera.rotation.x

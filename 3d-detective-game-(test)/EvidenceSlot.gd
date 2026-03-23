@@ -1,4 +1,4 @@
-# EvidenceSlot.gd - Complete updated version
+# EvidenceSlot.gd - Fixed version (removed problematic await)
 extends PanelContainer
 
 enum Mode { INVENTORY, CASE_BOARD }
@@ -7,11 +7,12 @@ var mode: Mode = Mode.INVENTORY
 var evidence_id: String = ""
 var evidence_data: Dictionary
 
-# Node references
+# Node references - Updated paths for your structure
 var label: Label
 var icon: TextureRect
 var remove_button: Button
 var confirm_button: Button
+var selection_highlight: ColorRect
 
 # Signals
 signal clicked(evidence_id)
@@ -19,37 +20,45 @@ signal confirmed(evidence_id)
 signal removed(evidence_id)
 
 func _ready():
-	# Find all nodes
-	label = find_child("Label", true, false)
-	icon = _find_icon_node()
+	# Find all nodes - UPDATED PATHS for your structure
+	label = $MarginContainer/VBoxContainer/Label
+	icon = $MarginContainer/VBoxContainer/Icon
 	remove_button = find_child("RemoveButton", true, false)
 	confirm_button = find_child("ConfirmButton", true, false)
+	
+	print("\n🔍 EVIDENCE SLOT _ready - Structure debug:")
+	print("   Label found: ", label != null)
+	print("   Icon found: ", icon != null)
+	if icon:
+		print("   Icon node: ", icon.name)
 	
 	# Setup icon appearance
 	if icon:
 		icon.custom_minimum_size = Vector2(64, 64)
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	
-	# Debug output
-	_print_debug_info()
+	# Create selection highlight overlay
+	_create_selection_highlight()
+	
+	# Setup tooltip
+	tooltip_text = "Click to select this evidence for placement"
 
-func _print_debug_info():
-	print("\n🔍 EVIDENCE SLOT DEBUG - ", name)
-	print("   Label: ", label)
-	print("   Icon: ", icon)
-	print("   Remove Button: ", remove_button)
-	print("   Confirm Button: ", confirm_button)
-	
-	# Print all children for debugging
-	print("   All children:")
-	for child in get_children():
-		print("     - ", child.name, " (", child.get_class(), ")")
-		if child.get_child_count() > 0:
-			for grandchild in child.get_children():
-				print("       - ", grandchild.name, " (", grandchild.get_class(), ")")
+func _create_selection_highlight():
+	"""Create a highlight overlay for when evidence is selected"""
+	selection_highlight = ColorRect.new()
+	selection_highlight.color = Color(1, 1, 0, 0.3)
+	selection_highlight.size = size
+	selection_highlight.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	selection_highlight.hide()
+	add_child(selection_highlight)
 
 func _find_icon_node() -> TextureRect:
-	# Try to find "Icon" node first, fallback to "TextureRect"
+	"""Fallback method to find icon"""
+	var direct_icon = $MarginContainer/VBoxContainer/Icon
+	if direct_icon:
+		return direct_icon
+	
 	var icon_node = find_child("Icon", true, false)
 	if icon_node and icon_node is TextureRect:
 		return icon_node
@@ -63,8 +72,23 @@ func _find_icon_node() -> TextureRect:
 func setup(data: Dictionary, new_mode: int):
 	print("\n🔧 SETUP EVIDENCE SLOT - ", data.get("name", "Unknown"))
 	
-	# Find any missing nodes
-	_find_missing_nodes()
+	# DEBUG: Print all data keys and texture info
+	print("   📦 Evidence data received:")
+	print("      Keys: ", data.keys())
+	print("      Has 'texture'? ", data.has("texture"))
+	if data.has("texture"):
+		print("      Texture value: ", data.texture)
+		if data.texture:
+			print("      Texture resource path: ", data.texture.resource_path)
+		else:
+			print("      Texture is null!")
+	
+	# Make sure we have references
+	if not label:
+		label = $MarginContainer/VBoxContainer/Label
+	if not icon:
+		icon = $MarginContainer/VBoxContainer/Icon
+		print("   Icon found in setup: ", icon != null)
 	
 	if not label:
 		print("   ❌ CRITICAL: Label node not found!")
@@ -82,42 +106,46 @@ func setup(data: Dictionary, new_mode: int):
 	# Setup buttons based on mode
 	_setup_buttons()
 	
+	# Set tooltip
+	tooltip_text = data.get("name", "Unknown") + "\n" + data.get("description", "Click to select this evidence")
+	
 	print("   ✅ Setup complete - Mode: ", "INVENTORY" if mode == Mode.INVENTORY else "CASE_BOARD")
-
-func _find_missing_nodes():
-	if not label:
-		label = find_child("Label", true, false)
-		if label:
-			print("   ✓ Found Label node")
-	
-	if not icon:
-		icon = _find_icon_node()
-		if icon:
-			print("   ✓ Found Icon node")
-	
-	if not remove_button:
-		remove_button = find_child("RemoveButton", true, false)
-		if remove_button:
-			print("   ✓ Found RemoveButton node")
-	
-	if not confirm_button:
-		confirm_button = find_child("ConfirmButton", true, false)
-		if confirm_button:
-			print("   ✓ Found ConfirmButton node")
 
 func _setup_icon(data: Dictionary):
 	if not icon:
-		print("   ⚠️ Icon node not available")
+		print("   ⚠️ Icon node not available!")
 		return
+	
+	print("   🖼️ Setting up icon...")
 	
 	if data.has("texture") and data.texture:
 		icon.texture = data.texture
-		print("   ✓ Icon texture set: ", data.texture.resource_path)
+		print("   ✓ Icon texture set from data")
+		print("      Texture path: ", data.texture.resource_path if data.texture else "none")
 		icon.modulate = Color(1, 1, 1, 1)
+		
+		# Verify texture was applied (without await to avoid errors)
+		if icon.texture:
+			print("      ✅ Icon texture verified")
+		else:
+			print("      ❌ Icon texture is null after assignment!")
 	else:
-		icon.texture = null
-		icon.modulate = Color(0.8, 0.8, 0.8, 1.0)
-		print("   ⚠️ No texture provided, using default gray color")
+		print("   ⚠️ No texture provided in data!")
+		print("   🔧 Creating test texture for debugging")
+		
+		# Create a test texture so we can see something
+		var test_image = Image.create(64, 64, false, Image.FORMAT_RGBA8)
+		test_image.fill(Color(1, 0.5, 0, 1))  # Orange square
+		test_image.fill_rect(Rect2(16, 16, 32, 32), Color(1, 1, 0, 1))  # Yellow center
+		
+		# Draw a simple shoeprint-like shape
+		test_image.fill_rect(Rect2(20, 40, 24, 6), Color(0.3, 0.2, 0.1, 1))
+		test_image.fill_rect(Rect2(24, 46, 16, 4), Color(0.3, 0.2, 0.1, 1))
+		
+		var test_texture = ImageTexture.create_from_image(test_image)
+		icon.texture = test_texture
+		icon.modulate = Color(1, 1, 1, 1)
+		print("   ✅ Test texture created and assigned (orange square with yellow center)")
 
 func _setup_buttons():
 	if mode == Mode.INVENTORY:
@@ -131,14 +159,10 @@ func _setup_inventory_mode():
 	if remove_button:
 		remove_button.hide()
 		_disconnect_button_signal(remove_button, _on_remove_pressed)
-	else:
-		print("   ⚠️ RemoveButton not found - skipping")
 	
 	if confirm_button:
 		confirm_button.hide()
 		_disconnect_button_signal(confirm_button, _on_confirm_pressed)
-	else:
-		print("   ⚠️ ConfirmButton not found - skipping")
 
 func _setup_case_board_mode():
 	print("   📋 Setting up CASE_BOARD mode")
@@ -148,20 +172,18 @@ func _setup_case_board_mode():
 		_connect_button_signal(remove_button, _on_remove_pressed)
 		print("   ✓ Remove button configured")
 	else:
-		print("   ❌ RemoveButton not found - cannot setup remove functionality!")
+		print("   ⚠️ RemoveButton not found")
 	
 	if confirm_button:
 		confirm_button.show()
 		_connect_button_signal(confirm_button, _on_confirm_pressed)
 		print("   ✓ Confirm button configured")
 	else:
-		print("   ❌ ConfirmButton not found - cannot setup confirm functionality!")
+		print("   ⚠️ ConfirmButton not found")
 
 func _connect_button_signal(button: Button, callback: Callable):
-	# Disconnect any existing connections first to avoid duplicates
 	if button.pressed.is_connected(callback):
 		button.pressed.disconnect(callback)
-	# Connect the signal
 	button.pressed.connect(callback)
 
 func _disconnect_button_signal(button: Button, callback: Callable):
@@ -169,43 +191,54 @@ func _disconnect_button_signal(button: Button, callback: Callable):
 		button.pressed.disconnect(callback)
 
 func _on_remove_pressed():
-	print("   🗑️ REMOVE button pressed for: ", evidence_id, " (", evidence_data.get("name", "Unknown"), ")")
+	print("   🗑️ REMOVE button pressed for: ", evidence_id)
 	removed.emit(evidence_id)
 
 func _on_confirm_pressed():
-	print("   ✅ CONFIRM button pressed for: ", evidence_id, " (", evidence_data.get("name", "Unknown"), ")")
+	print("   ✅ CONFIRM button pressed for: ", evidence_id)
 	confirmed.emit(evidence_id)
 
 func _gui_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if mode == Mode.INVENTORY:
-			print("   🖱️ CLICKED on evidence slot: ", evidence_id, " (", evidence_data.get("name", "Unknown"), ")")
+			print("   🖱️ CLICKED on evidence: ", evidence_data.get("name", "Unknown"))
 			clicked.emit(evidence_id)
 
-# Helper function to update evidence data (useful for dynamic updates)
+func set_selected(selected: bool):
+	if selection_highlight:
+		if selected:
+			selection_highlight.show()
+			var tween = create_tween()
+			tween.tween_property(self, "scale", Vector2(1.05, 1.05), 0.1)
+			tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.1)
+		else:
+			selection_highlight.hide()
+			modulate = Color(1, 1, 1, 1)
+
+func show_placement_feedback(is_correct: bool):
+	var original_modulate = modulate
+	
+	if is_correct:
+		var tween = create_tween()
+		tween.tween_property(self, "modulate", Color(0.3, 1, 0.3, 1), 0.2)
+		tween.tween_property(self, "modulate", original_modulate, 0.2)
+	else:
+		var tween = create_tween()
+		tween.tween_property(self, "modulate", Color(1, 0.3, 0.3, 1), 0.2)
+		tween.tween_property(self, "modulate", original_modulate, 0.2)
+		
+		var shake_tween = create_tween()
+		shake_tween.tween_property(self, "position", Vector2(5, 0), 0.05)
+		shake_tween.tween_property(self, "position", Vector2(-5, 0), 0.05)
+		shake_tween.tween_property(self, "position", Vector2(0, 0), 0.05)
+
 func update_evidence_data(data: Dictionary):
 	evidence_data = data
 	if label:
 		label.text = data.get("name", "Unknown")
 	_setup_icon(data)
-	print("   🔄 Evidence data updated for: ", evidence_id)
+	tooltip_text = data.get("name", "Unknown") + "\n" + data.get("description", "")
 
-# Helper function to check if buttons are working (for debugging)
-func test_buttons():
-	print("\n🧪 Testing buttons for evidence: ", evidence_id)
-	print("   Remove button exists: ", remove_button != null)
-	if remove_button:
-		print("   Remove button visible: ", remove_button.visible)
-		print("   Remove button disabled: ", remove_button.disabled)
-		print("   Remove button signals: ", remove_button.pressed.get_connections())
-	
-	print("   Confirm button exists: ", confirm_button != null)
-	if confirm_button:
-		print("   Confirm button visible: ", confirm_button.visible)
-		print("   Confirm button disabled: ", confirm_button.disabled)
-		print("   Confirm button signals: ", confirm_button.pressed.get_connections())
-
-# Clean up signals when the node is removed
 func _exit_tree():
 	if remove_button:
 		if remove_button.pressed.is_connected(_on_remove_pressed):
@@ -214,3 +247,6 @@ func _exit_tree():
 	if confirm_button:
 		if confirm_button.pressed.is_connected(_on_confirm_pressed):
 			confirm_button.pressed.disconnect(_on_confirm_pressed)
+	
+	if selection_highlight:
+		selection_highlight.queue_free()

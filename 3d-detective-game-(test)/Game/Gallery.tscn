@@ -8,7 +8,7 @@
 [ext_resource type="Material" uid="uid://cgc2i5dsyyjuf" path="res://Materials/WallPlaster.tres" id="3_u2ju2"]
 [ext_resource type="PackedScene" uid="uid://duuwukjtwn8nn" path="res://OrangeGlassOverlay.tscn" id="6_b2g3v"]
 [ext_resource type="Script" uid="uid://1jpivr5eqhn0" path="res://MagnifierUI.gd" id="7_oas7p"]
-[ext_resource type="PackedScene" uid="uid://cincg2qg4o3vo" path="res://Game/CaseBoard.tscn" id="7_po3a5"]
+[ext_resource type="PackedScene" uid="uid://cincg2qg4o3vo" path="res://CaseBoard.tscn" id="7_po3a5"]
 [ext_resource type="PackedScene" uid="uid://dys268n0evd3s" path="res://Assets/Poly/brass_vase_01_1k.gltf/brass_vase_01_1k.gltf" id="9_f00s6"]
 [ext_resource type="PackedScene" uid="uid://dxr44kpb8gijd" path="res://Assets/Poly/marble_bust_01_4k.gltf" id="9_lyw06"]
 [ext_resource type="PackedScene" uid="uid://cyfhqk58boywv" path="res://Assets/Poly/brass_vase_03_1k.gltf/brass_vase_03_1k.gltf" id="10_4dh4x"]
@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://cbhirascueh18" path="res://Game/Painting.tscn" id="17_1a3ta"]
 [ext_resource type="Script" uid="uid://bmhemos4g3fmj" path="res://BloodStain.gd" id="17_5pje2"]
 [ext_resource type="Script" uid="uid://dixuvypg7hyqj" path="res://FingerprintSurface.gd" id="17_b2g3v"]
+[ext_resource type="Texture2D" uid="uid://ceuu4u4ea83vx" path="res://Assets/fingerprint_icon.png" id="17_po3a5"]
 [ext_resource type="Texture2D" uid="uid://chox864cu6qfr" path="res://Game/Painting/claude-monet-impression-sunrise-1872-obelisk-art-history.jpg" id="17_u2ju2"]
 [ext_resource type="Material" uid="uid://bqj2aylsuqfhm" path="res://Materials/Painting1.tres" id="18_ydbhv"]
 [ext_resource type="Texture2D" uid="uid://daefj81w8474y" path="res://Assets/fingerprint.png" id="19_8myva"]
@@ -130,14 +131,14 @@ emission = Color(0.16924527, 0.1692453, 0.16924527, 1)
 emission_energy_multiplier = 3.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po3a5"]
-albedo_color = Color(0.20392157, 0.10980392, 0.007843138, 0.47843137)
+albedo_color = Color(1, 1, 1, 0)
 albedo_texture = ExtResource("19_8myva")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_dsomm"]
-size = Vector2(0.15, 0.2)
+size = Vector2(0.1, 0.15)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oas7p"]
-size = Vector3(0.5, 0.1, 0.5)
+size = Vector3(0.3, 0.1, 0.3)
 
 [sub_resource type="BoxMesh" id="BoxMesh_1a3ta"]
 size = Vector3(1.8, 1.3, 0.05)
@@ -274,7 +275,7 @@ transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 8)
 
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("3_q1g8n")]
 
-[node name="CaseBoard" parent="CanvasLayer" unique_id=679401411 instance=ExtResource("7_po3a5")]
+[node name="CaseBoard" parent="CanvasLayer" unique_id=679401411 groups=["case_board"] instance=ExtResource("7_po3a5")]
 
 [node name="OrangeGlassesOverlay" parent="CanvasLayer" unique_id=1475515266 instance=ExtResource("6_b2g3v")]
 
@@ -335,21 +336,25 @@ mesh = SubResource("PlaneMesh_sxsli")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 shape = SubResource("BoxShape3D_iu18o")
 
-[node name="Fingerprint_Interactable2" type="Area3D" parent="." unique_id=1594921073]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13904855, 1.4604535, 1.84778)
+[node name="Fingerprint_Interactable2" type="StaticBody3D" parent="." unique_id=359270634 groups=["fingerprint_surface"]]
+transform = Transform3D(1, 0, 0, 0, 0.9827712, -0.18482621, 0, 0.18482621, 0.9827712, 0.005736649, 1.8122141, 1.8881476)
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("17_b2g3v")
+evidence_id = "fingerprint_2"
+match_value = "fp_002"
 glow_intensity = 0.3
+evidence_texture = ExtResource("17_po3a5")
 
 [node name="HiddenFingerprint" type="MeshInstance3D" parent="Fingerprint_Interactable2" unique_id=1486895267]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.05, 0)
+transform = Transform3D(-0.040064692, -0.14947115, -0.4754505, 0.49839228, -0.01201567, -0.038220458, 0, -0.47698432, 0.14995335, 0, 0.049999952, 0)
 layers = 2
 material_override = SubResource("StandardMaterial3D_gn80i")
 material_overlay = SubResource("StandardMaterial3D_po3a5")
 mesh = SubResource("PlaneMesh_dsomm")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Fingerprint_Interactable2" unique_id=1768672210]
+transform = Transform3D(1, 0, 0, 0, 0.053120233, 0.99858814, 0, -0.99858814, 0.053120233, 0, 0, 0)
 shape = SubResource("BoxShape3D_oas7p")
 
 [node name="Spotlight_Painting1" parent="." unique_id=1073074194 instance=ExtResource("16_i6a4r")]

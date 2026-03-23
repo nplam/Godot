@@ -1,12 +1,14 @@
-# Shoeprint.gd - Uses interact() for click detection
+# Shoeprint.gd - Updated with complete evidence data for CaseBoard
 extends StaticBody3D
 
 @export var stain_name: String = "Shoeprint"
 @export var stain_description: String = "A muddy shoeprint that glows under UV light."
 @export var evidence_id: String = "shoe_1"
+@export var evidence_type: int = 0  # 0 = SHOEPRINT
+@export var match_value: String = "loafers"  # Matches suspect's shoe_type
 @export var glow_color: Color = Color(0, 1, 0)  # Green glow
 @export var glow_intensity: float = 3.0
-@export var evidence_texture: Texture2D  # ← ADD THIS LINE
+@export var evidence_texture: Texture2D
 
 # References
 @onready var mesh_instance: MeshInstance3D = $HiddenBloodStain
@@ -24,6 +26,9 @@ var double_click_threshold: float = 0.3  # 0.3 seconds between clicks
 func _ready():
 	print("\n========== SHOEPRINT READY ==========")
 	print("📍 POSITION: ", global_position)
+	print("🆔 Evidence ID: ", evidence_id)
+	print("🔢 Evidence Type: ", evidence_type, " (SHOEPRINT)")
+	print("🎯 Match Value: ", match_value)
 	
 	# Set collision layer (Layer 4)
 	collision_layer = 4
@@ -94,6 +99,8 @@ func add_to_case_board():
 	print("\n📋 add_to_case_board() CALLED")
 	print("   stain_name: ", stain_name)
 	print("   evidence_id: ", evidence_id)
+	print("   evidence_type: ", evidence_type)
+	print("   match_value: ", match_value)
 	print("   is_added_to_case: ", is_added_to_case)
 	
 	if is_added_to_case:
@@ -103,11 +110,14 @@ func add_to_case_board():
 	is_added_to_case = true
 	print("📋 Adding to case board: ", stain_name)
 	
+	# Complete evidence data for CaseBoard
 	var data = {
 		"id": evidence_id,
 		"name": stain_name,
 		"description": stain_description,
-		"texture": evidence_texture  # ← ADD THIS LINE
+		"texture": evidence_texture,
+		"type": evidence_type,  # 0 = SHOEPRINT
+		"match_value": match_value  # e.g., "loafers", "work boots", etc.
 	}
 	
 	var case_board = get_tree().get_first_node_in_group("case_board")

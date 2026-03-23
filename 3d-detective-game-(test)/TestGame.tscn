@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://vg7e41frpjs3"]
+
+[ext_resource type="Script" uid="uid://b6ynqghv7msk" path="res://TestGame.gd" id="1_spfbl"]
+[ext_resource type="PackedScene" uid="uid://cincg2qg4o3vo" path="res://CaseBoard.tscn" id="2_fnh2o"]
+
+[node name="TestGame" type="Node" unique_id=333346146]
+script = ExtResource("1_spfbl")
+
+[node name="CaseBoard" parent="." unique_id=679401411 instance=ExtResource("2_fnh2o")]
