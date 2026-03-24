@@ -7,11 +7,13 @@
 [ext_resource type="PackedScene" uid="uid://clg61px2by33h" path="res://InteractionPrompt.tscn" id="3_q1g8n"]
 [ext_resource type="Material" uid="uid://cgc2i5dsyyjuf" path="res://Materials/WallPlaster.tres" id="3_u2ju2"]
 [ext_resource type="PackedScene" uid="uid://duuwukjtwn8nn" path="res://OrangeGlassOverlay.tscn" id="6_b2g3v"]
+[ext_resource type="Script" uid="uid://caem4hmgf46ke" path="res://UI_Manager.gd" id="7_0opgy"]
 [ext_resource type="Script" uid="uid://1jpivr5eqhn0" path="res://MagnifierUI.gd" id="7_oas7p"]
 [ext_resource type="PackedScene" uid="uid://cincg2qg4o3vo" path="res://CaseBoard.tscn" id="7_po3a5"]
 [ext_resource type="PackedScene" uid="uid://dys268n0evd3s" path="res://Assets/Poly/brass_vase_01_1k.gltf/brass_vase_01_1k.gltf" id="9_f00s6"]
 [ext_resource type="PackedScene" uid="uid://dxr44kpb8gijd" path="res://Assets/Poly/marble_bust_01_4k.gltf" id="9_lyw06"]
 [ext_resource type="PackedScene" uid="uid://cyfhqk58boywv" path="res://Assets/Poly/brass_vase_03_1k.gltf/brass_vase_03_1k.gltf" id="10_4dh4x"]
+[ext_resource type="PackedScene" uid="uid://77bn1r0ddxqa" path="res://Game/HelpMenu.tscn" id="10_hvoaa"]
 [ext_resource type="Texture2D" uid="uid://br151pp5gmx8r" path="res://Assets/footprint_icon.png" id="15_oas7p"]
 [ext_resource type="PackedScene" uid="uid://cvp5822g8qxl8" path="res://Assets/Poly/antique_ceramic_vase_01_4k.glb" id="16_8myva"]
 [ext_resource type="PackedScene" uid="uid://bnpyup5r266qu" path="res://wallspotlight.tscn" id="16_i6a4r"]
@@ -279,6 +281,7 @@ shape = SubResource("BoxShape3D_51hkx")
 transform = Transform3D(0.84, 0, 0, 0, 0.84, 0, 0, 0, 1, 0, 0, 8)
 
 [node name="CanvasLayer" parent="." unique_id=1172188472 instance=ExtResource("3_q1g8n")]
+script = ExtResource("7_0opgy")
 
 [node name="CaseBoard" parent="CanvasLayer" unique_id=679401411 groups=["case_board"] instance=ExtResource("7_po3a5")]
 
@@ -293,6 +296,22 @@ mouse_filter = 2
 texture = SubResource("ViewportTexture_8myva")
 stretch_mode = 4
 script = ExtResource("7_oas7p")
+
+[node name="HelpButton" type="Button" parent="CanvasLayer" unique_id=1617343223]
+custom_minimum_size = Vector2(50, 50)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -50.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "Help"
+
+[node name="HelpMenu" parent="CanvasLayer" unique_id=597161671 instance=ExtResource("10_hvoaa")]
 
 [node name="StaticBody3D7" type="StaticBody3D" parent="." unique_id=207238661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)
