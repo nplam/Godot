@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://b1svwnytjavih"]
+
+[ext_resource type="Script" uid="uid://du2qhjjemnkfv" path="res://SuspectSlot.gd" id="1_5js6m"]
+[ext_resource type="Texture2D" uid="uid://xdte2lk7avqx" path="res://Assets/fingerprints/fingerprint_2.png" id="2_2gql2"]
+
+[node name="SuspectSlot" type="PanelContainer" unique_id=935384158]
+custom_minimum_size = Vector2(220, 280)
+offset_right = 40.0
+offset_bottom = 40.0
+size_flags_vertical = 4
+script = ExtResource("1_5js6m")
+suspect_id = "suspect_2"
+suspect_name = "Mrs. Bobby"
+suspect_role = "Wife"
+suspect_hair = "Red"
+suspect_fingerprint_id = "fp_002"
+suspect_shoe = "high heels"
+fingerprint_texture = ExtResource("2_2gql2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1175860036]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NameLabel" type="Label" parent="VBoxContainer" unique_id=1988613658]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="RoleLabel" type="Label" parent="VBoxContainer" unique_id=1755692542]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+
+[node name="HairLabel" type="Label" parent="VBoxContainer" unique_id=527711928]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+
+[node name="FingerprintDisplay" type="TextureRect" parent="VBoxContainer" unique_id=2048250657]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="FingerprintLabel" type="Label" parent="VBoxContainer/FingerprintDisplay" unique_id=1583833482]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="ShoeLabel" type="Label" parent="VBoxContainer" unique_id=1819251254]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+
+[node name="EvidenceContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=1792253702]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1

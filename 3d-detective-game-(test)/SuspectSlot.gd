@@ -1,11 +1,18 @@
-# SuspectSlot.gd - Updated with 2-evidence culprit detection
+# SuspectSlot.gd - Updated for manual Inspector setup
 extends PanelContainer
 
 signal evidence_placed(evidence_id, suspect_id, is_correct)
 signal evidence_removed(evidence_id, suspect_id)
 
-var suspect_data: SuspectData
-var suspect_id: String = ""
+# Export variables - set these in Inspector for each suspect slot
+@export var suspect_id: String = ""
+@export var suspect_name: String = ""
+@export var suspect_role: String = ""
+@export var suspect_hair: String = ""
+@export var suspect_fingerprint_id: String = ""
+@export var suspect_shoe: String = ""
+@export var fingerprint_texture: Texture2D
+
 var placed_evidence: Dictionary = {}  # {evidence_type: evidence_info}
 var case_board: Node = null
 
@@ -18,46 +25,58 @@ var evidence_container: HBoxContainer
 var fingerprint_display: TextureRect
 var fingerprint_label: Label
 
-# Store data for when _ready runs
-var pending_setup: Dictionary = {}
-
 func _ready():
 	_find_nodes()
-	visible = true
-	modulate = Color(1, 1, 1, 1)
 	
-	if not pending_setup.is_empty():
-		_apply_setup(pending_setup)
-		pending_setup.clear()
-
-func _find_nodes():
-	var vbox = $VBoxContainer
-	if vbox:
-		name_label = vbox.get_node_or_null("NameLabel")
-		role_label = vbox.get_node_or_null("RoleLabel")
-		hair_label = vbox.get_node_or_null("HairLabel")
-		shoe_label = vbox.get_node_or_null("ShoeLabel")
-		evidence_container = vbox.get_node_or_null("EvidenceContainer")
-		fingerprint_display = vbox.get_node_or_null("FingerprintDisplay")
-		if fingerprint_display:
-			fingerprint_label = fingerprint_display.get_node_or_null("FingerprintLabel")
-
-func setup(data: SuspectData, id: String, parent: Node):
-	suspect_data = data
-	suspect_id = id
-	case_board = parent
+	# Display suspect info from export variables
+	if name_label:
+		name_label.text = suspect_name
+		name_label.visible = true
+		name_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
-	if not name_label:
-		pending_setup = {"data": data, "id": id, "parent": parent}
-		print("⏳ Setup deferred for: ", data.name)
-		return
+	if role_label:
+		role_label.text = "Role: " + suspect_role
+		role_label.visible = true
+		role_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1))
+		role_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
-	_apply_setup({"data": data, "id": id, "parent": parent})
-
-func _apply_setup(setup_data: Dictionary):
-	var data = setup_data["data"]
+	if hair_label:
+		hair_label.text = suspect_hair + " hair"
+		hair_label.visible = true
+		hair_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1))
+		hair_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
-	# Background
+	# Setup Fingerprint Display
+	if fingerprint_display:
+		fingerprint_display.visible = true
+		fingerprint_display.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		
+		if fingerprint_texture:
+			fingerprint_display.texture = fingerprint_texture
+		else:
+			var placeholder = StyleBoxFlat.new()
+			placeholder.bg_color = Color(0.4, 0.4, 0.5, 1)
+			fingerprint_display.add_theme_stylebox_override("panel", placeholder)
+		
+		if fingerprint_label:
+			fingerprint_label.text = "FINGERPRINT"
+			fingerprint_label.add_theme_font_size_override("font_size", 10)
+	
+	if shoe_label:
+		shoe_label.text = "Shoe: " + suspect_shoe
+		shoe_label.visible = true
+		shoe_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1))
+		shoe_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	# Setup Evidence Container
+	if evidence_container:
+		evidence_container.alignment = BoxContainer.ALIGNMENT_CENTER
+		evidence_container.add_theme_constant_override("separation", 8)
+		evidence_container.custom_minimum_size = Vector2(180, 60)
+		evidence_container.visible = true
+	
+	# Background style
 	var bg_style = StyleBoxFlat.new()
 	bg_style.bg_color = Color(0.2, 0.2, 0.3, 1)
 	bg_style.border_width_left = 2
@@ -71,52 +90,24 @@ func _apply_setup(setup_data: Dictionary):
 	bg_style.corner_radius_bottom_right = 8
 	add_theme_stylebox_override("panel", bg_style)
 	
-	if name_label:
-		name_label.text = data.name
-		name_label.visible = true
-		name_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
-		name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	
-	if role_label:
-		role_label.text = "Role: " + data.role
-		role_label.visible = true
-		role_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1))
-		role_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	
-	if hair_label:
-		hair_label.text = data.get_display_hair()
-		hair_label.visible = true
-		hair_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1))
-		hair_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	
-	if fingerprint_display:
-		fingerprint_display.visible = true
-		fingerprint_display.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		if data.fingerprint_texture:
-			fingerprint_display.texture = data.fingerprint_texture
-		else:
-			var placeholder = StyleBoxFlat.new()
-			placeholder.bg_color = Color(0.4, 0.4, 0.5, 1)
-			fingerprint_display.add_theme_stylebox_override("panel", placeholder)
-		if fingerprint_label:
-			fingerprint_label.text = "FINGERPRINT"
-			fingerprint_label.add_theme_font_size_override("font_size", 10)
-	
-	if shoe_label:
-		shoe_label.text = data.get_display_shoe()
-		shoe_label.visible = true
-		shoe_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1))
-		shoe_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	
-	if evidence_container:
-		evidence_container.alignment = BoxContainer.ALIGNMENT_CENTER
-		evidence_container.add_theme_constant_override("separation", 8)
-		evidence_container.custom_minimum_size = Vector2(180, 60)
-		evidence_container.visible = true
+	# Find case board reference
+	case_board = get_tree().get_first_node_in_group("case_board")
 	
 	visible = true
-	show()
-	print("✅ Suspect created: ", data.name)
+	modulate = Color(1, 1, 1, 1)
+	print("✅ Suspect created: ", suspect_name)
+
+func _find_nodes():
+	var vbox = $VBoxContainer
+	if vbox:
+		name_label = vbox.get_node_or_null("NameLabel")
+		role_label = vbox.get_node_or_null("RoleLabel")
+		hair_label = vbox.get_node_or_null("HairLabel")
+		shoe_label = vbox.get_node_or_null("ShoeLabel")
+		evidence_container = vbox.get_node_or_null("EvidenceContainer")
+		fingerprint_display = vbox.get_node_or_null("FingerprintDisplay")
+		if fingerprint_display:
+			fingerprint_label = fingerprint_display.get_node_or_null("FingerprintLabel")
 
 func attempt_place_evidence(evidence_data: Dictionary) -> bool:
 	var evidence_type = evidence_data.get("type", -1)
@@ -129,11 +120,18 @@ func attempt_place_evidence(evidence_data: Dictionary) -> bool:
 	# Check if already has this evidence type
 	if placed_evidence.has(evidence_type):
 		if case_board and case_board.has_method("show_message"):
-			case_board.show_message("Already have " + evidence_name + " on " + suspect_data.name, Color(1, 0.5, 0))
+			case_board.show_message("Already have " + evidence_name + " on " + suspect_name, Color(1, 0.5, 0))
 		return false
 	
-	# Check if matches using SuspectData
-	var is_correct = suspect_data.check_evidence_match(evidence_type, match_value)
+	# Check if matches using suspect data
+	var is_correct = false
+	match evidence_type:
+		0:  # SHOEPRINT
+			is_correct = (match_value.to_lower() == suspect_shoe.to_lower())
+		1:  # FINGERPRINT
+			is_correct = (match_value == suspect_fingerprint_id)
+		2:  # HAIR
+			is_correct = (match_value.to_lower() == suspect_hair.to_lower())
 	
 	# Create icon
 	var icon = TextureRect.new()

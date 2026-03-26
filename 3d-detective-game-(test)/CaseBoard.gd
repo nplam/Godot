@@ -1,10 +1,9 @@
-# CaseBoard.gd - Updated with working victory message
+# CaseBoard.gd - Updated for manually placed suspect slots
 extends Control
 
 enum GamePhase { EXPLORATION, PLACING_EVIDENCE }
 
 const EvidenceSlotScene = preload("res://EvidenceSlot.tscn")
-const SuspectSlotScene = preload("res://SuspectSlot.tscn")
 
 # Simple node references
 @onready var evidence_grid = $MainPanel/MarginContainer/MainVBox/EvidenceGrid
@@ -34,15 +33,22 @@ func _ready():
 	
 	_show_all()
 	
+	# Configure grids
 	if suspects_grid:
 		suspects_grid.columns = 4
 		suspects_grid.add_theme_constant_override("h_separation", 20)
+		
+		# Collect existing suspect slots from scene (manually placed in editor)
+		for child in suspects_grid.get_children():
+			if child.has_method("get_correct_evidence_count"):
+				suspect_slots[child.suspect_id] = child
+				child.evidence_placed.connect(_on_evidence_placed)
+				print("✅ Found suspect: ", child.suspect_name)
+	
 	if evidence_grid:
 		evidence_grid.columns = 3
 		evidence_grid.add_theme_constant_override("h_separation", 20)
 		evidence_grid.custom_minimum_size = Vector2(0, 180)
-	
-	_create_suspect_slots()
 	
 	if close_button:
 		close_button.pressed.connect(_on_close)
@@ -50,6 +56,7 @@ func _ready():
 	await get_tree().process_frame
 	visible = false
 	print("📋 CaseBoard ready - Press C to open")
+	print("   Total suspects found: ", suspect_slots.size())
 
 func _set_full_rect():
 	anchor_left = 0.0
@@ -81,28 +88,6 @@ func _show_all():
 	if evidence_grid:
 		evidence_grid.visible = true
 		evidence_grid.custom_minimum_size = Vector2(0, 180)
-
-func _create_suspect_slots():
-	if not suspects_grid:
-		print("❌ SuspectsGrid not found!")
-		return
-	
-	for child in suspects_grid.get_children():
-		child.queue_free()
-	suspect_slots.clear()
-	
-	var suspects = SuspectData.get_all_suspects()
-	print("Creating ", suspects.size(), " suspect slots...")
-	
-	for suspect in suspects:
-		var slot = SuspectSlotScene.instantiate()
-		suspects_grid.add_child(slot)
-		slot.setup(suspect, suspect.id, self)
-		slot.evidence_placed.connect(_on_evidence_placed)
-		suspect_slots[suspect.id] = slot
-		print("  ✅ Created: ", suspect.name)
-	
-	print("✅ Total suspects: ", suspect_slots.size())
 
 func add_evidence(data):
 	print("\n📋 Adding evidence: ", data.get("name", "Unknown"))
@@ -194,28 +179,28 @@ func _on_evidence_placed(evidence_id, suspect_id, is_correct):
 	var suspect = suspect_slots.get(suspect_id)
 	
 	if is_correct:
-		show_message("✓ Correct! Evidence matches " + suspect.suspect_data.name, Color(0, 1, 0))
+		show_message("✓ Correct! Evidence matches " + suspect.suspect_name, Color(0, 1, 0))
 		
 		# Count correct evidence for this suspect
 		var correct_count = suspect.get_correct_evidence_count()
-		print("   Suspect ", suspect.suspect_data.name, " now has ", correct_count, " correct evidence")
+		print("   Suspect ", suspect.suspect_name, " now has ", correct_count, " correct evidence")
 		
 		# Check if culprit found (2 or more correct evidence)
 		if correct_count >= 2:
-			var victory_msg = "🎉 CASE SOLVED! " + suspect.suspect_data.name + " is the culprit! 🎉"
+			var victory_msg = "🎉 CASE SOLVED! " + suspect.suspect_name + " is the culprit! 🎉"
 			
 			print("\n" + "=".repeat(50))
 			print(victory_msg)
 			print("=".repeat(50))
 			
-			# Method 1: Show in feedback label
+			# Show in feedback label
 			if feedback_label:
 				feedback_label.text = victory_msg
 				feedback_label.modulate = Color(1, 1, 0)
 				feedback_label.show()
 				print("✅ Victory message sent to feedback_label")
 			
-			# Method 2: Create a popup dialog (always works)
+			# Create popup dialog
 			var popup = AcceptDialog.new()
 			popup.dialog_text = victory_msg
 			popup.title = "🎉 CASE SOLVED! 🎉"
@@ -224,7 +209,7 @@ func _on_evidence_placed(evidence_id, suspect_id, is_correct):
 			popup.popup()
 			print("✅ Victory popup created")
 			
-			# Method 3: Create a temporary label on screen
+			# Create temporary label on screen
 			var temp_label = Label.new()
 			temp_label.text = victory_msg
 			temp_label.add_theme_font_size_override("font_size", 24)
@@ -247,26 +232,24 @@ func _on_evidence_placed(evidence_id, suspect_id, is_correct):
 			current_phase = GamePhase.EXPLORATION
 			_on_culprit_found(suspect_id)
 	else:
-		show_message("✗ Wrong! Evidence doesn't match " + suspect.suspect_data.name, Color(1, 0, 0))
+		show_message("✗ Wrong! Evidence doesn't match " + suspect.suspect_name, Color(1, 0, 0))
 
 func _on_culprit_found(suspect_id: String):
 	var culprit_slot = suspect_slots.get(suspect_id)
 	if culprit_slot:
-		var victory_msg = "🎉 CASE SOLVED! " + culprit_slot.suspect_data.name + " is the culprit! 🎉"
+		var victory_msg = "🎉 CASE SOLVED! " + culprit_slot.suspect_name + " is the culprit! 🎉"
 		
 		# Console output
 		print("\n" + "=".repeat(50))
 		print(victory_msg)
 		print("=".repeat(50))
 		
-		# Show in feedback label on case board
+		# Show in feedback label
 		if feedback_label:
 			feedback_label.text = victory_msg
 			feedback_label.modulate = Color(1, 1, 0)
 			feedback_label.show()
 			print("✅ Victory message shown on feedback label")
-		else:
-			print("⚠️ feedback_label is null!")
 		
 		# Flash the culprit slot
 		culprit_slot.highlight_as_culprit()

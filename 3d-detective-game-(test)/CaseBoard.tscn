@@ -1,6 +1,10 @@
 [gd_scene format=3 uid="uid://cincg2qg4o3vo"]
 
 [ext_resource type="Script" uid="uid://dfsgojqak4jo5" path="res://CaseBoard.gd" id="1_54yya"]
+[ext_resource type="PackedScene" uid="uid://x8v5ql12ewwn" path="res://SuspectSlot_MrBobby.tscn" id="2_2fuek"]
+[ext_resource type="PackedScene" uid="uid://b1svwnytjavih" path="res://SuspectSlot_MrsBobby.tscn" id="3_x8ng4"]
+[ext_resource type="PackedScene" uid="uid://dqhpjxf57nram" path="res://SuspectSlot_Lulea.tscn" id="4_5vbv1"]
+[ext_resource type="PackedScene" uid="uid://c41vo6cuhgfa7" path="res://SuspectSlot_Hector.tscn" id="5_7bc0h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_54yya"]
 bg_color = Color(0.69135684, 0.6913568, 0.69135684, 0.7019608)
@@ -91,6 +95,18 @@ layout_mode = 2
 theme_override_constants/h_separation = 20
 theme_override_constants/v_separation = 0
 columns = 4
+
+[node name="SuspectSlot" parent="MainPanel/MarginContainer/MainVBox/SuspectsGrid" unique_id=935384158 instance=ExtResource("2_2fuek")]
+layout_mode = 2
+
+[node name="SuspectSlot2" parent="MainPanel/MarginContainer/MainVBox/SuspectsGrid" unique_id=108077124 instance=ExtResource("3_x8ng4")]
+layout_mode = 2
+
+[node name="SuspectSlot3" parent="MainPanel/MarginContainer/MainVBox/SuspectsGrid" unique_id=1692210658 instance=ExtResource("4_5vbv1")]
+layout_mode = 2
+
+[node name="SuspectSlot4" parent="MainPanel/MarginContainer/MainVBox/SuspectsGrid" unique_id=1197925404 instance=ExtResource("5_7bc0h")]
+layout_mode = 2
 
 [node name="EvidenceLabel" type="Label" parent="MainPanel/MarginContainer/MainVBox" unique_id=535222243]
 layout_mode = 2

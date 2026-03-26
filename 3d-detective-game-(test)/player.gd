@@ -1,4 +1,4 @@
-# player.gd - With ray hit visual marker and layer debug
+# player.gd - With footstep sounds
 extends CharacterBody3D
 
 @export var walk_speed := 5.0
@@ -25,6 +25,13 @@ extends CharacterBody3D
 
 # Ray hit visual marker
 var hit_glow_marker: MeshInstance3D = null
+
+# ============================================================
+# FOOTSTEP SOUND VARIABLES
+# ============================================================
+var footstep_timer: float = 0.0
+var footstep_interval: float = 0.45  # Time between footsteps
+# ============================================================
 
 enum ForensicTool { NONE, UV, BLUE, MAGNIFIER }
 var current_tool: ForensicTool = ForensicTool.NONE
@@ -94,7 +101,7 @@ func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if current_interactable:
 			print("🖱️ Left click on: ", current_interactable.name)
-			print("   Calling interact() on: ", current_interactable.name)  # DEBUG
+			print("   Calling interact() on: ", current_interactable.name)
 			CursorManager.set_cursor(CursorManager.CursorState.CLICK)
 			current_interactable.interact()
 			await get_tree().create_timer(0.1).timeout
@@ -117,12 +124,17 @@ func _input(event):
 	if event.is_action_pressed("toggle_glasses"):
 		if glasses_overlay and glasses_overlay.has_method("toggle"):
 			glasses_overlay.toggle()
+			SoundManager.play_glasses_on()
 			
-	if event.is_action_pressed("open_case_board"):  # Add to Input Map (C key)
+	if event.is_action_pressed("open_case_board"):
 		print("🔑 C key pressed - toggling case board")
 		print("   case_board node: ", case_board)
 		if case_board:
 			case_board.visible = !case_board.visible
+			if case_board.visible:
+				SoundManager.play_case_board_open()
+			else:
+				SoundManager.play_case_board_close()
 			print("   case_board visible: ", case_board.visible)
 		else:
 			print("   ❌ case_board is null!")
@@ -133,9 +145,11 @@ func set_tool(tool: ForensicTool):
 		ForensicTool.UV:
 			if uv_light_system and uv_light_system.has_method("set_active"):
 				uv_light_system.set_active(false)
+				SoundManager.play_uv_off()
 		ForensicTool.BLUE:
 			if blue_light and blue_light.has_method("set_active"):
 				blue_light.set_active(false)
+				SoundManager.play_blue_off()
 	
 	current_tool = tool
 	
@@ -143,10 +157,12 @@ func set_tool(tool: ForensicTool):
 		ForensicTool.UV:
 			if uv_light_system and uv_light_system.has_method("set_active"):
 				uv_light_system.set_active(true)
+				SoundManager.play_uv_on()
 			print("🔦 UV Light selected")
 		ForensicTool.BLUE:
 			if blue_light and blue_light.has_method("set_active"):
 				blue_light.set_active(true)
+				SoundManager.play_blue_on()
 			print("🔵 Blue Light selected")
 		ForensicTool.MAGNIFIER:
 			if magnifier_tool and magnifier_tool.has_method("set_active"):
@@ -187,16 +203,21 @@ func _physics_process(delta):
 
 	move_and_slide()
 	
+	# ============================================================
+	# FOOTSTEP SOUNDS - Play when moving on ground
+	# ============================================================
+	if direction.length() > 0.1 and is_on_floor():
+		footstep_timer -= delta
+		if footstep_timer <= 0.0:
+			SoundManager.play_footstep()
+			footstep_timer = footstep_interval
+	else:
+		footstep_timer = 0.0
+	# ============================================================
+	
 func _process(delta):
 	check_interaction()
 	rotate_hand_toward_camera(delta)
-	
-	# DEBUG: Print raycast hit every 60 frames (about 1 second)
-	#if Engine.get_frames_drawn() % 60 == 0:
-	#	if interaction_ray.is_colliding():
-	#		var collider = interaction_ray.get_collider()
-	#		print("🎯 Raycast hitting: ", collider.name if collider else "null")
-	#		print("   Groups: ", collider.get_groups() if collider else "null")
 
 func rotate_hand_toward_camera(delta):
 	var target_x_rotation = camera.rotation.x
@@ -207,16 +228,10 @@ func check_interaction():
 		var collider = interaction_ray.get_collider()
 		var hit_point = interaction_ray.get_collision_point()
 		
-		# DEBUG: Print what you're hitting
-		#print("🎯 Raycast hit: ", collider.name)
-		#print("   Groups: ", collider.get_groups() if collider else "null")
-		
 		# Show red marker at hit point
 		if hit_glow_marker:
 			hit_glow_marker.global_position = hit_point
 			hit_glow_marker.visible = true
-		
-		# DEBUG prints commented out
 		
 		if collider and collider.has_method("get_interaction_text"):
 			CursorManager.set_cursor(CursorManager.CursorState.HOVER)

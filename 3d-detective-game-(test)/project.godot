@@ -21,6 +21,7 @@ EvidenceSystem="*uid://ci5wj31m45nye"
 CursorManager="*uid://bdeit0yvcrmx"
 SceneRenderManager="*uid://dqee5gokfoqfj"
 MagnifierManager="*uid://cp3p2udds5g7n"
+SoundManager="*uid://bpgsuroa28345"
 
 [editor_plugins]
 
