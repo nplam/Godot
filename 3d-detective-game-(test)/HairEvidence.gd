@@ -140,7 +140,7 @@ func add_to_case_board():
 	var case_board = get_tree().get_first_node_in_group("case_board")
 	if case_board and case_board.has_method("add_evidence"):
 		case_board.add_evidence(data)
-		
+		SoundManager.play_evidence_collect()
 		if hair_sprite:
 			hair_sprite.modulate = Color(1, 1, 0.5)
 			await get_tree().create_timer(0.2).timeout

@@ -118,6 +118,7 @@ func _on_evidence_clicked(evidence_id):
 		return
 		
 	print("\n🖱️ Evidence clicked: ", evidence_id)
+	SoundManager.play_click()
 	
 	for id in evidence_slots:
 		if evidence_slots[id].evidence_id == evidence_id:
@@ -179,6 +180,7 @@ func _on_evidence_placed(evidence_id, suspect_id, is_correct):
 	var suspect = suspect_slots.get(suspect_id)
 	
 	if is_correct:
+		SoundManager.play_evidence_correct()
 		show_message("✓ Correct! Evidence matches " + suspect.suspect_name, Color(0, 1, 0))
 		
 		# Count correct evidence for this suspect
@@ -187,6 +189,7 @@ func _on_evidence_placed(evidence_id, suspect_id, is_correct):
 		
 		# Check if culprit found (2 or more correct evidence)
 		if correct_count >= 2:
+			SoundManager.play_case_solved()
 			var victory_msg = "🎉 CASE SOLVED! " + suspect.suspect_name + " is the culprit! 🎉"
 			
 			print("\n" + "=".repeat(50))
@@ -232,6 +235,7 @@ func _on_evidence_placed(evidence_id, suspect_id, is_correct):
 			current_phase = GamePhase.EXPLORATION
 			_on_culprit_found(suspect_id)
 	else:
+		SoundManager.play_evidence_wrong()
 		show_message("✗ Wrong! Evidence doesn't match " + suspect.suspect_name, Color(1, 0, 0))
 
 func _on_culprit_found(suspect_id: String):

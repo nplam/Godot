@@ -125,6 +125,7 @@ func add_to_case_board():
 	
 	if case_board and case_board.has_method("add_evidence"):
 		case_board.add_evidence(data)
+		SoundManager.play_evidence_collect()
 		print("   ✅ Added to case board!")
 		
 		# Visual feedback - flash green to confirm
