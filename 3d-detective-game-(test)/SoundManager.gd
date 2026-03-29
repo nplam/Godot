@@ -20,6 +20,7 @@ var evidence_correct: AudioStream = preload("res://Assets/Sounds/evidence_correc
 var evidence_wrong: AudioStream = preload("res://Assets/Sounds/evidence_wrong.mp3")
 var case_solved: AudioStream = preload("res://Assets/Sounds/case_solved.mp3")
 var key_press: AudioStream = preload("res://Assets/Sounds/key_press.mp3")
+var incoming_message: AudioStream = preload("res://Assets/Sounds/incoming_message.mp3")
 
 # Volume settings (in dB - negative values are quieter)
 var master_volume: float = 0.0

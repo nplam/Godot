@@ -519,7 +519,7 @@ script = ExtResource("31_po3a5")
 transform = Transform3D(-1.5, 0, -1.3113416e-07, 0, 1.5, 0, 1.3113416e-07, 0, -1.5, 1.8237405, 1.5485854, 9.906324)
 
 [node name="RedHair_Interactable" type="StaticBody3D" parent="." unique_id=1677681889 groups=["hair_evidence"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016549349, 0.05, -3.2977026)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.016549349, 0.037402753, -3.3571687)
 collision_layer = 65
 script = ExtResource("33_hvoaa")
 evidence_texture = ExtResource("33_5pje2")

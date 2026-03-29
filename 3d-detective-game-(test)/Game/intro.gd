@@ -1,55 +1,50 @@
-# Intro.gd - With simple scrolling
+# Intro.gd - Inspector configurable
 extends Control
 
 enum IntroPart { PART1, PART2 }
 
+# ============ EXPORT VARIABLES - Configure in Inspector ============
+@export var typing_speed: float = 0.08
+@export var text_font_size: int = 24
+@export var text_color: Color = Color(0.9, 0.9, 0.9)
+@export var line_spacing: int = 10
+@export var top_spacer_height: int = 80
+@export var bottom_spacer_height: int = 40
+@export var button_width: int = 200
+@export var button_height: int = 50
+
+# Part 1: Story/Context - Can be edited in Inspector as multiline string
+@export_multiline var part1_text: String = "Mr. Bobby, millionaire heir to Security Dynamics Inc., had a special room where he kept his most prized possessions, where only a few individuals were allowed in - the maid, Luela, to dust the room under specific supervision, the developer of the security system, Hector, and, of course, his wife, Mrs. Bobby. 
+\nOne day, Mr. Bobby was showing his prized possessions off to his esteemed colleague, Ms. Albani (for the tenth time). This time, Ms. Albani started to laugh uncontrollably and told Mr. Bobby that, for him running a security company, the picture in the room is fake. Angry, Mr. Bobby got an art expert to look at the painting, which was indeed fake. Mr. Bobby called the police, and here you are, an emerging detective, to see what has happened. 
+"
+
+# Part 2: Four Suspects Introduction - Can be edited in Inspector
+@export_multiline var part2_text: String = "Now, let's meet the suspects...\n\nMr. Bobby (the owner):
+\nMr. Bobby claims that there is no way he would be exchanging his prized possessions. However, it has been known that his investments in the stock market have recently been trending downwards. Mr. Bobby has downplayed this fact and insists that he is a righteous man who would not stoop to selling his paintings.
+\n\nMrs. Bobby (the wife): 
+\nMrs. Bobby is used to a life of leisure as the wife of a wealthy man. With the change in fortune reducing much of Mr. Bobby’s income, Mrs. Bobby may have stooped to selling some of the artwork. More importantly, she has a key to the room that is not monitored as rigorously as others.
+\n\nLuela (the maid): 
+\nLuela is always under strict surveillance when she is let into the room to dust the artifacts. However, she has recently entered the city-wide championship of locksmiths. One of the events includes opening a lock within a minute and replicating keys using minimal tools. Being able to break into Bobby’s prized room would ensure bragging rights for the foreseeable future.
+\n\nHector (the security guard): 
+\nHector has recently been looking into opening his own security company. After years of hard work for Mr. Bobby, Hector now feels it is time to try his luck on his own without so much stress and micromanaging. Of course, when he leaves the company, he is planning on taking everything he knows about the security systems that HE developed.
+"
+
+# ============ INTERNAL VARIABLES ============
 var current_part: IntroPart = IntroPart.PART1
-var typing_speed: float = 0.03
 var current_text: String = ""
 var full_text: String = ""
 var typing_timer: float = 0.0
 var is_typing: bool = true
 
-# Node references - will be found dynamically
+# Node references
 var text_label: Label
 var continue_button: Button
 var skip_button: Button
 var background: ColorRect
 var scroll_container: ScrollContainer
 var main_container: Control
-
-# Part 1: Story/Context
-var part1_text = "It was a dark and stormy night at the grand mansion...\n\n" + \
-				 "A priceless artifact has been stolen from the museum collection.\n\n" + \
-				 "Four people were present at the scene when the crime occurred.\n\n" + \
-				 "As the lead detective, you must examine the evidence and identify the culprit.\n\n" + \
-				 "Use your forensic tools to find hidden evidence:\n" + \
-				 "• UV Light reveals shoeprints\n" + \
-				 "• Blue Light with Orange Glasses reveals fingerprints\n" + \
-                 "• Hair strands are visible to the naked eye"
-
-# Part 2: Four Suspects Introduction
-var part2_text = "Now, let's meet the suspects...\n\n" + \
-				 "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" + \
-				 "🔍 MR. BOBBY - The Owner\n" + \
-				 "   • Brown hair\n" + \
-				 "   • Wears loafers\n" + \
-				 "   • Fingerprint ID: FP-001\n\n" + \
-				 "🔍 MRS. BOBBY - The Wife\n" + \
-				 "   • Red hair\n" + \
-				 "   • Wears high heels\n" + \
-				 "   • Fingerprint ID: FP-002\n\n" + \
-				 "🔍 LULEA - The Maid\n" + \
-				 "   • Blond hair\n" + \
-				 "   • Wears flats\n" + \
-				 "   • Fingerprint ID: FP-003\n\n" + \
-				 "🔍 HECTOR - The Security Guard\n" + \
-				 "   • Brown hair\n" + \
-				 "   • Wears loafers\n" + \
-				 "   • Fingerprint ID: FP-004\n\n" + \
-				 "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" + \
-				 "Collect 2 matching evidence on the same suspect to identify the culprit!\n\n" + \
-                 "Good luck, Detective!"
+var top_spacer: Control
+var bottom_spacer: Control
 
 func _ready():
 	print("🎬 Intro _ready called")
@@ -57,42 +52,8 @@ func _ready():
 	# Make intro full screen
 	_set_full_rect()
 	
-	# Find nodes by name (flexible)
-	_find_nodes()
-	
-	# Set up layout to prevent text overflow
-	_setup_layout()
-	
-	# Style the text label if found
-	if text_label:
-		text_label.add_theme_font_size_override("font_size", 24)
-		text_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
-		text_label.add_theme_constant_override("line_spacing", 10)
-		text_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-		text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		print("   ✅ TextLabel styled")
-	else:
-		print("   ⚠️ TextLabel not found - creating one")
-		_create_text_label()
-	
-	# Connect buttons if found
-	if continue_button:
-		continue_button.pressed.connect(_on_continue_pressed)
-		print("   ✅ Continue button connected")
-	else:
-		print("   ⚠️ ContinueButton not found")
-		_create_continue_button()
-	
-	if skip_button:
-		skip_button.pressed.connect(_on_skip_pressed)
-		print("   ✅ Skip button connected")
-	else:
-		print("   ⚠️ SkipButton not found")
-		_create_skip_button()
-	
-	# Find background
-	if background:
-		background.gui_input.connect(_on_background_click)
+	# Build UI dynamically using Inspector values
+	_build_ui()
 	
 	# Start with Part 1
 	_start_part(IntroPart.PART1)
@@ -112,112 +73,102 @@ func _set_full_rect():
 	offset_right = 0
 	offset_bottom = 0
 
-func _find_nodes():
-	"""Find nodes by common names"""
-	# Try to find MainContainer (VBoxContainer)
-	main_container = find_child("MainContainer", true, false)
-	if not main_container:
-		main_container = find_child("VBoxContainer", true, false)
+func _build_ui():
+	"""Build the entire UI using Inspector values"""
 	
-	# Try to find ScrollContainer
-	scroll_container = find_child("TextScrollContainer", true, false)
-	if not scroll_container:
-		scroll_container = find_child("ScrollContainer", true, false)
+	# Create Background
+	background = ColorRect.new()
+	background.name = "Background"
+	background.color = Color(0, 0, 0, 0.9)
+	background.anchor_left = 0.0
+	background.anchor_top = 0.0
+	background.anchor_right = 1.0
+	background.anchor_bottom = 1.0
+	background.offset_left = 0
+	background.offset_top = 0
+	background.offset_right = 0
+	background.offset_bottom = 0
+	background.gui_input.connect(_on_background_click)
+	add_child(background)
 	
-	# Try to find TextLabel
-	text_label = find_child("TextLabel", true, false)
-	if not text_label:
-		text_label = find_child("Label", true, false)
+	# Create Main VBoxContainer
+	main_container = VBoxContainer.new()
+	main_container.name = "MainContainer"
+	main_container.anchor_left = 0.0
+	main_container.anchor_top = 0.0
+	main_container.anchor_right = 1.0
+	main_container.anchor_bottom = 1.0
+	main_container.offset_left = 50
+	main_container.offset_top = 50
+	main_container.offset_right = -50
+	main_container.offset_bottom = -50
+	main_container.add_theme_constant_override("separation", 20)
+	add_child(main_container)
 	
-	# Try to find ContinueButton
-	continue_button = find_child("ContinueButton", true, false)
-	if not continue_button:
-		continue_button = find_child("Continue", true, false)
+	# Create ScrollContainer
+	scroll_container = ScrollContainer.new()
+	scroll_container.name = "TextScrollContainer"
+	scroll_container.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll_container.size_flags_vertical = Control.SIZE_EXPAND | Control.SIZE_FILL
+	main_container.add_child(scroll_container)
 	
-	# Try to find SkipButton
-	skip_button = find_child("SkipButton", true, false)
-	if not skip_button:
-		skip_button = find_child("Skip", true, false)
+	# Create inner container for text with spacers
+	var inner_vbox = VBoxContainer.new()
+	inner_vbox.name = "InnerVBox"
+	inner_vbox.size_flags_horizontal = Control.SIZE_EXPAND | Control.SIZE_FILL
+	scroll_container.add_child(inner_vbox)
 	
-	# Try to find Background
-	background = find_child("Background", true, false)
-
-func _setup_layout():
-	"""Set up layout to prevent text overflow and ensure scrolling"""
+	# Add top spacer
+	top_spacer = Control.new()
+	top_spacer.name = "TopSpacer"
+	top_spacer.custom_minimum_size = Vector2(0, top_spacer_height)
+	inner_vbox.add_child(top_spacer)
 	
-	# Set up MainContainer (VBoxContainer)
-	if main_container:
-		main_container.size_flags_vertical = Control.SIZE_EXPAND | Control.SIZE_FILL
-		main_container.size_flags_horizontal = Control.SIZE_EXPAND | Control.SIZE_FILL
-		main_container.add_theme_constant_override("separation", 20)
-		print("   ✅ MainContainer configured")
-	
-	# Set up ScrollContainer
-	if scroll_container:
-		scroll_container.size_flags_vertical = Control.SIZE_EXPAND | Control.SIZE_FILL
-		scroll_container.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-		print("   ✅ ScrollContainer configured")
-	
-	# Set up TextLabel
-	if text_label:
-		text_label.size_flags_horizontal = Control.SIZE_EXPAND | Control.SIZE_FILL
-		text_label.size_flags_vertical = Control.SIZE_EXPAND | Control.SIZE_FILL
-		text_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-		text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		print("   ✅ TextLabel configured")
-	
-	# Set up ContinueButton
-	if continue_button:
-		continue_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		continue_button.size = Vector2(200, 50)
-		print("   ✅ ContinueButton configured")
-
-func _create_text_label():
-	"""Create a text label if none exists"""
+	# Create TextLabel
 	text_label = Label.new()
 	text_label.name = "TextLabel"
-	text_label.add_theme_font_size_override("font_size", 24)
-	text_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9))
-	text_label.add_theme_constant_override("line_spacing", 10)
+	text_label.add_theme_font_size_override("font_size", text_font_size)
+	text_label.add_theme_color_override("font_color", text_color)
+	text_label.add_theme_constant_override("line_spacing", line_spacing)
 	text_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	text_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	text_label.size_flags_horizontal = Control.SIZE_EXPAND | Control.SIZE_FILL
-	text_label.size_flags_vertical = Control.SIZE_EXPAND | Control.SIZE_FILL
+	inner_vbox.add_child(text_label)
 	
-	# Add to ScrollContainer or direct
-	if scroll_container:
-		scroll_container.add_child(text_label)
-	else:
-		add_child(text_label)
-	print("   ✅ Created TextLabel")
-
-func _create_continue_button():
-	"""Create a continue button if none exists"""
+	# Add bottom spacer
+	bottom_spacer = Control.new()
+	bottom_spacer.name = "BottomSpacer"
+	bottom_spacer.custom_minimum_size = Vector2(0, bottom_spacer_height)
+	inner_vbox.add_child(bottom_spacer)
+	
+	# Create ContinueButton
 	continue_button = Button.new()
 	continue_button.name = "ContinueButton"
 	continue_button.text = "Continue"
-	continue_button.size = Vector2(200, 50)
+	continue_button.size = Vector2(button_width, button_height)
 	continue_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	
-	# Add to MainContainer or direct
-	if main_container:
-		main_container.add_child(continue_button)
-	else:
-		add_child(continue_button)
 	continue_button.pressed.connect(_on_continue_pressed)
-	print("   ✅ Created ContinueButton")
-
-func _create_skip_button():
-	"""Create a skip button if none exists"""
+	main_container.add_child(continue_button)
+	
+	# Create SkipButton
 	skip_button = Button.new()
 	skip_button.name = "SkipButton"
 	skip_button.text = "Skip"
-	skip_button.size = Vector2(100, 40)
-	skip_button.position = Vector2(get_viewport().size.x - 110, 20)
+	skip_button.size = Vector2(80, 40)
+	skip_button.anchor_left = 1.0
+	skip_button.anchor_right = 1.0
+	skip_button.offset_left = -90
+	skip_button.offset_top = 10
+	skip_button.offset_right = -10
+	skip_button.offset_bottom = 50
 	skip_button.pressed.connect(_on_skip_pressed)
 	add_child(skip_button)
-	print("   ✅ Created SkipButton")
+	
+	print("   ✅ UI built with Inspector values")
+	print("      Top spacer height: ", top_spacer_height)
+	print("      Text font size: ", text_font_size)
+	print("      Button size: ", button_width, "x", button_height)
 
 func _start_part(part: IntroPart):
 	current_part = part
@@ -234,7 +185,7 @@ func _start_part(part: IntroPart):
 	is_typing = true
 	typing_timer = 0.0
 	
-	# Scroll to top when new text starts
+	# Scroll to top
 	if scroll_container:
 		scroll_container.scroll_vertical = 0
 	
@@ -244,12 +195,7 @@ func _start_part(part: IntroPart):
 func _scroll_to_bottom():
 	"""Scroll to the bottom of the scroll container"""
 	if scroll_container:
-		# Use a large number to scroll to bottom (works even if max is not ready)
 		scroll_container.scroll_vertical = 10000
-		# Then schedule a second scroll after the text updates
-		await get_tree().create_timer(0.05).timeout
-		if is_instance_valid(scroll_container):
-			scroll_container.scroll_vertical = 10000
 
 func _process(delta):
 	if is_typing and text_label:
