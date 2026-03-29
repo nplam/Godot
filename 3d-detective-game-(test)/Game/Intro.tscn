@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://cb7lwga1fw0y0"]
+
+[ext_resource type="Script" uid="uid://corvv5sqn57ww" path="res://Game/intro.gd" id="1_mb6sd"]
+
+[node name="Intro" type="Panel" unique_id=1040784989]
+custom_minimum_size = Vector2(800, 600)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mb6sd")
+
+[node name="MainContainer" type="VBoxContainer" parent="." unique_id=930161467]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="TextScrollContainer" type="ScrollContainer" parent="MainContainer" unique_id=920225946]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="TextLabel" type="Label" parent="MainContainer/TextScrollContainer" unique_id=1924087819]
+custom_minimum_size = Vector2(700, 400)
+layout_mode = 2
+size_flags_vertical = 1
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ContinueButton" type="Button" parent="." unique_id=538476791]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Continue"
+
+[node name="SkipButton" type="Button" parent="." unique_id=258721420]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -50.0
+offset_right = -20.0
+offset_bottom = -19.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Skip"
