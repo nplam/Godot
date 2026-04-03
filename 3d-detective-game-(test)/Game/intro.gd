@@ -79,7 +79,7 @@ func _build_ui():
 	# Create Background
 	background = ColorRect.new()
 	background.name = "Background"
-	background.color = Color(0, 0, 0, 0.9)
+	background.color = Color(0, 0, 0, 0.5)
 	background.anchor_left = 0.0
 	background.anchor_top = 0.0
 	background.anchor_right = 1.0
