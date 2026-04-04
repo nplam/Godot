@@ -55,7 +55,7 @@ static func _create_suspect_2() -> SuspectData:
 static func _create_suspect_3() -> SuspectData:
 	var suspect = SuspectData.new()
 	suspect.id = "suspect_3"
-	suspect.name = "Lulea"
+	suspect.name = "Luela"
 	suspect.role = "Maid"
 	suspect.hair_color = "Blond"
 	suspect.fingerprint_id = "fp_003"

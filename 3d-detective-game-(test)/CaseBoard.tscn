@@ -104,6 +104,7 @@ layout_mode = 2
 
 [node name="SuspectSlot3" parent="MainPanel/MarginContainer/MainVBox/SuspectsGrid" unique_id=1692210658 instance=ExtResource("4_5vbv1")]
 layout_mode = 2
+suspect_name = "Luela"
 
 [node name="SuspectSlot4" parent="MainPanel/MarginContainer/MainVBox/SuspectsGrid" unique_id=1197925404 instance=ExtResource("5_7bc0h")]
 layout_mode = 2
