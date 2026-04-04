@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cyfhqk58boywv" path="res://Assets/Poly/brass_vase_03_1k.gltf/brass_vase_03_1k.gltf" id="10_4dh4x"]
 [ext_resource type="PackedScene" uid="uid://77bn1r0ddxqa" path="res://Game/HelpMenu.tscn" id="10_hvoaa"]
 [ext_resource type="PackedScene" uid="uid://cb7lwga1fw0y0" path="res://Game/Intro.tscn" id="12_t6gkp"]
+[ext_resource type="PackedScene" uid="uid://dnqdiid3ya23d" path="res://Game/StartScreen.tscn" id="13_gn80i"]
 [ext_resource type="Texture2D" uid="uid://br151pp5gmx8r" path="res://Assets/footprint_icon.png" id="15_oas7p"]
 [ext_resource type="PackedScene" uid="uid://cvp5822g8qxl8" path="res://Assets/Poly/antique_ceramic_vase_01_4k.glb" id="16_8myva"]
 [ext_resource type="PackedScene" uid="uid://bnpyup5r266qu" path="res://wallspotlight.tscn" id="16_i6a4r"]
@@ -325,6 +326,8 @@ offset_right = 50.0
 grow_vertical = 0
 theme_override_font_sizes/font_size = 24
 text = "Intro"
+
+[node name="StartScreen" parent="CanvasLayer" unique_id=1887072003 instance=ExtResource("13_gn80i")]
 
 [node name="StaticBody3D7" type="StaticBody3D" parent="." unique_id=207238661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.530303, 0.251, 0.247)

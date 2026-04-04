@@ -1,4 +1,4 @@
-# Intro.gd - Inspector configurable
+# Intro.gd - Inspector configurable (starts hidden)
 extends Control
 
 enum IntroPart { PART1, PART2 }
@@ -14,20 +14,10 @@ enum IntroPart { PART1, PART2 }
 @export var button_height: int = 50
 
 # Part 1: Story/Context - Can be edited in Inspector as multiline string
-@export_multiline var part1_text: String = "Mr. Bobby, millionaire heir to Security Dynamics Inc., had a special room where he kept his most prized possessions, where only a few individuals were allowed in - the maid, Luela, to dust the room under specific supervision, the developer of the security system, Hector, and, of course, his wife, Mrs. Bobby. 
-\nOne day, Mr. Bobby was showing his prized possessions off to his esteemed colleague, Ms. Albani (for the tenth time). This time, Ms. Albani started to laugh uncontrollably and told Mr. Bobby that, for him running a security company, the picture in the room is fake. Angry, Mr. Bobby got an art expert to look at the painting, which was indeed fake. Mr. Bobby called the police, and here you are, an emerging detective, to see what has happened. 
-"
+@export_multiline var part1_text: String = "Mr. Bobby, millionaire heir to Security Dynamics Inc., had a special room where he kept his most prized possessions, where only a few individuals were allowed in - the maid, Luela, to dust the room under specific supervision, the developer of the security system, Hector, and, of course, his wife, Mrs. Bobby. \nOne day, Mr. Bobby was showing his prized possessions off to his esteemed colleague, Ms. Albani (for the tenth time). This time, Ms. Albani started to laugh uncontrollably and told Mr. Bobby that, for him running a security company, the picture in the room is fake. Angry, Mr. Bobby got an art expert to look at the painting, which was indeed fake. Mr. Bobby called the police, and here you are, an emerging detective, to see what has happened. "
 
 # Part 2: Four Suspects Introduction - Can be edited in Inspector
-@export_multiline var part2_text: String = "Now, let's meet the suspects...\n\nMr. Bobby (the owner):
-\nMr. Bobby claims that there is no way he would be exchanging his prized possessions. However, it has been known that his investments in the stock market have recently been trending downwards. Mr. Bobby has downplayed this fact and insists that he is a righteous man who would not stoop to selling his paintings.
-\n\nMrs. Bobby (the wife): 
-\nMrs. Bobby is used to a life of leisure as the wife of a wealthy man. With the change in fortune reducing much of Mr. Bobby’s income, Mrs. Bobby may have stooped to selling some of the artwork. More importantly, she has a key to the room that is not monitored as rigorously as others.
-\n\nLuela (the maid): 
-\nLuela is always under strict surveillance when she is let into the room to dust the artifacts. However, she has recently entered the city-wide championship of locksmiths. One of the events includes opening a lock within a minute and replicating keys using minimal tools. Being able to break into Bobby’s prized room would ensure bragging rights for the foreseeable future.
-\n\nHector (the security guard): 
-\nHector has recently been looking into opening his own security company. After years of hard work for Mr. Bobby, Hector now feels it is time to try his luck on his own without so much stress and micromanaging. Of course, when he leaves the company, he is planning on taking everything he knows about the security systems that HE developed.
-"
+@export_multiline var part2_text: String = "Now, let's meet the suspects...\n\nMr. Bobby (the owner):\nMr. Bobby claims that there is no way he would be exchanging his prized possessions. However, it has been known that his investments in the stock market have recently been trending downwards. Mr. Bobby has downplayed this fact and insists that he is a righteous man who would not stoop to selling his paintings.\n\nMrs. Bobby (the wife): \nMrs. Bobby is used to a life of leisure as the wife of a wealthy man. With the change in fortune reducing much of Mr. Bobby’s income, Mrs. Bobby may have stooped to selling some of the artwork. More importantly, she has a key to the room that is not monitored as rigorously as others.\n\nLuela (the maid): \nLuela is always under strict surveillance when she is let into the room to dust the artifacts. However, she has recently entered the city-wide championship of locksmiths. One of the events includes opening a lock within a minute and replicating keys using minimal tools. Being able to break into Bobby’s prized room would ensure bragging rights for the foreseeable future.\n\nHector (the security guard): \nHector has recently been looking into opening his own security company. After years of hard work for Mr. Bobby, Hector now feels it is time to try his luck on his own without so much stress and micromanaging. Of course, when he leaves the company, he is planning on taking everything he knows about the security systems that HE developed."
 
 # ============ INTERNAL VARIABLES ============
 var current_part: IntroPart = IntroPart.PART1
@@ -55,12 +45,9 @@ func _ready():
 	# Build UI dynamically using Inspector values
 	_build_ui()
 	
-	# Start with Part 1
-	_start_part(IntroPart.PART1)
-	
-	# Make sure intro is visible
-	visible = true
-	print("🎬 Intro ready")
+	# Start hidden - will be shown by start screen
+	visible = false
+	print("🎬 Intro ready - hidden until called")
 
 func _set_full_rect():
 	"""Make the intro fill the entire screen"""
@@ -235,18 +222,23 @@ func _on_background_click(event):
 		_finish_intro()
 
 func show_intro():
-	"""Show the intro and reset to Part 1"""
+	"""Show the intro and reset to Part 1 - Called from Start Screen"""
 	print("🎬 Showing intro")
 	_start_part(IntroPart.PART1)
 	visible = true
 	modulate = Color(1, 1, 1, 1)
 
 func _finish_intro():
+	"""Finish intro and start the game"""
 	# Fade out
 	var tween = create_tween()
 	tween.tween_property(self, "modulate", Color(1, 1, 1, 0), 0.3)
 	await tween.finished
 	
-	# Hide instead of freeing
+	# Hide intro
 	visible = false
 	modulate = Color(1, 1, 1, 1)
+	
+	# The game is already running (World.tscn is already loaded)
+	# No need to change scene - just close intro
+	print("🎬 Intro finished - game ready")
